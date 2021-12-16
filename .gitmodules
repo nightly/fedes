@@ -1,0 +1,9 @@
+[submodule "external/googletest"]
+	path = external/googletest
+	url = https://github.com/google/googletest
+[submodule "external/patterns"]
+	path = external/patterns
+	url = https://github.com/mpark/patterns
+[submodule "external/libfedes"]
+	path = external/libfedes
+	url = https://github.com/nightly/libfedes
