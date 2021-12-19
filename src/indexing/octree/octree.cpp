@@ -1,10 +1,9 @@
-#include "fedes/indexing/octree.h"
+#include "fedes/indexing/octree/octree.hpp"
 
 #include <span>
-
-#include "fedes/data/vector3.h"
 #include <stack>
-#include <memory>
+
+#include "fedes/data/vector3.hpp"
 
 namespace fedes {
 	template <typename T>
@@ -46,12 +45,12 @@ namespace fedes {
 
 	template<typename T>
 	void Octree<T>::Insert(const Vector3<T>& point) {
+		// @Todo: check for duplicate points before insertion
 		InsertAtOctant(root_, point);
 	}
 
 	template<typename T>
 	void Octree<T>::InsertAtOctant(Octant<T>* octant, const Vector3<T>& insertion_point) {
-		// @Todo: check for duplicate points before insertion
 
 		// Handle leaf node case
 		if (octant->IsLeaf()) {
@@ -101,13 +100,13 @@ namespace fedes {
 		}
 		std::stack<Octant<T>*>* stack = new std::stack<Octant<T>*>;
 		std::stack<Octant<T>*>* output = new std::stack<Octant<T>*>;
-		stack.push(root_);
+		stack->push(root_);
 
 		while (!stack->empty()) {
-			Octant* current = stack->top();
+			Octant<T>* current = stack->top();
 			stack->pop();
 			output->push(current);
-			if (!(current->IsLeaf()) {
+			if (!(current->IsLeaf())) {
 				for (int i = 0; i < 8; i++) {
 					stack->push(current->children[i]);
 				}

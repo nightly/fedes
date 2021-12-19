@@ -4,7 +4,11 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/external/googletest" "external/googletes
  
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
-    target_compile_features(${TESTNAME} PRIVATE cxx_std_20)
+
+    target_compile_features(${TESTNAME}  PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(${TESTNAME} PUBLIC "/Zc:__cplusplus") 
+    endif()
 
     target_link_libraries(${TESTNAME} 
     PRIVATE 
@@ -20,3 +24,4 @@ macro(package_add_test TESTNAME)
 endmacro()
 
 package_add_test(dynamic_array interop/dynamic_array.cpp)
+package_add_test(octant indexing/octree/octant.cpp)

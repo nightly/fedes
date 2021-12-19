@@ -2,21 +2,11 @@
 
 #include <iostream>
 
-#include "fedes/data/vector3.h"
-#include "fedes/indexing/octree.h"
-
-void t1() {
-	fedes::Vector3<float> t0 = fedes::Vector3<float>(1.0f, 1.0f, 1.0f);
-	fedes::Vector3<float> t1 = fedes::Vector3<float>(0.0f, 0.0f, 0.0f);
-	fedes::Vector3<float> t2 = fedes::Vector3<float>(-1.0f, -1.0f, -1.0f);
-	fedes::Vector3<float> f[3] = { t0, t1, t2 };
-
-	// fedes::Octree<float> o = fedes::Octree<float>(f);
-
-}
+#include "fedes/data/vector3.hpp"
+#include "fedes/indexing/octree/octree.hpp"
 
 int main() {
-	t1();
-	std::cin.get();
+	std::cout << " - " << std::endl;
+
 	return 0;
 }

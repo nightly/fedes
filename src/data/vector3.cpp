@@ -1,4 +1,4 @@
-#include "fedes/data/vector3.h"
+#include "fedes/data/vector3.hpp"
 namespace fedes {
 	template<typename T>
 	Vector3<T>::Vector3(T x, T y, T z)

@@ -3,8 +3,8 @@
 #include <array>
 #include <span>
 
-#include "fedes/data/vector3.h"
-#include "fedes/indexing/octant.h"
+#include "fedes/data/vector3.hpp"
+#include "fedes/indexing/octree/octant.hpp"
 
 namespace fedes {
 	using namespace fedes::internal;
