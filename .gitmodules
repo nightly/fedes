@@ -1,9 +1,9 @@
 [submodule "external/googletest"]
 	path = external/googletest
 	url = https://github.com/google/googletest
-[submodule "external/libfedes"]
-	path = external/libfedes
-	url = https://github.com/nightly/libfedes
 [submodule "external/matchit"]
 	path = external/matchit
 	url = https://github.com/BowenFu/matchit.cpp
+[submodule "external/libfedesutil"]
+	path = external/libfedesutil
+	url = https://github.com/nightly/libfedesutil

@@ -17,6 +17,7 @@ protected:
 	}
 };
 
+
 TEST_F(OctantTest, DetermineChildOctant) {
 	fedes::Vector3<double> insertion_point(0.8, 0.7, 0.8);
 	int child = octant_->DetermineChildOctant(insertion_point);
@@ -27,8 +28,7 @@ TEST_F(OctantTest, DetermineChildOctant) {
 }
 
 
-TEST_F(OctantTest, IsLeaf) {
+TEST_F(OctantTest, IsLeafFromFixture) {
 	bool leaf = octant_->IsLeaf();
 	ASSERT_EQ(leaf, true) << "Expected original fixture to be a leaf node";
-	// ...
 }

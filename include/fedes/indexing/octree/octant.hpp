@@ -11,18 +11,18 @@ namespace fedes::internal {
 	public:
 		Vector3<T> extent;
 		Vector3<T> center;
-		Vector3<T>* point;
-		std::array<Octant<T>*, 8> children;
+		Vector3<T>* point = nullptr;
+		std::array<Octant<T>*, 8> children = {nullptr};
 	public:
 		Octant(const Vector3<T>& center, const Vector3<T>& extent);
-		Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T> p);
+		Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T>& point);
 
 		Octant(const Octant& other);
 		Octant& operator=(const Octant& other);
 		Octant(Octant&& other);
 		Octant& operator=(Octant&& other);
 
-		bool IsLeaf();
-		int DetermineChildOctant(const Vector3<T>& insertion_point);
+		bool IsLeaf() const;
+		int DetermineChildOctant(const Vector3<T>& insertion_point) const;
 	};
 }

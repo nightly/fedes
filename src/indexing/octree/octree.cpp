@@ -94,7 +94,7 @@ namespace fedes {
 	// Iterative post-order traversal for deletion of nodes, instead of a recursive `delete` approach through destructors
 	template<typename T>
 	void Octree<T>::Clear() {
-		// @Todo: abstract this into some kind of iterator perhaps
+		// @Todo: abstract this into some kind of iterator
 		if (root_ == nullptr) {
 			return;
 		}

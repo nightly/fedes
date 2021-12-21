@@ -9,23 +9,17 @@ namespace fedes::internal {
 	template<typename T>
 	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent)
 		: center(center), extent(extent) {
-		for (auto& ptr : children) {
-			ptr = nullptr;
-		}
 	}
 
 	template<typename T>
-	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T> p)
+	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T>& point)
 		: center(center), extent(extent) {
-		for (auto& ptr : children) {
-			ptr = nullptr;
-		}
-		point = new Vector3<T>(p.x, p.y, p.z);
+		this->point = new Vector3<T>(point.x, point.y, point.z);
 	}
 
 	// A node will either have 8 children or 0 children, allowing us to easily figure out whether a node is a leaf or not
 	template<typename T>
-	bool Octant<T>::IsLeaf() {
+	bool Octant<T>::IsLeaf() const {
 		return children[0] == nullptr;
 	}
 
@@ -33,7 +27,7 @@ namespace fedes::internal {
 	// Where 111 represents index 7 (greater X, Y, and Z), and 000 represents index 0
 	// Three booleans attained by comparing the point to the center of the octant for each axis
 	template<typename T>
-	int Octant<T>::DetermineChildOctant(const Vector3<T>& insertion_point) {
+	int Octant<T>::DetermineChildOctant(const Vector3<T>& insertion_point) const {
 		using namespace matchit;
 
 		bool x_larger = insertion_point.x >center.x;
@@ -52,7 +46,6 @@ namespace fedes::internal {
 		pattern | ds(false, false, true) = [] { return 1; },
 		pattern | ds(false, false, false) = [] { return 0; }
 		);
-	
 	}
 
 	template struct Octant<double>;

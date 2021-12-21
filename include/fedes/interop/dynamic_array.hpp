@@ -4,7 +4,7 @@
 
 namespace fedes {
 	template<typename T>
-	std::vector<T> Dyn1DArrayAsVec(T* buffer, size_t count);
+	std::vector<T> DynArray1DAsVec(T* buffer, size_t count);
 }
 
 // Remove the need for verbose explicit template instanatiation by including the templated definitions

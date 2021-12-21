@@ -24,4 +24,6 @@ macro(package_add_test TESTNAME)
 endmacro()
 
 package_add_test(dynamic_array interop/dynamic_array.cpp)
+
 package_add_test(octant indexing/octree/octant.cpp)
+package_add_test(octant indexing/octree/octree.cpp)
