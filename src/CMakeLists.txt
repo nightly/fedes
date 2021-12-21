@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 
-# FEDES library
+# FEDES Library
 add_library(fedes STATIC "data/vector3.cpp" "indexing/octree/octree.cpp" "indexing/octree/octant.cpp" "interop/dynamic_array.cpp"  "instrumentation/timer.cpp")
+
 target_compile_features(fedes PRIVATE cxx_std_20)
 if(MSVC)
     target_compile_options(fedes PUBLIC "/Zc:__cplusplus") # Reports __cplusplus version correctly for external libraries checking it

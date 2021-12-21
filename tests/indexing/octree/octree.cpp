@@ -12,3 +12,7 @@ class OctreeTest : public ::testing::Test {
 	
 	};
 };
+
+TEST_F(OctreeTest, Find) {
+
+}

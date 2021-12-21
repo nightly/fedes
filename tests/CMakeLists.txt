@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/external/googletest" "external/googletest")
- 
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
 
@@ -23,7 +22,8 @@ macro(package_add_test TESTNAME)
     set_target_properties(${TESTNAME} PROPERTIES FOLDER tests)
 endmacro()
 
+# Test Suite
 package_add_test(dynamic_array interop/dynamic_array.cpp)
 
 package_add_test(octant indexing/octree/octant.cpp)
-package_add_test(octant indexing/octree/octree.cpp)
+package_add_test(octree indexing/octree/octree.cpp)

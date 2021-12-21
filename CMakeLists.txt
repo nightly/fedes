@@ -3,6 +3,7 @@ project ("fedes" VERSION 0 LANGUAGES CXX)
 
 option(FEDES_RUN_TESTS "Run tests" ON)
 
+# Library
 add_subdirectory(src)
 
 # Tests
@@ -13,3 +14,6 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     add_subdirectory(tests)
 endif()
+
+# Application
+add_subdirectory(src/app)
