@@ -9,7 +9,7 @@ add_subdirectory(src)
 # Tests
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)
     include(CTest)
-    enable_testing() 
+    enable_testing()
     include(GoogleTest)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     add_subdirectory(tests)

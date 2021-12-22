@@ -9,6 +9,9 @@ namespace fedes {
 
 		Vector3 operator/(const T& scalar) const;
 		Vector3 operator*(const T& scalar) const;
+		
 		Vector3& operator+=(const Vector3<T>& other);
+
+		bool operator==(const Vector3<T>& other) const;
 	};
 }

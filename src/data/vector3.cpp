@@ -26,6 +26,11 @@ namespace fedes {
 		return *this;
 	}
 
+	template<typename T>
+	bool Vector3<T>::operator==(const Vector3<T>& other) const {
+		return ((x == other.x) && (y == other.y) && (z == other.z)) ? true : false;
+	}
+
 	template struct Vector3<double>;
 	template struct Vector3<float>;
 }
