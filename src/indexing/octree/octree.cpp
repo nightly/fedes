@@ -2,6 +2,7 @@
 
 #include <span>
 #include <stack>
+#include <stdexcept>
 
 #include "fedes/data/vector3.hpp"
 
@@ -9,8 +10,7 @@ namespace fedes {
 	template <typename T>
 	Octree<T>::Octree(const std::span<Vector3<T>>& points) {
 		if (points.empty()) {
-			// @Todo: Throw exception/error here
-			return; 
+			throw std::length_error("Octree Constructor: Empty set of initial points sent");
 		}
 		Vector3<T> min;
 		Vector3<T> max;
@@ -62,14 +62,13 @@ namespace fedes {
 			}
 			// There's a point present at the leaf node already. Therefore a split should occur based on the current splitting criterion of 1 point per leaf.
 			else {
-				Split(octant, insertion_point);
-				return;
+				return Split(octant, insertion_point);
 			}
 		}
 		// Handle interior node case - recursively insert into correct octant
 		int oct = octant->DetermineChildOctant(insertion_point);
 		Octant<T>* insert_octant = octant->children[oct];
-		InsertAtOctant(insert_octant, insertion_point);
+		return InsertAtOctant(insert_octant, insertion_point);
 	}
 
 	// This function splits a leaf node into 8 children and inserts the new point alongside reinserting the old one
@@ -116,7 +115,6 @@ namespace fedes {
 		// ...
 		// ...
 		
-		// Free heap allocated stacks used during traversal
 		delete stack;
 		delete output;
 	}
