@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "fedes/data/vector3.hpp"
+#include "fedes/maths/vector3.hpp"
 #include "fedes/indexing/octree/octree.hpp"
 
 int main() {

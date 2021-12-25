@@ -4,7 +4,7 @@
 #include <stack>
 #include <stdexcept>
 
-#include "fedes/data/vector3.hpp"
+#include "fedes/maths/vector3.hpp"
 
 namespace fedes {
 	template <typename T>

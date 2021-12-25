@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "fedes/data/vector3.hpp"
+#include "fedes/maths/vector3.hpp"
 
 namespace fedes::internal {
 	template <typename T>

@@ -2,8 +2,9 @@
 
 #include <array>
 #include <tuple>
-
 #include <matchit.h>
+
+#include "fedes/maths/vector3.hpp"
 
 namespace fedes::internal {
 	template<typename T>

@@ -23,9 +23,7 @@ macro(package_add_test TESTNAME)
 endmacro()
 
 # Test Suite
-package_add_test(vector3 data/vector3.cpp)
-
-package_add_test(dynamic_array interop/dynamic_array.cpp)
+package_add_test(vector3 math/vector3.cpp)
 
 package_add_test(octant indexing/octree/octant.cpp)
 package_add_test(octree indexing/octree/octree.cpp)

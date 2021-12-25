@@ -4,6 +4,3 @@
 [submodule "external/matchit"]
 	path = external/matchit
 	url = https://github.com/BowenFu/matchit.cpp
-[submodule "external/libfedesexchange"]
-	path = external/libfedesexchange
-	url = https://github.com/nightly/libfedesexchange
