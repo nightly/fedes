@@ -7,20 +7,20 @@
 
 namespace fedes::internal {
 	template <typename T>
-	struct Octant {
+	class Octant {
 	public:
 		Vector3<T> extent;
 		Vector3<T> center;
 		Vector3<T>* point = nullptr;
-		std::array<Octant<T>*, 8> children = {nullptr};
+		std::array<Octant<T>*, 8> child = {nullptr};
 	public:
 		Octant(const Vector3<T>& center, const Vector3<T>& extent);
 		Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T>& point);
 
-		Octant(const Octant& other);
-		Octant& operator=(const Octant& other);
-		Octant(Octant&& other);
-		Octant& operator=(Octant&& other);
+		Octant(const Octant& other) = delete;
+		Octant& operator=(const Octant& other) = delete;
+		Octant(Octant&& other) = delete;
+		Octant& operator=(Octant&& other) = delete;
 
 		bool IsLeaf() const;
 		int DetermineChildOctant(const Vector3<T>& insertion_point) const;

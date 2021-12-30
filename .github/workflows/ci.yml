@@ -20,13 +20,13 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -S. -B build -DCMAKE_BUILD_TYPE=Debug
+        cmake -S. -B build/x64 -DCMAKE_BUILD_TYPE=x64-ReleaseWithDebugInfo
 
     - name: Build
       run: |
-        cmake --build build --config Debug
+        cmake --build build/x64
 
-    - name: Run Tests
+    - name: Run Tests 
       run: |
-        cd build
-        ctest -C Debug -j 8 --output-on-failure --verbose
+        cd build/x64
+        ctest -j 8 --output-on-failure --verbose

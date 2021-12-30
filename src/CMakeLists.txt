@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 3.8)
 
 # FEDES Library
-set(FEDES_SOURCES "maths/vector3.cpp" "indexing/octree/octree.cpp" "indexing/octree/octant.cpp"  "instrumentation/timer.cpp")
+set(FEDES_SOURCES "maths/vector3.cpp" "indexing/octree/octree.cpp" "indexing/octree/octant.cpp" "model/parsers.cpp" "model/writers.cpp"
+"common/files.cpp" "common/strings.cpp" "instrumentation/timer.cpp")
+
 add_library(fedes STATIC ${FEDES_SOURCES})
 
 target_compile_features(fedes PRIVATE cxx_std_20)

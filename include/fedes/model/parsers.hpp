@@ -1,0 +1,18 @@
+#pragma once
+
+#include <filesystem>
+
+#include "fedes/model/model.hpp"
+
+namespace fedes {
+
+	void AbaqusInputRead(const std::filesystem::path& path, fedes::Model& model);
+	void AbaqusOutputRead(const std::filesystem::path& path, fedes::Model& model, size_t length);
+	
+	void AnsysInputReadLis(const std::filesystem::path& path, fedes::Model& model);
+	void AnsysOutputRead(const std::filesystem::path& path, fedes::Model& model);
+	
+	void MorpheoInputOutputRead(const std::filesystem::path& path, fedes::Model& model);
+	void MorpheoInputRead(const std::filesystem::path& path, fedes::Model& model);
+
+}

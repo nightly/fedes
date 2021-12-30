@@ -17,16 +17,15 @@ namespace fedes {
 		Octree(const std::span<Vector3<T>>& points);
 		~Octree();
 
-		Octree(const Octree& other);
-		Octree& operator=(const Octree& other);
-		Octree(Octree&& other);
-		Octree& operator=(Octree&& other);
+		Octree(const Octree& other) = delete;
+		Octree& operator=(const Octree& other) = delete;
+		Octree(Octree&& other) = delete;
+		Octree& operator=(Octree&& other) = delete;
 
-		void Insert(const Vector3<T>& point);
 		bool Find(const Vector3<T>& point) const;
-		void Split(Octant<T>* octant, const Vector3<T>& insertion_point);
 	private:
 		void InsertAtOctant(Octant<T>* octant, const Vector3<T>& point);
+		void Split(Octant<T>* octant, const Vector3<T>& insertion_point);
 		void Clear();
 	};
 }

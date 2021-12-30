@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/external/googletest" "external/googletest")
+
+# Macro adapted from: https://cliutils.gitlab.io/modern-cmake/chapters/testing/googletest.html
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
 
@@ -13,6 +15,7 @@ macro(package_add_test TESTNAME)
     PRIVATE 
         fedes
         gtest 
+        gmock
         gtest_main)
 
     gtest_discover_tests(${TESTNAME}
@@ -27,3 +30,10 @@ package_add_test(vector3 maths/vector3.cpp)
 
 package_add_test(octant indexing/octree/octant.cpp)
 package_add_test(octree indexing/octree/octree.cpp)
+
+package_add_test(parsers model/parsers.cpp)
+package_add_test(writers model/writers.cpp)
+
+package_add_test("strings" "common/strings.cpp")
+
+

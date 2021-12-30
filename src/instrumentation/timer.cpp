@@ -1,4 +1,4 @@
-﻿#include "timer.hpp"
+﻿#include "fedes/instrumentation/timer.hpp"
 
 #include <chrono>
 #include <string>
@@ -6,12 +6,8 @@
 
 namespace fedes::internal {
 
-		Timer::Timer(const std::string& name, std::ostream& output_stream = std::cout) 
+		Timer::Timer(const std::string& name, std::ostream& output_stream) 
 		: name_(name), output_stream_(output_stream) {
-			start_ = std::chrono::high_resolution_clock::now();
-		}
-
-		void Timer::Restart() {
 			start_ = std::chrono::high_resolution_clock::now();
 		}
 
@@ -23,8 +19,12 @@ namespace fedes::internal {
 
 		void Timer::StopWithWrite() {
 			auto duration = Stop();
-			output_stream_ << "Timer for " << name_ << " took " << duration << " μs (microseconds)\n";
+			output_stream_ << "Timer for " << name_ << " took " << duration << " µs (microseconds) or " << (duration * 0.001) << " ms (milliseconds) \n";
 			output_stream_.flush();
+		}
+
+		void Timer::Restart() {
+			start_ = std::chrono::high_resolution_clock::now();
 		}
 
 		Timer::~Timer() {

@@ -21,7 +21,7 @@ namespace fedes::internal {
 	// A node will either have 8 children or 0 children, allowing us to easily figure out whether a node is a leaf or not
 	template<typename T>
 	bool Octant<T>::IsLeaf() const {
-		return children[0] == nullptr;
+		return child[0] == nullptr;
 	}
 
 	// Morton Encoding/Z-Ordering
@@ -49,6 +49,6 @@ namespace fedes::internal {
 		);
 	}
 
-	template struct Octant<double>;
-	template struct Octant<float>;
+	template class Octant<double>;
+	template class Octant<float>;
 }

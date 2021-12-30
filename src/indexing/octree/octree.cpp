@@ -7,6 +7,13 @@
 #include "fedes/maths/vector3.hpp"
 
 namespace fedes {
+
+	/**
+	 * @brief Octree will be constructed based on a set of unique points provided
+	 *
+	 * @param points Unique set of points to be indexed from any std::span-compliant container (array, vector, etc)
+	 * @exception length_error If an empty set of points is sent, no Octree will be constructed
+	 */
 	template <typename T>
 	Octree<T>::Octree(const std::span<Vector3<T>>& points) {
 		if (points.empty()) {
@@ -39,19 +46,12 @@ namespace fedes {
 		root_ = new Octant<T>(center, extent / 2);
 
 		for (auto& v : points) {
-			Insert(v);
+			InsertAtOctant(root_, v);
 		}
 	}
 
 	template<typename T>
-	void Octree<T>::Insert(const Vector3<T>& point) {
-		// @Todo: check for duplicate points before insertion
-		InsertAtOctant(root_, point);
-	}
-
-	template<typename T>
 	void Octree<T>::InsertAtOctant(Octant<T>* octant, const Vector3<T>& insertion_point) {
-
 		// Handle leaf node case
 		if (octant->IsLeaf()) {
 			// If the node is a leaf and there's no data currently being stored, an insertion is valid
@@ -67,11 +67,11 @@ namespace fedes {
 		}
 		// Handle interior node case - recursively insert into correct octant
 		int oct = octant->DetermineChildOctant(insertion_point);
-		Octant<T>* insert_octant = octant->children[oct];
+		Octant<T>* insert_octant = octant->child[oct];
 		return InsertAtOctant(insert_octant, insertion_point);
 	}
 
-	// This function splits a leaf node into 8 children and inserts the new point alongside reinserting the old one
+	// Split a leaf node into 8 children and inserts the new point alongside reinserting the old one
 	template<typename T>
 	void Octree<T>::Split(Octant<T>* octant, const Vector3<T>& insertion_point) {
 		Vector3<T> current_point = *(octant->point);
@@ -82,7 +82,7 @@ namespace fedes {
 			split_origin.x = octant->extent.x * (i&4 ? 0.5 : -0.5);
 			split_origin.y = octant->extent.y * (i&2 ? 0.5 : -0.5);
 			split_origin.z = octant->extent.z * (i&1 ? 0.5 : -0.5);
-			octant->children[i] = new Octant<T>(split_origin, octant->extent / 2);
+			octant->child[i] = new Octant<T>(split_origin, octant->extent / 2);
 		}
 
 		// Insert current + new point in newly split octant directly
@@ -107,13 +107,11 @@ namespace fedes {
 			output->push(current);
 			if (!(current->IsLeaf())) {
 				for (int i = 0; i < 8; i++) {
-					stack->push(current->children[i]);
+					stack->push(current->child[i]);
 				}
 			}
 		}
-		// Process output stack with a loop - free any memory that needs to be done with the guarantee of dealing with leaves first
-		// ...
-		// ...
+		// Process output stack -  free any memory that needs to be done with the guarantee of dealing with leaves first
 		
 		delete stack;
 		delete output;
