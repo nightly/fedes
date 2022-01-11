@@ -19,7 +19,7 @@ TEST(Writer, CreateXML) {
 	}
 
 	try {
-		fedes::CreateXML("CreateXMLTest.vtu", model);
+		fedes::CreateXML("Test_CreateXML.vtu", model);
 	} catch (const std::ofstream::failure& e) {
 		throw;
 	}
@@ -27,11 +27,10 @@ TEST(Writer, CreateXML) {
 	std::string got;
 	std::string expected;
 	try {
-		got = fedes::StringFromFile("CreateXMLTest.vtu");
+		got = fedes::StringFromFile("Test_CreateXML.vtu");
 		expected = fedes::StringFromFile("../../../tests/model/testdata/writers/model_1_ansys.vtu");
 	} catch (const std::ifstream::failure& e) {
 		throw;
 	}
-	std::cout << std::filesystem::current_path(); 
 	ASSERT_EQ(got, expected) << "CreateXML writer doesn't produce expected output";
 }

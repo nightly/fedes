@@ -80,7 +80,7 @@ namespace fedes {
 
 		for (auto& e : model.elements) {
 			for (auto& j : e) {
-				str = str + std::to_string(j - 1) + ' ';
+				str = str + std::to_string(j) + ' ';
 			}
 			stream << str << '\n';
 			str = "";

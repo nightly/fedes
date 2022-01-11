@@ -1,12 +1,17 @@
-﻿// fedes.cpp : Defines the entry point for the application.
+﻿#include <iostream>
 
-#include <iostream>
+#include "models.hpp"
+#include "octree.hpp"
 
-#include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/octree/octree.hpp"
 
 int main() {
-	std::cout << " - " << std::endl;
+	fedes::Model source, target;
+	SetModels(source, target, 1);
+
+	OctreeNPM(source, target);
+	ExportModels(source, target, "oct-npm");
+
+
 
 	return 0;
 }

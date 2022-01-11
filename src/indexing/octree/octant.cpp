@@ -7,33 +7,53 @@
 #include "fedes/maths/vector3.hpp"
 
 namespace fedes::internal {
+
+	/* 
+	 * @brief Octant constructor, creating the octant with the given center and extent
+	 *
+	 * @tparam T: the type of point contained within the Octant, i.e. double/float
+	 * @param center: the center of this Octant
+	 * @param extent: how far the octant extends within each axis (width, height, depth)
+	 */
 	template<typename T>
 	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent)
 		: center(center), extent(extent) {
 	}
 
-	template<typename T>
-	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T>& point)
-		: center(center), extent(extent) {
-		this->point = new Vector3<T>(point.x, point.y, point.z);
-	}
-
-	// A node will either have 8 children or 0 children, allowing us to easily figure out whether a node is a leaf or not
+	/*
+	 * @brief Returns true/false if the Octant is a leaf, using the invariant that there are either 0 or 8 children.
+	 */
 	template<typename T>
 	bool Octant<T>::IsLeaf() const {
 		return child[0] == nullptr;
 	}
 
-	// Morton Encoding/Z-Ordering
-	// Where 111 represents index 7 (greater X, Y, and Z), and 000 represents index 0
-	// Three booleans attained by comparing the point to the center of the octant for each axis
+	/*
+	 * @brief Returns true if the Octant contains a point, false otherwise
+	 */
 	template<typename T>
-	int Octant<T>::DetermineChildOctant(const Vector3<T>& insertion_point) const {
+	bool Octant<T>::IsEmpty() const {
+		return points.empty();
+	}
+
+	/*
+	 * @brief Provided a point, returns which octant/node to traverse to given this octant's center
+	 *
+	 * Morton Encoding, also known as Z-Ordering is used here. The point in question is compared to the octant's center
+	 * to determine whether it is larger in the X, Y, and Z axis'. Then pattern matching is used to determine the correct
+	 * child octant to return. Example: 000 would return 0, where as 111 would return 7. Used for insertion & traversal.
+	 * 
+	 * @param point: the point in question to determine the correct sub-Octant for based on the current Octant.
+	 * 
+	 * @returns unsigned integer from 0 to 7 representing the child octant within the child[] array
+	 */
+	template<typename T>
+	uint8_t Octant<T>::DetermineChildOctant(const Vector3<T>& point) const {
 		using namespace matchit;
 
-		bool x_larger = insertion_point.x >center.x;
-		bool y_larger = insertion_point.y > center.y;
-		bool z_larger = insertion_point.z >center.z;
+		bool x_larger = point.x > center.x;
+		bool y_larger = point.y > center.y;
+		bool z_larger = point.z > center.z;
 
 		std::tuple<bool, bool, bool> tuple{ x_larger, y_larger, z_larger };
 
@@ -47,6 +67,14 @@ namespace fedes::internal {
 		pattern | ds(false, false, true) = [] { return 1; },
 		pattern | ds(false, false, false) = [] { return 0; }
 		);
+	}
+
+	/*
+	* @brief Octant destructor
+	*/
+	template <typename T>
+	Octant<T>::~Octant() {
+		
 	}
 
 	template class Octant<double>;

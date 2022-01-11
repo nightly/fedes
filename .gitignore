@@ -50,3 +50,6 @@ _deps
 out/
 build/
 bin/
+
+# FEDES
+exports/

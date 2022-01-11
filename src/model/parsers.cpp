@@ -26,6 +26,7 @@ namespace fedes {
 		int br = -1, br_1 = -1, br_2 = -1, br_3 = -1, br_el = 0, action = 4, num_nblocks = 1, num_eblocks = 1;
 		int anz_tokens = 0;
 		std::vector<std::string> A, A1;
+		size_t size = 0;
 		std::string line;
 		std::ifstream stream;
 		try {
@@ -43,7 +44,6 @@ namespace fedes {
 			if ((action == 1) && (line.find("NODE") == std::string::npos) && (fedes::Trim(line) != "") && (line.find("LIST") == std::string::npos) && (line.find("SORT") == std::string::npos)) {
 				br_1++;
 				anz_tokens = fedes::StringSplit(A, fedes::Trim(line), ' ');
-				br = -1;
 				for (auto& s : A) {
 					if (s != "") {
 						A1.push_back(s);
@@ -56,19 +56,18 @@ namespace fedes {
 			else if ((action == 2) && (line.find("ELEM") == std::string::npos) && (fedes::Trim(line) != "") && (line.find("LIST") == std::string::npos) && (line.find("SORT") == std::string::npos)) {
 				br_2++;
 				anz_tokens = fedes::StringSplit(A, fedes::Trim(line), ' ');
-				br = -1;
 				for (auto& s : A) {
 					if (s != "") {
 						A1.emplace_back(s);
 					}
 				}
-				size_t size = A1.size() - 1;
+				size = A1.size() - 1;
 				if ((A1[size]) != (A1[size-1])) { // Hex
-					model.elements.push_back({ stoi(A1[5]), stoi(A1[6]), stoi(A1[7]), stoi(A1[8]), stoi(A1[9]), stoi(A1[10]), stoi(A1[11]), stoi(A1[12]) });
+					model.elements.push_back({ stoi(A1[5]) - 1, stoi(A1[6]) - 1, stoi(A1[7]) - 1, stoi(A1[8]) - 1, stoi(A1[9]) - 1, stoi(A1[10]) - 1, stoi(A1[11]) - 1, stoi(A1[12]) - 1 });
 				} else if ((A1[size] == A1[size-1]) && (A1[size] == A1[size-2])) { // Tetrahedron
-					model.elements.push_back({ stoi(A1[6]), stoi(A1[7]), stoi(A1[8]), stoi(A1[10]) });
+					model.elements.push_back({ stoi(A1[6]) - 1, stoi(A1[7]) - 1, stoi(A1[8]) - 1, stoi(A1[10]) - 1 });
 				} else { // Wedge
-					model.elements.push_back({ stoi(A1[5]), stoi(A1[6]), stoi(A1[7]), stoi(A1[9]), stoi(A1[10]), stoi(A1[11]) });
+					model.elements.push_back({ stoi(A1[5]) - 1, stoi(A1[6]) - 1, stoi(A1[7]) - 1, stoi(A1[9]) - 1, stoi(A1[10]) - 1, stoi(A1[11]) - 1});
 				}
 			}
 			A.clear();
@@ -117,7 +116,6 @@ namespace fedes {
 			if ((action == 1) && (fedes::Trim(line).find("NODE") == std::string::npos)) {
 				br_1++;
 				AnzTokens = fedes::StringSplit(A, fedes::Trim(line), '\t');
-				br = -1;
 				for (auto& s : A) {
 					if (s != "") {
 						A1.emplace_back(s);
@@ -134,7 +132,6 @@ namespace fedes {
 				br_2++;
 				model.stress.resize(model.stress.size() + 1);
 				AnzTokens = fedes::StringSplit(A, fedes::Trim(line), '\t');
-				br = -1;
 				for (auto& s : A) {
 					if (s != "") {
 						A1.emplace_back(s);
@@ -152,7 +149,6 @@ namespace fedes {
 			if ((action == 3) && (fedes::Trim(line).find("NODE") == std::string::npos)) {
 				br_3++;
 				AnzTokens = fedes::StringSplit(A, fedes::Trim(line), '\t');
-				br = -1;
 				model.total_strain.resize(model.total_strain.size() + 1);
 				for (auto& s : A) {
 					A1.emplace_back(s);
@@ -238,7 +234,7 @@ namespace fedes {
 						br_1++;
 						model.elements.resize(model.elements.size() + 1);
 						for (int j = 1; j < (A.size()); j++) {
-							model.elements[br_1].emplace_back(stoi(fedes::Trim(A[j])));
+							model.elements[br_1].emplace_back(stoi(fedes::Trim(A[j])) - 1);
 						}
 						A.clear();
 					}
@@ -251,7 +247,7 @@ namespace fedes {
 			}
 		}	
 		try {
-fedes::CloseInputFileStream(stream);
+			fedes::CloseInputFileStream(stream);
 		}
 		catch (const std::ifstream::failure& e) {
 			throw;
@@ -259,19 +255,21 @@ fedes::CloseInputFileStream(stream);
 	}
 
 	/**
-	* @brief Reads an ABAQUS output file (in .dat), parsing displacements, stress, total strain, platsic strain & accumulated strain
+	* @brief Maps Abaqus Output data for a model where the input data was set prior (uses node.size)
+	* 
+	* Reads an ABAQUS output file (in .dat), parsing displacements, stress, total strain, platsic strain & accumulated strain
 	*
 	* @port - Port of code from FEDES v2
 	* @param path: Path to the file
 	* @param model: Model which will be updated by reference
-	* @param length: number of nodes
 	* @exception Propagates std::ifstream::failure
 	*/
-	void AbaqusOutputRead(const std::filesystem::path& path, fedes::Model& model, size_t length) {
-		std::string line;
-		std::ifstream stream;
+	void AbaqusOutputRead(const std::filesystem::path& path, fedes::Model& model) {
 		int br = -1, br_1 = -1, br_2 = -1, br_3 = -1, action = 5, AnzTokens = 0;
 		std::vector<std::string> operating_str_arr, A, A1;
+		size_t length = model.nodes.size();
+		std::string line;
+		std::ifstream stream;
 		try {
 			fedes::SetInputFileStream(path, stream);
 		}
@@ -498,7 +496,6 @@ fedes::CloseInputFileStream(stream);
 			if ((action == 1) && line.find("<DataArray") == std::string::npos) {
 				counter++;
 				AnzTokens = fedes::StringSplit(A, fedes::Trim(line), ' ');
-				br = -1;
 				for (auto& s : A) {
 					if (s != "") {
 						A1.emplace_back(s);
@@ -513,13 +510,12 @@ fedes::CloseInputFileStream(stream);
 				AnzTokens = fedes::StringSplit(A, fedes::Trim(line), ' ');
 				for (auto& s : A) {
 					if (s != "") {
-						br++;
 						A1.emplace_back(s);
 					}
 				}
 				model.elements.resize(model.elements.size() + 1);
 				for (auto &s: A1) {
-					model.elements[counter_2].emplace_back(stoi(s) + 1);
+					model.elements[counter_2].emplace_back(stoi(s));
 				}
 				A.clear();
 				A1.clear();
@@ -603,7 +599,7 @@ fedes::CloseInputFileStream(stream);
 					}
 				}
 				for (auto& s : A1) {
-					model.elements[counter_2].emplace_back(stoi(s) + 1);
+					model.elements[counter_2].emplace_back(stoi(s));
 				}
 				A.clear();
 				A1.clear();

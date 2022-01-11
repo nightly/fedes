@@ -11,6 +11,7 @@ namespace fedes {
 
 	/*
 	* @brief Trims whitespaces and blank characters from the start/left side of the string.
+	* 
 	* @param string The string to evaluate
 	* @return A string that's been trimmed from the left-hand/beginning side
 	*/
@@ -21,6 +22,7 @@ namespace fedes {
 
 	/*
 	* @brief Trims whitespaces and blank characters from the end/right-side of a string.
+	* 
 	* @param string The string to evaluate
 	* @return A string that's been trimmed from the right-hand/end side
 	*/
@@ -31,6 +33,7 @@ namespace fedes {
 
 	/*
 	 * @brief Trims whitespaces and blank characters from start/end (left/right) side of the string.
+	 * 
 	 * @param string The string to trim
 	 * @return A string that is now trimmed
 	 */
@@ -59,6 +62,7 @@ namespace fedes {
 
 	/*
 	 * @brief Converts a string to lower-case and returns it
+	 * 
 	 * @param string: The string to convert to lowercase
 	 * @return Newly-created lower-cased string
 	 */

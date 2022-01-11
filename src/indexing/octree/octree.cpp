@@ -1,128 +1,205 @@
 #include "fedes/indexing/octree/octree.hpp"
 
 #include <span>
-#include <stack>
+#include <vector>
 #include <stdexcept>
+#include <iostream>
 
 #include "fedes/maths/vector3.hpp"
+#include "fedes/indexing/octree/octant.hpp"
+#include "fedes/indexing/octree/traversals.hpp"
 
 namespace fedes {
 
 	/**
 	 * @brief Octree will be constructed based on a set of unique points provided
 	 *
-	 * @param points Unique set of points to be indexed from any std::span-compliant container (array, vector, etc)
+	 * @tparam T: point type of Octree, e.g. double, float
+	 * @param points: Unique set of points to be indexed from any std::span-compliant container (array, vector, etc)...
+	 * @param points_per_leaf: the maximum number of points to be contained within a leaf before splitting into a branch
+	 * @param max_depth: the maximum depth for the Octree
+	 * 
 	 * @exception length_error If an empty set of points is sent, no Octree will be constructed
 	 */
 	template <typename T>
-	Octree<T>::Octree(const std::span<Vector3<T>>& points) {
-		if (points.empty()) {
+	Octree<T>::Octree(const std::vector<Vector3<T>>& points, const size_t points_per_leaf, const size_t max_depth) 
+		: points_(points), points_per_leaf_(points_per_leaf), max_depth_(max_depth) {
+		if (points_.empty()) {
 			throw std::length_error("Octree Constructor: Empty set of initial points sent");
 		}
-		Vector3<T> min;
-		Vector3<T> max;
+		Vector3<T> min, max;
 		for (auto& v : points) {
 			if (v.x > max.x) {
 				max.x = v.x;
-			} else if (v.x < min.x) {
+			}
+			else if (v.x < min.x) {
 				min.x = v.x;
 			}
-			
+
 			if (v.y > max.y) {
 				max.y = v.y;
-			} else if (v.y < min.y) {
+			}
+			else if (v.y < min.y) {
 				min.y = v.y;
 			}
 
 			if (v.z > max.z) {
 				max.z = v.z;
-			} else if (v.z < min.z) {
+			}
+			else if (v.z < min.z) {
 				min.z = v.z;
 			}
 		}
-		Vector3<T> center = Vector3<T>((max.x + min.x) * 0.5, (max.y + min.y) * 0.5, (max.z + min.z) * 0.5);
+		Vector3<T> center = Vector3<T>((max.x + min.x) / 2, (max.y + min.y) / 2, (max.z + min.z) / 2);
 		Vector3<T> extent = Vector3<T>((max.x - min.x), (max.y - min.y), (max.z - min.z));
 
-		root_ = new Octant<T>(center, extent / 2);
+		root_ = new Octant(center, extent / 2);
 
-		for (auto& v : points) {
-			InsertAtOctant(root_, v);
+		for (size_t i = 0; i != points_.size(); i++) {
+			InsertAtOctant(*root_, i, 0);
 		}
 	}
 
+	/*
+	* @brief Inserts a point starting from the given Octant
+	* 
+	* @param octant: the Octant to insert into from. The root at the start, and in recursive cases, any arbitrary Octant.
+	* @param point_id: the point index to insert into the correct Octant from points_
+	* @param size_t depth: the current depth of the given Octant
+	*/
 	template<typename T>
-	void Octree<T>::InsertAtOctant(Octant<T>* octant, const Vector3<T>& insertion_point) {
+	void Octree<T>::InsertAtOctant(Octant& octant, size_t point_id, size_t depth) {
 		// Handle leaf node case
-		if (octant->IsLeaf()) {
-			// If the node is a leaf and there's no data currently being stored, an insertion is valid
-			if (octant->point == nullptr) {
-				Vector3<T>* point = new Vector3<T>(insertion_point.x, insertion_point.y, insertion_point.z);
-				octant->point = point;
+		if (octant.IsLeaf()) {
+			// We examine if the Octant has no points or allow an insertion if our splitting criterion isn't active
+			if (octant.IsEmpty() || ((octant.points.size() < points_per_leaf_) || (depth == max_depth_))) {
+				octant.points.emplace_back(point_id);
 				return;
-			}
-			// There's a point present at the leaf node already. Therefore a split should occur based on the current splitting criterion of 1 point per leaf.
-			else {
-				return Split(octant, insertion_point);
+			} else { // Our splitting criterion is active
+				return Split(octant, point_id, depth);
 			}
 		}
-		// Handle interior node case - recursively insert into correct octant
-		int oct = octant->DetermineChildOctant(insertion_point);
-		Octant<T>* insert_octant = octant->child[oct];
-		return InsertAtOctant(insert_octant, insertion_point);
+		// Handle branch node/interior node case
+		int oct = octant.DetermineChildOctant(points_[point_id]);
+		return InsertAtOctant(*(octant.child[oct]), point_id, ++depth);
 	}
 
-	// Split a leaf node into 8 children and inserts the new point alongside reinserting the old one
+	/*
+	 * @brief Splits a leaf node into 8 new nodes and re-inserts the old point indexes into the newly created leaf octants
+	 * 
+	 * Insertions from this function will occur directly from this Octant instead of starting from the root
+	 * 
+	 * @param octant: the leaf Octant that will be split and as a result turn into a branch Octant
+	 * @param point_id: the point ID of points_ to be inserted straight from this Octant
+	 * @param depth
+	 */
 	template<typename T>
-	void Octree<T>::Split(Octant<T>* octant, const Vector3<T>& insertion_point) {
-		Vector3<T> current_point = *(octant->point);
-		octant->point = nullptr;
+	void Octree<T>::Split(Octant& octant, size_t point_id, size_t depth) {
+		std::vector<size_t> current_points = octant.points;
+		octant.points.clear();
 
 		Vector3<T> split_origin;
 		for (int i = 0; i < 8; i++) {
-			split_origin.x = octant->extent.x * (i&4 ? 0.5 : -0.5);
-			split_origin.y = octant->extent.y * (i&2 ? 0.5 : -0.5);
-			split_origin.z = octant->extent.z * (i&1 ? 0.5 : -0.5);
-			octant->child[i] = new Octant<T>(split_origin, octant->extent / 2);
+			split_origin.x = octant.extent.x * (i & 4 ? 0.5 : -0.5);
+			split_origin.y = octant.extent.y * (i & 2 ? 0.5 : -0.5);
+			split_origin.z = octant.extent.z * (i & 1 ? 0.5 : -0.5);
+			octant.child[i] = new Octant(split_origin, octant.extent / 2);
 		}
 
-		// Insert current + new point in newly split octant directly
-		InsertAtOctant(octant, current_point);
-		InsertAtOctant(octant, insertion_point);
+		for (auto& p : current_points) {
+			InsertAtOctant(octant, p, depth);
+		}
+		InsertAtOctant(octant, point_id, depth);
 	}
 
-	// Iterative post-order traversal for deletion of nodes, instead of a recursive `delete` approach through destructors
-	template<typename T>
-	void Octree<T>::Clear() {
-		// @Todo: abstract this into some kind of iterator
-		if (root_ == nullptr) {
-			return;
-		}
-		std::stack<Octant<T>*>* stack = new std::stack<Octant<T>*>;
-		std::stack<Octant<T>*>* output = new std::stack<Octant<T>*>;
-		stack->push(root_);
+	/*
+	 * @brief Searches and checks whether a given point exists within the Octree, starting from the root.
+	 *
+	 * @param point: the point to search for. Must exactly match
+	 * @return True/false depending whether the point is contained within the Octree
+	 */
+	template <typename T>
+	bool Octree<T>::Find(const Vector3<T>& point) const {
+		return FindAtOctant(point, *root_);
+	}
 
-		while (!stack->empty()) {
-			Octant<T>* current = stack->top();
-			stack->pop();
-			output->push(current);
-			if (!(current->IsLeaf())) {
-				for (int i = 0; i < 8; i++) {
-					stack->push(current->child[i]);
+	/*
+	 * @brief Returns true if a point exists within the Octree, false otherwise
+	 *
+	 * @param point: the point to search for. Must exactly match
+	 * @param octant: the octant to search recursively from.
+	 * 
+	 * @returns True/false depending whether the point is contained within the Octree
+	 */
+	template <typename T>
+	bool Octree<T>::FindAtOctant(const Vector3<T>& point, const Octant& octant) const {
+		if (octant.IsLeaf()) {
+			if (!octant.points.empty()) {
+				bool found_match = false;
+				for (auto& p : octant.points) {
+					if (points_[p] == point) {
+						found_match = true;
+					}
 				}
+				return found_match;
+			}
+			else {
+				return false;
 			}
 		}
-		// Process output stack -  free any memory that needs to be done with the guarantee of dealing with leaves first
-		
-		delete stack;
-		delete output;
+		return FindAtOctant(point, *octant.child[octant.DetermineChildOctant(point)]);
 	}
 
+	/*
+	* @brief Creates a new order post order iterator from root octant
+	*/
+	template <typename T>
+	Octree<T>::post_order_iterator Octree<T>::post_begin() {
+		return post_order_iterator(root_);
+	}
+
+	/*
+	 * @brief Determines and creates the end-point of the post-order-iterator
+	 */
+	template <typename T>
+	Octree<T>::post_order_iterator Octree<T>::post_end() {
+		return post_order_iterator(nullptr);
+	}
+
+	/*
+	* @brief K Nearest Neighbour
+	*/
+	template <typename T>
+	Vector3<T> Octree<T>::NearestNeighbour(fedes::Vector3<T> point, size_t k) const {
+		// Queue
+	}
+
+
+	/*
+	 * @brief Clears the octree and deallocates all memory
+	 * 
+	 * The approach used is to use post-order traversal to clear the tree and its Octants, instead of using
+	 * a chain of destructors calling each child octant with `delete` recursively
+	 */
+	template<typename T>
+	void Octree<T>::Clear() {
+		post_order_iterator it = post_begin();
+		while (it != post_end()) {
+			auto octant = it.operator->();
+			delete octant;
+			++it;
+		}
+	}
+
+	/*
+	* @brief Octree destructor
+	*/
 	template <typename T>
 	Octree<T>::~Octree() {
 		Clear();
 	}
 
-
+	/* Explicit template instantiations */
 	template class Octree<double>;
 	template class Octree<float>;
 }

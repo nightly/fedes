@@ -7,7 +7,7 @@
 namespace fedes {
 
 	void AbaqusInputRead(const std::filesystem::path& path, fedes::Model& model);
-	void AbaqusOutputRead(const std::filesystem::path& path, fedes::Model& model, size_t length);
+	void AbaqusOutputRead(const std::filesystem::path& path, fedes::Model& model);
 	
 	void AnsysInputReadLis(const std::filesystem::path& path, fedes::Model& model);
 	void AnsysOutputRead(const std::filesystem::path& path, fedes::Model& model);

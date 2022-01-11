@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include <string>
 
-
 namespace fedes {
 
 	/**
@@ -49,6 +48,7 @@ namespace fedes {
 
 	/*
 	 * @brief RewindInputStream will reset an input stream to the first line
+	 * 
 	 * @param input_stream: The stream that should be reset to the start of file
 	 * @exception Propagates std::ifstream::failure
 	 */
@@ -65,6 +65,7 @@ namespace fedes {
 
 	/*
 	 * @brief StringFromFile opens a file and reads its contents into a string
+	 * 
 	 * @param path: The path to the file
 	 * @return string with the file contents copied into it
 	 * @exception Propagates std::ifstream::failure
@@ -85,14 +86,19 @@ namespace fedes {
 	/**
 	 * @brief Returns an output file stream ready for writing to based on provided output path
 	 * 
-	 * @param output_file: Path and name of the file to create and write to
+	 * If the given directory path isn't currently present, it will be created
+	 * 
+	 * @param path: Path and name of the file to create/write/output to
 	 * @param output_stream: Output stream to set
 	 * @exception Propagates std::ofstream::failure
 	 */
-	void SetOutputFileStream(const std::filesystem::path& output_file_path, std::ofstream& output_stream) {
+	void SetOutputFileStream(const std::filesystem::path& path, std::ofstream& output_stream) {
 		output_stream.exceptions(std::ifstream::badbit);
 		try {
-			output_stream.open(output_file_path, std::ios::out | std::ios::trunc);
+			if (!std::filesystem::is_directory(path.parent_path()) && path.has_parent_path()) {
+				std::filesystem::create_directory(path.parent_path());
+			}
+			output_stream.open(path, std::ios::out | std::ios::trunc);
 		}
 		catch (const std::ofstream::failure& e) {
 			throw;
