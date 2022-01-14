@@ -25,16 +25,18 @@ namespace fedes::internal {
 	long long Timer::Stop() {
 		auto start = std::chrono::time_point_cast<std::chrono::microseconds>(start_).time_since_epoch().count();
 		auto end = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch().count();
+		stopped_ = true;
 		return end - start;
 	}
 
 	/*
-	 * @brief Stops the timer and outputs the duration to the pre-set output_stream.
+	 * @brief Stops the timer and outputs the duration to the pre-set output_stream. µ
 	 */
 	void Timer::StopWithWrite() {
 		auto duration = Stop();
-		output_stream_ << "Timer for " << name_ << " took " << duration << " µs (microseconds) or " << (duration * 0.001) << " ms (milliseconds) \n";
+		output_stream_ << "Timer for " << name_ << " took " << duration << " microseconds or " << (duration * 0.001) << " ms (milliseconds) \n";
 		output_stream_.flush();
+		stopped_ = true;
 	}
 
 	/*

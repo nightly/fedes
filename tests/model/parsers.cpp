@@ -19,7 +19,7 @@ protected:
 
 TEST_F(ParserTest, AnsysReadLis) {
 	try {
-		fedes::AnsysInputReadLis("../../../models/Example1-Vane-big/Model1_Input-Ansys.txt", model_);
+		fedes::AnsysInputReadLis("../../models/Example1-Vane-big/Model1_Input-Ansys.txt", model_);
 	} catch (std::ifstream::failure& e) {
 		FAIL() << e.what();
 	}
@@ -37,7 +37,7 @@ TEST_F(ParserTest, AnsysReadLis) {
 TEST_F(ParserTest, AnsysOutputRead) {
 	try {
 		// Only contains displacement and stress
-		fedes::AnsysOutputRead("../../../models/Example1-Vane-big/Model1_output-Ansys.txt", model_);
+		fedes::AnsysOutputRead("../../models/Example1-Vane-big/Model1_output-Ansys.txt", model_);
 	}
 	catch (std::ifstream::failure& e) {
 		FAIL() << e.what();
@@ -52,7 +52,7 @@ TEST_F(ParserTest, AnsysOutputRead) {
 
 TEST_F(ParserTest, AbaqusInputRead) {
 	try {
-		fedes::AbaqusInputRead("../../../models/Example-3D-medium/model1-input-Abaqus.inp", model_);
+		fedes::AbaqusInputRead("../../models/Example-3D-medium/model1-input-Abaqus.inp", model_);
 	} catch (std::ifstream::failure& e) {
 		FAIL() << e.what();
 	}
@@ -70,9 +70,9 @@ TEST_F(ParserTest, AbaqusInputRead) {
 
 TEST_F(ParserTest, AbaqusOutputRead) {
 	try {
-		fedes::AbaqusInputRead("../../../models/Example1-ManufacturingProcessChain-2ndLoop/Process-1-Abaqus-Input.inp", model_);
+		fedes::AbaqusInputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process-1-Abaqus-Input.inp", model_);
 		// Only contains stress and displacements
-		fedes::AbaqusOutputRead("../../../models/Example1-ManufacturingProcessChain-2ndLoop/Process-1-Abaqus-Output.dat", model_);
+		fedes::AbaqusOutputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process-1-Abaqus-Output.dat", model_);
 	}
 	catch (std::ifstream::failure& e) {
 		FAIL() << e.what();
@@ -89,7 +89,7 @@ TEST_F(ParserTest, AbaqusOutputRead) {
 
 TEST_F(ParserTest, MorpheoInputRead) {
 	try {
-		fedes::MorpheoInputRead("../../../models/Example1-ManufacturingProcessChain-2ndLoop/Process2-Machining-XML-input.vtu", model_);
+		fedes::MorpheoInputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process2-Machining-XML-input.vtu", model_);
 	}
 	catch (std::ifstream::failure& e) {
 		FAIL() << e.what();
@@ -109,7 +109,7 @@ TEST_F(ParserTest, MorpheoInputRead) {
 TEST_F(ParserTest, MorpheoInputOutputRead) {
 	try {
 		// Example contains no accumulated and total strain
-		fedes::MorpheoInputOutputRead("../../../models/Example1-ManufacturingProcessChain-2ndLoop/Process1-HeatTreatment-XML-format.vtu", model_);
+		fedes::MorpheoInputOutputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process1-HeatTreatment-XML-format.vtu", model_);
 	}
 	catch (std::ifstream::failure& e) {
 		FAIL() << e.what();

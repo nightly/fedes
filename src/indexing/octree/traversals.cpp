@@ -11,6 +11,9 @@ namespace fedes {
 
 	/* @brief Octree Post-Order Iterator constructor, with the ordered stack being finalised at time of Iterator construction
 	* 
+	* Empty octants (no children, not a leaf) are present for completeness to facilitate memory deallocation
+	* 
+	* @tparam Octree: the Octree type, e.g. Octree<double>
 	* @param root_octant: pointer to the top-level Octant to post-order traverse from
 	*/
 	template <typename Octree>
@@ -22,14 +25,12 @@ namespace fedes {
 		}
 		process_stack_->push(root_octant);
 		while (!process_stack_->empty()) {
-			pointer_type current = process_stack_->top();
+			Octant* current = process_stack_->top();
 			process_stack_->pop();
 			ordered_stack_->push(current);
 			if (!(current->IsLeaf())) {
 				for (int i = 0; i < 8; i++) {
-					if (!current->child[i]->IsEmpty() || !current->child[i]->IsLeaf()) {
-						process_stack_->push(current->child[i]);
-					}
+					process_stack_->push(current->child[i]);
 				}
 			}
 		}

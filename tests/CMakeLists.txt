@@ -27,6 +27,7 @@ endmacro()
 
 # Test Suite
 package_add_test("vector3" "maths/vector3.cpp")
+package_add_test("distance" "maths/distance.cpp")
 
 package_add_test("octant" "indexing/octree/octant.cpp")
 package_add_test("octree" "indexing/octree/octree.cpp")

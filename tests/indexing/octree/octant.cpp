@@ -35,7 +35,6 @@ TEST_F(OctantTest, IsLeafFromFixture) {
 }
 
 TEST_F(OctantTest, IsLeafWithChildren) {
-	// The actual Octant data for each child is irrelevant for this assertion.
 	fedes::internal::Octant<double> child(fedes::Vector3<double>(0.5, 0.5, 0.5), fedes::Vector3<double>(0.5,0.5,0.5));
 	for (int i = 0; i < 7; i++) {
 		octant_->child[i] = &child;
@@ -43,3 +42,11 @@ TEST_F(OctantTest, IsLeafWithChildren) {
 	bool leaf = octant_->IsLeaf();
 	ASSERT_EQ(leaf, false) << "Expected fixture with children added to not be classified as a leaf";
 }
+
+TEST_F(OctantTest, IsEmpty) {
+	ASSERT_EQ(octant_->IsEmpty(), true);
+	octant_->points.emplace_back(1);
+	ASSERT_EQ(octant_->IsEmpty(), false);
+}
+
+

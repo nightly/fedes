@@ -23,7 +23,9 @@ TEST_F(OctreeTraversalTest, OctreePostOrderIterator) {
 	fedes::Octree<double>::post_order_iterator it = octree_->post_begin();
 	while (it != octree_->post_end()) {
 		auto octant = it.operator->();
-		got.push_back(octant);
+		if (!octant->IsEmpty() || !octant->IsLeaf()) {
+			got.push_back(octant);
+		}
 		++it;
 	}
 	std::vector<fedes::internal::Octant<double>*> expected;

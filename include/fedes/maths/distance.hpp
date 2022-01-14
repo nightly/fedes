@@ -5,7 +5,10 @@
 
 namespace fedes {
 
-	template <std::integral T>
-	T Distance(fedes::Vector3<T> point, fedes::Vector3<T> second_point);
+	template <typename T>
+	T DistanceSquared(const fedes::Vector3<T>& point, const fedes::Vector3<T>& second_point);
+
+	template <typename T>
+	T Distance(const fedes::Vector3<T>& point, const fedes::Vector3<T>& second_point);
 
 }

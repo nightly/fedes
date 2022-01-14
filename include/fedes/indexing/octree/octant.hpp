@@ -9,6 +9,8 @@ namespace fedes::internal {
 	template <typename T>
 	class Octant {
 	public:
+		using value_type = T;
+
 		Vector3<T> extent;
 		Vector3<T> center;
 		std::vector<size_t> points;

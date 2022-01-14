@@ -76,7 +76,8 @@ namespace fedes::internal {
 	Octant<T>::~Octant() {
 		
 	}
-
+	
+	/* Explicit template instantiations */
 	template class Octant<double>;
 	template class Octant<float>;
 }

@@ -17,6 +17,7 @@ namespace fedes {
 	 * @port This function is ported from FEDES v2
 	 * @param path: Path to write file to, e.g. "dir/a.xml" or "b.vtu"
 	 * @param model: Model that will be used to write data to the file from
+	 * 
 	 * @exception Propagates std::ofstream failure
 	 */
 	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model) {
@@ -54,7 +55,7 @@ namespace fedes {
 			if (!model.total_strain.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"TotalStrain\" NumberOfComponents=\"6\" format=\"ascii\" >\n";
 				for (auto& s : model.total_strain) {
-					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
+						stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
@@ -70,7 +71,7 @@ namespace fedes {
 				for (auto& s : model.accumulated_strain) {
 					stream << s << "\n";
 				}
-				stream << "</DataArray>\n";
+				stream << "</DataArray>\n"; 
 			}
 			stream << "</PointData>\n";
 		}

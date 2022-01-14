@@ -3,11 +3,14 @@
 #include <span>
 #include <vector>
 #include <stdexcept>
+#include <memory>
 #include <iostream>
+#include <limits>
 
 #include "fedes/maths/vector3.hpp"
 #include "fedes/indexing/octree/octant.hpp"
 #include "fedes/indexing/octree/traversals.hpp"
+#include "fedes/maths/distance.hpp"
 
 namespace fedes {
 
@@ -80,18 +83,18 @@ namespace fedes {
 			}
 		}
 		// Handle branch node/interior node case
-		int oct = octant.DetermineChildOctant(points_[point_id]);
+		uint8_t oct = octant.DetermineChildOctant(points_[point_id]);
 		return InsertAtOctant(*(octant.child[oct]), point_id, ++depth);
 	}
 
 	/*
 	 * @brief Splits a leaf node into 8 new nodes and re-inserts the old point indexes into the newly created leaf octants
 	 * 
-	 * Insertions from this function will occur directly from this Octant instead of starting from the root
+	 * Insertions/re-insertions from this function will occur directly from the split Octant instead of starting from the root
 	 * 
 	 * @param octant: the leaf Octant that will be split and as a result turn into a branch Octant
 	 * @param point_id: the point ID of points_ to be inserted straight from this Octant
-	 * @param depth
+	 * @param depth: the depth of the Octant being split
 	 */
 	template<typename T>
 	void Octree<T>::Split(Octant& octant, size_t point_id, size_t depth) {
@@ -99,7 +102,7 @@ namespace fedes {
 		octant.points.clear();
 
 		Vector3<T> split_origin;
-		for (int i = 0; i < 8; i++) {
+		for (uint8_t i = 0; i < 8; i++) {
 			split_origin.x = octant.extent.x * (i & 4 ? 0.5 : -0.5);
 			split_origin.y = octant.extent.y * (i & 2 ? 0.5 : -0.5);
 			split_origin.z = octant.extent.z * (i & 1 ? 0.5 : -0.5);
@@ -116,7 +119,8 @@ namespace fedes {
 	 * @brief Searches and checks whether a given point exists within the Octree, starting from the root.
 	 *
 	 * @param point: the point to search for. Must exactly match
-	 * @return True/false depending whether the point is contained within the Octree
+	 * 
+	 * @returns True/false depending whether the point is contained within the Octree
 	 */
 	template <typename T>
 	bool Octree<T>::Find(const Vector3<T>& point) const {
@@ -142,8 +146,7 @@ namespace fedes {
 					}
 				}
 				return found_match;
-			}
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -166,14 +169,66 @@ namespace fedes {
 		return post_order_iterator(nullptr);
 	}
 
-	/*
-	* @brief K Nearest Neighbour
+	/* @brief Locates the nearest point to the given query point
+	*
+	* @param query_point: the query point to search the nearest neighbour(s) for
+	*
+	* @returns The nearest point as the index identifier from the original container
 	*/
 	template <typename T>
-	Vector3<T> Octree<T>::NearestNeighbour(fedes::Vector3<T> point, size_t k) const {
-		// Queue
+	size_t Octree<T>::Nearest(const Vector3<T>& query_point) const {
+		return NearestSearch(query_point, *root_);
 	}
 
+	/* @brief Performs the nearest point search recursively
+	* 
+	* @Note: This could also use priority queues to perform a best-first search
+	*
+	* @param query_point: the query point to search the nearest neighbour(s) for
+	* @param octant: the current Octant we are searching recursively from
+	*
+	* @returns The nearest point as the index identifier from the original container
+	*/
+	template <typename T>
+	size_t Octree<T>::NearestSearch(const Vector3<T>& query_point, const Octant& octant) const {
+		if (!octant.IsLeaf()) { // Interior node case
+			uint8_t oct = octant.DetermineChildOctant(query_point);
+			Octant* child = (octant.child[oct]);
+			if (!child->IsLeaf() || !child->IsEmpty()) { 
+				// The node we wish to traverse to is an interior node or leaf node with points
+				return NearestSearch(query_point, *child);
+			} else {
+				// The original node we wanted to traverse to is a leaf with no points, therefore, we must select a different node
+				Octant* best_octant = nullptr;
+				T best_distance = std::numeric_limits<T>::max();
+				for (uint8_t i = 0; i < 8; i++) {
+					if ((i == oct) || (octant.child[i]->IsEmpty() && octant.child[i]->IsLeaf())) {
+						continue;
+					}
+					T distance = fedes::DistanceSquared(query_point, octant.child[i]->center);
+					if (distance < best_distance) {
+						best_distance = distance;
+						if (!octant.child[i]->IsEmpty() || !octant.child[i]->IsLeaf()) {
+							best_octant = octant.child[i];
+						}
+					}
+				}
+				return NearestSearch(query_point, *best_octant);
+			}
+		} else {
+			// We have arrived at the best final leaf, although our leaves may contain more than 1 point, so we still need to do some searching
+			std::size_t best_point_index{};
+			T best_distance = std::numeric_limits<T>::max();
+			for (auto& p : octant.points) {
+				T distance = fedes::DistanceSquared(query_point, points_[p]);
+				if (distance < best_distance) {
+					best_distance = distance;
+					best_point_index = p;
+				}
+			}
+			return best_point_index;
+		}
+	}
 
 	/*
 	 * @brief Clears the octree and deallocates all memory
