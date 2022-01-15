@@ -7,33 +7,6 @@
 #include "fedes/model/writers.hpp"
 
 namespace fedes {
-
-	/*
-	 * @brief Transfers Finite Element Data between two models given the corresponding index
-	 *
-	 * @param node_index: the node index to map Finite Element data into
-	 * @param source_model: the source model where the FEA/FEM data will be retrieved from
-	 * @param source_node_index: the node index of the source mesh/model where FE data will be transferred to the target model at the given node_index
-	 * @example (20, source, 40) will copy all FE data into (this/target[node 20] from source[node 40])
-	 */
-	void Model::NearestPointTransfer(size_t node_index, const fedes::Model& source_model, size_t source_node_index) {
-		if (!source_model.displacement.empty()) {
-			displacement[node_index] = source_model.displacement[source_node_index];
-		}
-		if (!source_model.stress.empty()) {
-			stress[node_index] = source_model.stress[source_node_index];
-		}
-		if (!source_model.total_strain.empty()) {
-			total_strain[node_index] = source_model.total_strain[source_node_index];
-		}
-		if (!source_model.plastic_strain.empty()) {
-			plastic_strain[node_index] = source_model.plastic_strain[source_node_index];
-		}
-		if (!source_model.accumulated_strain.empty()) {
-			accumulated_strain[node_index] = source_model.accumulated_strain[source_node_index];
-		}
-	}
-
 	
 	/*
 	 * @brief Exports the given model in .xml/.vtu format to the given directory with the provided file name. Overwrites existing files.
@@ -62,8 +35,9 @@ namespace fedes {
 			displacement.resize(this->nodes.size());
 		}
 		if (!source.stress.empty()) {
-			stress.resize(this->nodes.size());
+			stress.resize(this->elements.size());
 		}
+		// @Todo: correctly resize the rest like this one, as some mappings depend on node whilst others on integration points
 		if (!source.total_strain.empty()) {
 			total_strain.resize(this->nodes.size());
 		}
@@ -75,4 +49,38 @@ namespace fedes {
 		}
 	}
 
+	/*
+	 * @brief Provides the integration data for the model
+	 * 
+	 * @port Port of "convert_coordinates" from FEDES v2 interpolations.pas
+	 */
+	void Model::ConvertCoordinates() {
+		integration.reserve(elements.size());
+		for (size_t i = 0; i < elements.size(); i++) {
+			double x = 0;
+			double y = 0;
+			double z = 0;
+			size_t br = 0;
+			for (size_t j = 0; j < elements[i].size(); j++) {
+				if (j > 0) {
+					if (elements[i][j] != 0) {
+						x = x + nodes[elements[i][j]].x;
+						y = y + nodes[elements[i][j]].y;
+						z = z + nodes[elements[i][j]].z;
+						br++;
+					}
+				}
+			}
+			integration.emplace_back(x / br, y / br, z / br);
+		}
+	}
+
+	/*
+	 * @brief Model equality operator, which is useful for unit tests (when dealing with small models)
+	 */
+	bool Model::operator==(const Model& other) const {
+		return (nodes == other.nodes && elements == other.elements && displacement == other.displacement && stress == other.stress &&
+		total_strain == other.total_strain && plastic_strain == other.plastic_strain && accumulated_strain == other.accumulated_strain &&
+		integration == other.integration);
+	}
 }

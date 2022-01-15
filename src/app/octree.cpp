@@ -6,6 +6,7 @@
 #include "fedes/indexing/octree/interpolations.hpp"
 #include "fedes/instrumentation/timer.hpp"
 
+
 /*
  * @brief Nearest Point Method with Octree Index with timing
  */
@@ -14,7 +15,7 @@ void OctreeNPM(fedes::Model& source, fedes::Model& target, size_t points_per_lea
 	fedes::Octree<double> octree(source.nodes, points_per_leaf, max_depth);
 	build_timer.StopWithWrite();
 
-	fedes::internal::Timer interpolation_timer("NPM Interpolation");
+	fedes::internal::Timer interpolation_timer("Octree NPM Interpolation");
 	fedes::OctreeNearestPointMethod(octree, source, target);
 	interpolation_timer.StopWithWrite();
 }

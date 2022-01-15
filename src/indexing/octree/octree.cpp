@@ -25,7 +25,7 @@ namespace fedes {
 	 * @exception length_error If an empty set of points is sent, no Octree will be constructed
 	 */
 	template <typename T>
-	Octree<T>::Octree(const std::vector<Vector3<T>>& points, const size_t points_per_leaf, const size_t max_depth) 
+	Octree<T>::Octree(const std::span<Vector3<T>>& points, const size_t points_per_leaf, const size_t max_depth) 
 		: points_(points), points_per_leaf_(points_per_leaf), max_depth_(max_depth) {
 		if (points_.empty()) {
 			throw std::length_error("Octree Constructor: Empty set of initial points sent");
@@ -202,21 +202,19 @@ namespace fedes {
 				Octant* best_octant = nullptr;
 				T best_distance = std::numeric_limits<T>::max();
 				for (uint8_t i = 0; i < 8; i++) {
-					if ((i == oct) || (octant.child[i]->IsEmpty() && octant.child[i]->IsLeaf())) {
-						continue;
+					if ((i == oct) || (octant.child[i]->IsLeaf()) && octant.child[i]->IsEmpty()) {
+						continue; // Exclude the node previously selected as well as any node that can't be traversed to
 					}
 					T distance = fedes::DistanceSquared(query_point, octant.child[i]->center);
 					if (distance < best_distance) {
+						best_octant = octant.child[i];
 						best_distance = distance;
-						if (!octant.child[i]->IsEmpty() || !octant.child[i]->IsLeaf()) {
-							best_octant = octant.child[i];
-						}
 					}
 				}
 				return NearestSearch(query_point, *best_octant);
 			}
 		} else {
-			// We have arrived at the best final leaf, although our leaves may contain more than 1 point, so we still need to do some searching
+			// We have arrived at the best final leaf, although since leaves may contain more than 1 point, so we still need to do some searching
 			std::size_t best_point_index{};
 			T best_distance = std::numeric_limits<T>::max();
 			for (auto& p : octant.points) {

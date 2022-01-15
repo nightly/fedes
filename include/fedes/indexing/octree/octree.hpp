@@ -21,17 +21,17 @@ namespace fedes {
 		using post_order_iterator = fedes::OctreePostOrderIterator<fedes::Octree<T>>;
 	private:
 		Octant* root_ = nullptr;
-		std::vector<Vector3<T>> points_;
+		std::span<Vector3<T>> points_;
 
 		size_t points_per_leaf_;
 		size_t max_depth_;
 	public:
 		Octree() = delete;
-		Octree(const std::vector<Vector3<T>>& points, size_t points_per_leaf, size_t max_depth);
+		Octree(const std::span<Vector3<T>>& points, size_t points_per_leaf, size_t max_depth);
 		~Octree();
 
-		Octree(const Octree& other) noexcept = delete;
-		Octree& operator=(const Octree& other) noexcept = delete;
+		Octree(const Octree& other) = delete;
+		Octree& operator=(const Octree& other) = delete;
 		Octree(Octree&& other) noexcept = delete;
 		Octree& operator=(Octree&& other) noexcept = delete;
 

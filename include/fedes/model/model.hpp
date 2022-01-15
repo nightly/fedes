@@ -19,14 +19,16 @@ namespace fedes {
 		std::vector<std::vector<double>> total_strain;
 		std::vector<std::vector<double>> plastic_strain;
 		std::vector<double> accumulated_strain;
+		std::vector<fedes::Vector3<double>> integration;
 	public:
-		void NearestPointTransfer(size_t node_index, const fedes::Model& source_model, size_t source_node_index);
-
 		void ResizeIndexes(const fedes::Model& source);
 		void Export(const std::string& file_name, const std::filesystem::path& path = "../../../exports");
+		void ConvertCoordinates();
 
 		void WriteStats(std::ostream& output_stream = std::cout);
 		void WriteStatsParalllel(std::ostream& output_steram = std::cout);
+
+		bool operator==(const Model& other) const;
 	};
 
 }

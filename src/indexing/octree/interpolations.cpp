@@ -11,14 +11,25 @@ namespace fedes {
 	 * 
 	 * @tparam T: the point data type of the Octree, i.e. double, float
 	 * @param octree: the built Octree Index to use when performing the mapping
-	 * @param source_model: the source model with nodal and FE data set to be copied
-	 * @param target_model: the target model to use to fill stresses, displacements etc data with from the given index
+	 * @param source: the source model with nodal and FE data set to be copied
+	 * @param target: the target model to use to fill stresses, displacements etc data with from the given index
 	 */
 	template <typename T>
-	void OctreeNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source_model, fedes::Model& target_model) {
-		for (size_t i = 0; i != target_model.nodes.size(); i++) {
-			size_t source_node_index = octree.Nearest(target_model.nodes[i]);
-			target_model.NearestPointTransfer(i, source_model, source_node_index);
+	void OctreeNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target) {
+		target.ResizeIndexes(source);
+		for (size_t i = 0; i != target.nodes.size(); i++) {
+			size_t source_node_idx = octree.Nearest(target.nodes[i]);
+			if (!source.displacement.empty()) {
+				target.displacement[i] = source.displacement[source_node_idx];
+			}
+		}
+		// N.B. stress mapping aren't done by node unlike displacement
+		if (!source.stress.empty()) { 
+			target.ConvertCoordinates();
+			for (size_t i = 0; i != target.integration.size(); i++) {
+				size_t source_node_idx = octree.Nearest(target.integration[i]);
+				target.stress[i] = source.stress[source_node_idx];
+			}
 		}
 	}
 
