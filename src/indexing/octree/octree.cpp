@@ -22,7 +22,7 @@ namespace fedes {
 	 * @param points_per_leaf: the maximum number of points to be contained within a leaf before splitting into a branch
 	 * @param max_depth: the maximum depth for the Octree
 	 * 
-	 * @exception length_error If an empty set of points is sent, no Octree will be constructed
+	 * @exception length_error: If an empty set of points is sent, no Octree will be constructed
 	 */
 	template <typename T>
 	Octree<T>::Octree(const std::span<Vector3<T>>& points, const size_t points_per_leaf, const size_t max_depth) 
@@ -30,7 +30,7 @@ namespace fedes {
 		if (points_.empty()) {
 			throw std::length_error("Octree Constructor: Empty set of initial points sent");
 		}
-		Vector3<T> min, max;
+		fedes::Vector3<T> min, max;
 		for (auto& v : points) {
 			if (v.x > max.x) {
 				max.x = v.x;
@@ -53,8 +53,8 @@ namespace fedes {
 				min.z = v.z;
 			}
 		}
-		Vector3<T> center = Vector3<T>((max.x + min.x) / 2, (max.y + min.y) / 2, (max.z + min.z) / 2);
-		Vector3<T> extent = Vector3<T>((max.x - min.x), (max.y - min.y), (max.z - min.z));
+		fedes::Vector3<T> center((max.x + min.x) / 2, (max.y + min.y) / 2, (max.z + min.z) / 2);
+		fedes::Vector3<T> extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
 
 		root_ = new Octant(center, extent / 2);
 
@@ -101,7 +101,7 @@ namespace fedes {
 		std::vector<size_t> current_points = octant.points;
 		octant.points.clear();
 
-		Vector3<T> split_origin;
+		fedes::Vector3<T> split_origin;
 		for (uint8_t i = 0; i < 8; i++) {
 			split_origin.x = octant.extent.x * (i & 4 ? 0.5 : -0.5);
 			split_origin.y = octant.extent.y * (i & 2 ? 0.5 : -0.5);
@@ -138,14 +138,13 @@ namespace fedes {
 	template <typename T>
 	bool Octree<T>::FindAtOctant(const Vector3<T>& point, const Octant& octant) const {
 		if (octant.IsLeaf()) {
-			if (!octant.points.empty()) {
-				bool found_match = false;
+			if (!octant.IsEmpty()) {
 				for (auto& p : octant.points) {
 					if (points_[p] == point) {
-						found_match = true;
+						return true;
 					}
 				}
-				return found_match;
+				return false;
 			} else {
 				return false;
 			}
@@ -169,7 +168,7 @@ namespace fedes {
 		return post_order_iterator(nullptr);
 	}
 
-	/* @brief Locates the nearest point to the given query point
+	/* @brief Locates the nearest point to the given query point assuming a static Octree index
 	*
 	* @param query_point: the query point to search the nearest neighbour(s) for
 	*
@@ -182,7 +181,10 @@ namespace fedes {
 
 	/* @brief Performs the nearest point search recursively
 	* 
-	* @Note: This could also use priority queues to perform a best-first search
+	* This algorithm is optimized and designed with the following in mind:
+	* a) only 1 nearest neighbour needs to be returned
+	* b) no deletions occur from the index once created — in FEDES, meshes are static
+	* Otherwise, a more standard approach with priority queues/best-first search is more suitable
 	*
 	* @param query_point: the query point to search the nearest neighbour(s) for
 	* @param octant: the current Octant we are searching recursively from
@@ -214,7 +216,7 @@ namespace fedes {
 				return NearestSearch(query_point, *best_octant);
 			}
 		} else {
-			// We have arrived at the best final leaf, although since leaves may contain more than 1 point, so we still need to do some searching
+			// We have arrived at the best final leaf, although since leaves may contain more than 1 point, some searching is left
 			std::size_t best_point_index{};
 			T best_distance = std::numeric_limits<T>::max();
 			for (auto& p : octant.points) {

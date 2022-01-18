@@ -22,12 +22,12 @@ namespace fedes {
 		std::vector<fedes::Vector3<double>> integration;
 	public:
 		void ResizeIndexes(const fedes::Model& source);
+		void AssignIntegration();
+
 		void Export(const std::string& file_name, const std::filesystem::path& path = "../../../exports");
-		void ConvertCoordinates();
 
 		void WriteStats(std::ostream& output_stream = std::cout);
 		void WriteStatsParalllel(std::ostream& output_steram = std::cout);
-
 		bool operator==(const Model& other) const;
 	};
 

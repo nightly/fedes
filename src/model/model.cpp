@@ -52,26 +52,24 @@ namespace fedes {
 	/*
 	 * @brief Provides the integration data for the model
 	 * 
+	 * An integration point represents the average node value for each element.
+	 * Some mapping methods are done via integration point instead of by node.
+	 * 
 	 * @port Port of "convert_coordinates" from FEDES v2 interpolations.pas
 	 */
-	void Model::ConvertCoordinates() {
+	void Model::AssignIntegration() {
 		integration.reserve(elements.size());
 		for (size_t i = 0; i < elements.size(); i++) {
 			double x = 0;
 			double y = 0;
 			double z = 0;
-			size_t br = 0;
-			for (size_t j = 0; j < elements[i].size(); j++) {
-				if (j > 0) {
-					if (elements[i][j] != 0) {
-						x = x + nodes[elements[i][j]].x;
-						y = y + nodes[elements[i][j]].y;
-						z = z + nodes[elements[i][j]].z;
-						br++;
-					}
-				}
+			size_t element_count = elements[i].size();
+			for (size_t j = 0; j < element_count; j++) {
+					x = x + nodes[elements[i][j]].x;
+					y = y + nodes[elements[i][j]].y;
+					z = z + nodes[elements[i][j]].z;
 			}
-			integration.emplace_back(x / br, y / br, z / br);
+			integration.emplace_back(x / element_count, y / element_count, z / element_count);
 		}
 	}
 

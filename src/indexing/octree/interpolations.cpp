@@ -25,7 +25,7 @@ namespace fedes {
 		}
 		// N.B. stress mapping aren't done by node unlike displacement
 		if (!source.stress.empty()) { 
-			target.ConvertCoordinates();
+			target.AssignIntegration();
 			for (size_t i = 0; i != target.integration.size(); i++) {
 				size_t source_node_idx = octree.Nearest(target.integration[i]);
 				target.stress[i] = source.stress[source_node_idx];

@@ -48,7 +48,7 @@ void prompt() {
 * @brief Main program loop, terminates after first iteration if user_prompt = false
 */
 int main() {
-	bool prompt_user = false;
+	bool prompt_user = true;
 	while (true) {
 		switch (prompt_user) {
 		case(false):

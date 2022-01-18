@@ -32,6 +32,7 @@ package_add_test("distance" "maths/distance.cpp")
 package_add_test("octant" "indexing/octree/octant.cpp")
 package_add_test("octree" "indexing/octree/octree.cpp")
 package_add_test("octree_traversals" "indexing/octree/traversals.cpp")
+package_add_test("octree_interpolations" "indexing/octree/interpolations.cpp")
 
 package_add_test("parsers" "model/parsers.cpp")
 package_add_test("writers" "model/writers.cpp")

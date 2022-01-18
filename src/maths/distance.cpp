@@ -8,13 +8,13 @@
 namespace fedes {
 
 	/*
-	* @brief Euclidean distance squared which omits the square root computation when the actual distance value isn't required
+	* @brief Euclidean Distance Squared which omits the square root computation when the actual distance value isn't required
 	* 
-	* tparam T: numeric type, i.e. double, float
+	* @tparam T: numeric type, i.e. double, float
 	* @param point: 3 dimensional point
 	* @param second_point: the second 3 dimensional point to compute distance against
 	* 
-	* @returns Squared distance between two points
+	* @returns Squared Distance between two points
 	*/
 	template <typename T>
 	T DistanceSquared(const fedes::Vector3<T>& point,  const fedes::Vector3<T>& second_point) {
@@ -22,7 +22,7 @@ namespace fedes {
 	}
 
 	/*
-	* @brief Euclidean distance
+	* @brief Euclidean Distance
 	*
 	* @tparam T: numeric type,  i.e. double, float
 	* @param point: 3 dimensional point
@@ -37,8 +37,9 @@ namespace fedes {
 
 
 	/* Explicit template instantiations */
-	template float DistanceSquared<float>(const fedes::Vector3<float>&, const fedes::Vector3<float>&);
+	template double DistanceSquared<double>(const fedes::Vector3<double>&, const fedes::Vector3<double>&);
+	template float  DistanceSquared<float>(const fedes::Vector3<float>&, const fedes::Vector3<float>&);
+	
 	template double Distance<double>(const fedes::Vector3<double>&, const fedes::Vector3<double>&);
-	template float DistanceSquared<float>(const fedes::Vector3<float>&, const fedes::Vector3<float>&);
-	template double Distance<float>(const fedes::Vector3<double>&, const fedes::Vector3<double>&);
+	template float  Distance<float>(const fedes::Vector3<float>&, const fedes::Vector3<float>&);
 }

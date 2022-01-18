@@ -53,8 +53,7 @@ namespace fedes::internal {
 	Timer::~Timer() {
 		if (!stopped_) {
 			StopWithWrite();
-		}
-		else {
+		} else {
 			Stop();
 		}
 	}

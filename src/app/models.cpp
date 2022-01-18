@@ -7,6 +7,7 @@
 
 #include "fedes/model/parsers.hpp"
 #include "fedes/model/writers.hpp"
+#include "fedes/instrumentation/timer.hpp"
 
 /*
  * @brief Sets source and target models based on a pre-defined set of examples
@@ -16,6 +17,7 @@
  * @param id: default parameter = 1, dictates which model to use
  */
 void SetModels(fedes::Model& source, fedes::Model& target, unsigned int id) {
+	fedes::internal::Timer timer("Mesh Parsing");
 	switch (id) {
 	case 1:
 		fedes::AnsysInputReadLis("../../models/Example1-Vane-big/Model1_Input-Ansys.txt", source);
