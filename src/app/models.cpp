@@ -52,8 +52,8 @@ void SetModels(fedes::Model& source, fedes::Model& target, unsigned int id) {
  */
 void ExportModels(fedes::Model& source, fedes::Model& target, const std::string& file_suffix) {
 	try {
-		source.Export("source-" + file_suffix, "../../exports");
-		target.Export("target-" + file_suffix, "../../exports");
+		source.Export("source-" + file_suffix, false, "../../exports");
+		target.Export("target-" + file_suffix, true, "../../exports");
 	} catch (const std::ofstream::failure& e) {
 		throw;
 	}

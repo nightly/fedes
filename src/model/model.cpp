@@ -12,14 +12,15 @@ namespace fedes {
 	 * @brief Exports the given model in .xml/.vtu format to the given directory with the provided file name. Overwrites existing files.
 	 * 
 	 * @param file_name: the file name to be used without the file extension
+	 * @param by_integration: whether or not FE like stress is by integration point or by node
 	 * @param path: the directory to write to. @Default: ""../../../exports"
 	 * 
 	 * @exception Propagates std::ofstream::failure
 	 */
-	void Model::Export(const std::string& file_name, const std::filesystem::path& path) {
+	void Model::Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path) {
 		try {
 			std::string file_name_with_ext = file_name + ".vtu";
-			fedes::CreateXML(path / file_name_with_ext, *this);
+			fedes::CreateXML(path / file_name_with_ext, *this, by_integration ? true : false);
 		} catch (const std::ofstream::failure& e) {
 			throw;
 		}

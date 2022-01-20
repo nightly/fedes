@@ -6,6 +6,6 @@
 
 namespace fedes {
 
-	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model);
+	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model, bool by_integration);
 
 }

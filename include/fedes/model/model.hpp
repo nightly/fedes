@@ -24,7 +24,7 @@ namespace fedes {
 		void ResizeIndexes(const fedes::Model& source);
 		void AssignIntegration();
 
-		void Export(const std::string& file_name, const std::filesystem::path& path = "../../../exports");
+		void Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path = "../../../exports");
 
 		void WriteStats(std::ostream& output_stream = std::cout);
 		void WriteStatsParalllel(std::ostream& output_steram = std::cout);

@@ -17,10 +17,12 @@ namespace fedes {
 	 * @port This function is ported from FEDES v2
 	 * @param path: Path to write file to, e.g. "dir/a.xml" or "b.vtu"
 	 * @param model: Model that will be used to write data to the file from
+	 * @param by_integration: differentiates whether or not we are dealing with certain values by integration or node points,
+	 * in FEDES v2, this corresponds to the difference between createXML1 and create XML2
 	 * 
 	 * @exception Propagates std::ofstream failure
 	 */
-	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model) {
+	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model, bool by_integration) {
 		int num = 0;
 		double z_coord = 0.00;
 		std::string str;
@@ -36,26 +38,32 @@ namespace fedes {
 		stream << "<UnstructuredGrid>\n";
 		stream << "<Piece NumberOfPoints=\"" << model.nodes.size() << "\" NumberOfCells=\"" << model.elements.size() << "\" >\n";
 
-		if ((!model.displacement.empty()) && (!model.stress.empty()) || (!model.plastic_strain.empty()) || (!model.total_strain.empty()) || (!model.accumulated_strain.empty())) {
+		if (!model.displacement.empty()) {
 			stream << "<PointData Tensors=\"Vector\" >\n";
-			if (!model.displacement.empty()) {
-				stream << "<DataArray type=\"Float64\" Name=\"displacement\" NumberOfComponents=\"3\" format=\"ascii\" >\n";
-				for (auto& d : model.displacement) {	
-					stream << d[0] << ' ' << d[1] << ' ' << d[2] << "\n";
-				}
-				stream << "</DataArray>\n";
+			stream << "<DataArray type=\"Float64\" Name=\"Displacement\" NumberOfComponents=\"3\" format=\"ascii\" >\n";
+			for (auto& d : model.displacement) {	
+				stream << d[0] << ' ' << d[1] << ' ' << d[2] << "\n";
+			}
+			stream << "</DataArray>\n";
+		}
+		if (by_integration) {
+			stream << "</PointData>\n";
+		}
+		if ((!model.stress.empty()) || (!model.plastic_strain.empty()) || (!model.total_strain.empty()) || (!model.accumulated_strain.empty())) {
+			if (by_integration) {
+				stream << "<CellData Tensors=\"stress\" >\n";
 			}
 			if (!model.stress.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"Stress\" NumberOfComponents=\"6\" format=\"ascii\" >\n";
 				for (auto& s : model.stress) {
-					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3]  << ' ' << s[4] << ' ' << s[5] << "\n";
+					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
 			if (!model.total_strain.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"TotalStrain\" NumberOfComponents=\"6\" format=\"ascii\" >\n";
 				for (auto& s : model.total_strain) {
-						stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
+					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
@@ -71,11 +79,15 @@ namespace fedes {
 				for (auto& s : model.accumulated_strain) {
 					stream << s << "\n";
 				}
-				stream << "</DataArray>\n"; 
+				stream << "</DataArray>\n";
 			}
+			if (by_integration) {
+				stream << "</CellData>\n";
+			}
+		}
+		if (!by_integration) {
 			stream << "</PointData>\n";
 		}
-
 		stream << "<Cells>\n";
 		stream << "<DataArray type=\"UInt32\" Name=\"connectivity\" NumberOfComponents=\"1\" format=\"ascii\" >\n";
 
