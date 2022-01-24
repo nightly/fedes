@@ -4,6 +4,9 @@
 #include <tuple>
 #include <matchit.h>
 
+#include <iostream>
+#include <string>
+
 #include "fedes/maths/vector3.hpp"
 
 namespace fedes::internal {
@@ -51,12 +54,11 @@ namespace fedes::internal {
 	uint8_t Octant<T>::DetermineChildOctant(const Vector3<T>& point) const {
 		using namespace matchit;
 
-		bool x_larger = point.x > center.x;
-		bool y_larger = point.y > center.y;
-		bool z_larger = point.z > center.z;
-
+		bool x_larger = point.x >= center.x;
+		bool y_larger = point.y >= center.y;
+		bool z_larger = point.z >= center.z;
 		std::tuple<bool, bool, bool> tuple{ x_larger, y_larger, z_larger };
-
+	
 		return match(tuple)(
 		pattern | ds(true, true, true) = [] { return 7; },
 		pattern | ds(true, true, false) = [] { return 6; },

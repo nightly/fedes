@@ -27,7 +27,11 @@ namespace fedes {
 	}
 
 	/* 
-	 * @brief Resizes and pre-allocates all indexes for FE data allowing the arbitrary use of operator[] when mapping data
+	 * @brief Resizes and pre-allocates all target indexes for FE data allowing arbitrary use of operator[] + assigns integration data
+	 * 
+	 * Displacement and forces are mapped by node, stresses and strains are mapped by integration points/elements, hence why some indexes are 
+	 * relative to the element count as opposed to node count. Integration points are only calculated when the source model has data that
+	 * needs to be mapped via integration point (e.g. stress).
 	 * 
 	 * @param source: the source model so that target FE indexes can be set correctly corresponding to the source model
 	 */
@@ -35,18 +39,20 @@ namespace fedes {
 		if (!source.displacement.empty()) {
 			displacement.resize(this->nodes.size());
 		}
-		if (!source.stress.empty()) {
-			stress.resize(this->elements.size());
-		}
-		// @Todo: correctly resize the rest like this one, as some mappings depend on node whilst others on integration points
-		if (!source.total_strain.empty()) {
-			total_strain.resize(this->nodes.size());
-		}
-		if (!source.plastic_strain.empty()) {
-			plastic_strain.resize(this->nodes.size());
-		}
-		if (!source.accumulated_strain.empty()) {
-			accumulated_strain.resize(this->nodes.size());
+		if (!source.stress.empty() || !source.total_strain.empty() || !source.plastic_strain.empty() || !source.accumulated_strain.empty()) {
+			AssignIntegration();
+			if (!source.stress.empty()) {
+				stress.resize(this->elements.size());
+			}
+			if (!source.total_strain.empty()) {
+				total_strain.resize(this->elements.size());
+			}
+			if (!source.plastic_strain.empty()) {
+				plastic_strain.resize(this->elements.size());
+			}
+			if (!source.accumulated_strain.empty()) {
+				accumulated_strain.resize(this->elements.size());
+			}
 		}
 	}
 
@@ -56,6 +62,7 @@ namespace fedes {
 	 * An integration point represents the average node value for each element.
 	 * Some mapping methods are done via integration point instead of by node.
 	 * 
+	 * @note ResizeIndexes() will invoke this function automatically when it is required
 	 * @port Port of "convert_coordinates" from FEDES v2 interpolations.pas
 	 */
 	void Model::AssignIntegration() {
@@ -66,9 +73,9 @@ namespace fedes {
 			double z = 0;
 			size_t element_count = elements[i].size();
 			for (size_t j = 0; j < element_count; j++) {
-					x = x + nodes[elements[i][j]].x;
-					y = y + nodes[elements[i][j]].y;
-					z = z + nodes[elements[i][j]].z;
+				x = x + nodes[elements[i][j]].x;
+				y = y + nodes[elements[i][j]].y;
+				z = z + nodes[elements[i][j]].z;
 			}
 			integration.emplace_back(x / element_count, y / element_count, z / element_count);
 		}

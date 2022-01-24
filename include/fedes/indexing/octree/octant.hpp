@@ -10,9 +10,8 @@ namespace fedes::internal {
 	class Octant {
 	public:
 		using value_type = T;
-
-		Vector3<T> extent;
 		Vector3<T> center;
+		Vector3<T> extent; // Extent = half of each dimension (half width, height, depth)
 		std::vector<size_t> points;
 		std::array<Octant<T>*, 8> child = {nullptr}; // @Todo: hold one pointer instead of 8
 	public:

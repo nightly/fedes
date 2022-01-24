@@ -1,8 +1,11 @@
 #include "fedes/indexing/octree/interpolations.hpp"
 
+#include "fedes/maths/vector3.hpp"
 #include "fedes/indexing/octree/octree.hpp"
 #include "fedes/indexing/octree/octant.hpp"
 #include "fedes/model/model.hpp"
+
+#include <iostream>
 
 namespace fedes {
 
@@ -17,15 +20,13 @@ namespace fedes {
 	template <typename T>
 	void OctreeNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target) {
 		target.ResizeIndexes(source);
-		for (size_t i = 0; i != target.nodes.size(); i++) {
-			size_t source_node_idx = octree.Nearest(target.nodes[i]);
-			if (!source.displacement.empty()) {
+		if (!source.displacement.empty()) {
+			for (size_t i = 0; i != target.nodes.size(); i++) {
+				size_t source_node_idx = octree.Nearest(target.nodes[i]);
 				target.displacement[i] = source.displacement[source_node_idx];
 			}
 		}
-		// N.B. stress mapping aren't done by node unlike displacement
 		if (!source.stress.empty()) { 
-			target.AssignIntegration();
 			for (size_t i = 0; i != target.integration.size(); i++) {
 				size_t source_node_idx = octree.Nearest(target.integration[i]);
 				target.stress[i] = source.stress[source_node_idx];

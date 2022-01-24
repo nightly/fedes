@@ -4,8 +4,10 @@
 #include <vector>
 #include <stdexcept>
 #include <memory>
-#include <iostream>
 #include <limits>
+
+#include <iostream>
+#include <string>
 
 #include "fedes/maths/vector3.hpp"
 #include "fedes/indexing/octree/octant.hpp"
@@ -30,32 +32,34 @@ namespace fedes {
 		if (points_.empty()) {
 			throw std::length_error("Octree Constructor: Empty set of initial points sent");
 		}
-		fedes::Vector3<T> min, max;
-		for (auto& v : points) {
+		fedes::Vector3<T> min(std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
+		fedes::Vector3<T> max(std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min());
+		fedes::Vector3<T> center;
+		for (auto& v : points_) {
+			center += v;
 			if (v.x > max.x) {
 				max.x = v.x;
 			}
-			else if (v.x < min.x) {
+			if (v.x < min.x) {
 				min.x = v.x;
 			}
 
 			if (v.y > max.y) {
 				max.y = v.y;
 			}
-			else if (v.y < min.y) {
+			if (v.y < min.y) {
 				min.y = v.y;
 			}
 
 			if (v.z > max.z) {
 				max.z = v.z;
 			}
-			else if (v.z < min.z) {
+			if (v.z < min.z) {
 				min.z = v.z;
 			}
-		}
-		fedes::Vector3<T> center((max.x + min.x) / 2, (max.y + min.y) / 2, (max.z + min.z) / 2);
+		}		
 		fedes::Vector3<T> extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
-
+		center /= points_.size();
 		root_ = new Octant(center, extent / 2);
 
 		for (size_t i = 0; i != points_.size(); i++) {
@@ -74,11 +78,11 @@ namespace fedes {
 	void Octree<T>::InsertAtOctant(Octant& octant, size_t point_id, size_t depth) {
 		// Handle leaf node case
 		if (octant.IsLeaf()) {
-			// We examine if the Octant has no points or allow an insertion if our splitting criterion isn't active
-			if (octant.IsEmpty() || ((octant.points.size() < points_per_leaf_) || (depth == max_depth_))) {
+			// We examine our splitting criterion and accordingly either allow the insertion or split first
+			if (octant.points.size() <= points_per_leaf_ || depth == max_depth_) {
 				octant.points.emplace_back(point_id);
 				return;
-			} else { // Our splitting criterion is active
+			} else { 
 				return Split(octant, point_id, depth);
 			}
 		}
@@ -101,12 +105,12 @@ namespace fedes {
 		std::vector<size_t> current_points = octant.points;
 		octant.points.clear();
 
-		fedes::Vector3<T> split_origin;
-		for (uint8_t i = 0; i < 8; i++) {
-			split_origin.x = octant.extent.x * (i & 4 ? 0.5 : -0.5);
-			split_origin.y = octant.extent.y * (i & 2 ? 0.5 : -0.5);
-			split_origin.z = octant.extent.z * (i & 1 ? 0.5 : -0.5);
-			octant.child[i] = new Octant(split_origin, octant.extent / 2);
+		for (uint8_t i = 0; i < 8; ++i) {
+			fedes::Vector3<T> split_center = octant.center;
+			split_center.x += octant.extent.x * (i & 4 ? 0.5 : -0.5);
+			split_center.y += octant.extent.y * (i & 2 ? 0.5 : -0.5);
+			split_center.z += octant.extent.z * (i & 1 ? 0.5 : -0.5);
+			octant.child[i] = new Octant(split_center, octant.extent / 2);
 		}
 
 		for (auto& p : current_points) {
@@ -184,7 +188,6 @@ namespace fedes {
 	* This algorithm is optimized and designed with the following in mind:
 	* a) only 1 nearest neighbour needs to be returned
 	* b) no deletions occur from the index once created — in FEDES, meshes are static
-	* Otherwise, a more standard approach with priority queues/best-first search is more suitable
 	*
 	* @param query_point: the query point to search the nearest neighbour(s) for
 	* @param octant: the current Octant we are searching recursively from
@@ -200,20 +203,21 @@ namespace fedes {
 				// The node we wish to traverse to is an interior node or leaf node with points
 				return NearestSearch(query_point, *child);
 			} else {
-				// The original node we wanted to traverse to is a leaf with no points, therefore, we must select a different node
-				Octant* best_octant = nullptr;
-				T best_distance = std::numeric_limits<T>::max();
-				for (uint8_t i = 0; i < 8; i++) {
-					if ((i == oct) || (octant.child[i]->IsLeaf()) && octant.child[i]->IsEmpty()) {
-						continue; // Exclude the node previously selected as well as any node that can't be traversed to
-					}
-					T distance = fedes::DistanceSquared(query_point, octant.child[i]->center);
-					if (distance < best_distance) {
-						best_octant = octant.child[i];
-						best_distance = distance;
-					}
+			// The child node we wanted to traverse to is a leaf with no points, therefore, we must select a different node
+			Octant* best_octant = nullptr;
+			T best_distance = std::numeric_limits<T>::max();
+			for (uint8_t i = 0; i < 8; i++) {
+				if ((i == oct) || ((octant.child[i]->IsLeaf()) && octant.child[i]->IsEmpty())) {
+					continue; // Exclude the node previously selected as well as any node that can't be traversed to
 				}
-				return NearestSearch(query_point, *best_octant);
+				T distance = fedes::DistanceSquared(query_point, octant.child[i]->center);
+				if (distance < best_distance) {
+					if (distance == best_distance) std::cout << "Hm";
+					best_octant = octant.child[i];
+					best_distance = distance;
+				}
+			}
+			return NearestSearch(query_point, *best_octant);
 			}
 		} else {
 			// We have arrived at the best final leaf, although since leaves may contain more than 1 point, some searching is left

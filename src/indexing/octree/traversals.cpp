@@ -11,7 +11,7 @@ namespace fedes {
 
 	/* @brief Octree Post-Order Iterator constructor, with the ordered stack being finalised at time of Iterator construction
 	* 
-	* Empty octants (no children, not a leaf) are present for completeness to facilitate memory deallocation
+	* Empty octants (i.e. empty leaf) are present for completeness to facilitate memory deallocation
 	* 
 	* @tparam Octree: the Octree type, e.g. Octree<double>
 	* @param root_octant: pointer to the top-level Octant to post-order traverse from

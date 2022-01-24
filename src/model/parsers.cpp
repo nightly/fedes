@@ -365,7 +365,6 @@ namespace fedes {
 						A1.emplace_back(s);
 					}
 				}
-
 				if (A1.size() == 4) {
 					model.displacement[stoi(A1[0]) - 1].emplace_back(stod(A1[1]));
 					model.displacement[stoi(A1[0]) - 1].emplace_back(stod(A1[2]));
