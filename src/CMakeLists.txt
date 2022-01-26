@@ -4,7 +4,9 @@ cmake_minimum_required (VERSION 3.8)
 set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp"
 "model/model.cpp" "model/parsers.cpp" "model/writers.cpp"
 "indexing/octree/octree.cpp" "indexing/octree/octant.cpp" "indexing/octree/traversals.cpp" "indexing/octree/interpolations.cpp"
-"common/files.cpp" "common/strings.cpp" "instrumentation/timer.cpp")
+"memory/chunk_allocator.cpp" "thread/thread_pool.cpp"
+"common/files.cpp" "common/strings.cpp"
+"instrumentation/timer.cpp")
 
 add_library(fedes STATIC ${FEDES_SOURCES})
 

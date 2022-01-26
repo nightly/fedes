@@ -11,10 +11,9 @@
 
 /*
  * @brief Sets source and target models based on a pre-defined set of examples
- * 
- * @param source: the starting model
- * @param target: the model where data will/has been mapped to
- * @param id: default parameter = 1, dictates which model to use
+ * @param source: starting model
+ * @param target: model where data will/has been mapped to
+ * @param id: dictates which example model to use. @default = 1.
  */
 void SetModels(fedes::Model& source, fedes::Model& target, unsigned int id) {
 	fedes::internal::Timer timer("Mesh Parsing");
@@ -38,16 +37,15 @@ void SetModels(fedes::Model& source, fedes::Model& target, unsigned int id) {
 		fedes::AbaqusOutputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process-1-Abaqus-Output.dat", source);
 		fedes::MorpheoInputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process2-Machining-XML-input.vtu", target);
 		break;
-	}
+	}		
+	target.SetIndexes(source);
 }
 
 /*
  * @brief Will export the source and target models in .xml/.vtu format (visualisable with ParaView). Overwrites existing files.
- * 
- * @param source: the starting model
- * @param target: the model where data will/has been mapped to
+ * @param source: starting model
+ * @param target: model where data will/has been mapped to
  * @param file_suffix: filename suffixes before file extension to "source" + "target". E.g. "oct-npm" = "source-oct-npm.xml"
- *
  * @exception Propagtes std::ofstream::failure
  */
 void ExportModels(fedes::Model& source, fedes::Model& target, const std::string& file_suffix) {

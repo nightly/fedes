@@ -9,6 +9,6 @@ namespace fedes {
 	std::string RightTrim(const std::string& string);
 	std::string Trim(const std::string& string);
 
-	int StringSplit(std::vector<std::string>& splits, const std::string& string, const char delimiter);
+	size_t StringSplit(std::vector<std::string>& splits, const std::string& string, const char delimiter);
 	std::string ToLower(const std::string& string);
 }

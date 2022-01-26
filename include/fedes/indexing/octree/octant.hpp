@@ -14,9 +14,10 @@ namespace fedes::internal {
 		Vector3<T> extent; // Extent = half of each dimension (half width, height, depth)
 		std::vector<size_t> points;
 		std::array<Octant<T>*, 8> child = {nullptr}; // @Todo: hold one pointer instead of 8
+		Octant<T>* parent = nullptr;
 	public:
 		Octant(const Vector3<T>& center, const Vector3<T>& extent);
-		Octant(const Vector3<T>& center, const Vector3<T>& extent, const Vector3<T>& point);
+		Octant(const Vector3<T>& center, const Vector3<T>& extent, Octant<T>* parent);
 		~Octant();
 
 		Octant(const Octant& other) = delete;

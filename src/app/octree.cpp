@@ -22,7 +22,6 @@ void OctreeNPM(fedes::Model& source, fedes::Model& target, size_t points_per_lea
 	fedes::Octree<double> octree = OctreeBuild(source, points_per_leaf, max_depth);
 	fedes::internal::Timer interpolation_timer("Octree NPM Interpolation");
 	fedes::OctreeNearestPointMethod(octree, source, target);
-	interpolation_timer.StopWithWrite();
 }
 
 
@@ -30,13 +29,16 @@ void OctreeNPM(fedes::Model& source, fedes::Model& target, size_t points_per_lea
  * @brief Distance Method using Field of Points with Octree Index with timing
  */
 void OctreeDMUFOP(fedes::Model& source, fedes::Model& target, size_t points_per_leaf, size_t max_depth) {
-	fedes::internal::Timer timer(__FUNCSIG__);
+	fedes::Octree<double> octree = OctreeBuild(source, points_per_leaf, max_depth);
+	fedes::internal::Timer interpolation_timer("Octree Distance Method using Field of Points Interpolation");
+	fedes::OctreeFieldOfPoints(octree, source, target);
 }
 
 /*
  * @brief Distance Method using Elements with Octree Index with timing
  */
 void OctreeDMUE(fedes::Model& source, fedes::Model& target, size_t points_per_leaf, size_t max_depth) {
+	fedes::Octree<double> octree = OctreeBuild(source, points_per_leaf, max_depth);
 	fedes::internal::Timer timer(__FUNCSIG__);
 }
 
@@ -44,5 +46,6 @@ void OctreeDMUE(fedes::Model& source, fedes::Model& target, size_t points_per_le
  * @brief Element Shape Function with Octree Index with timing
  */
 void OctreeESF(fedes::Model& source, fedes::Model& target, size_t points_per_leaf, size_t max_depth) {
+	fedes::Octree<double> octree = OctreeBuild(source, points_per_leaf, max_depth);
 	fedes::internal::Timer timer(__FUNCSIG__);
 }

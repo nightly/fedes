@@ -1,4 +1,5 @@
 #include "fedes/indexing/octree/octree.hpp"
+#include <gtest/gtest.h>
 
 #include <memory>
 #include <array>
@@ -6,7 +7,6 @@
 
 #include "fedes/maths/vector3.hpp"
 
-#include <gtest/gtest.h>
 
 class OctreeTest : public ::testing::Test {
 protected:

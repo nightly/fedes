@@ -11,4 +11,12 @@ namespace fedes {
 	template<typename T>
 	void OctreeNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source_model, fedes::Model& target_model);
 	
+	template<typename T>
+	void OctreeFieldOfPoints(const fedes::Octree<T>& octree, const fedes::Model& source_model, fedes::Model& target_model);
+	
+	template<typename T>
+	void OctreeDistanceUsingElements(const fedes::Octree<T>& octree, const fedes::Model& source_model, fedes::Model& target_model);
+	
+	template<typename T>
+	void OctreeElementShapeFunction(const fedes::Octree<T>& octree, const fedes::Model& source_model, fedes::Model& target_model);
 }

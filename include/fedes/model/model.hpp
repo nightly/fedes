@@ -21,7 +21,7 @@ namespace fedes {
 		std::vector<double> accumulated_strain;
 		std::vector<fedes::Vector3<double>> integration;
 	public:
-		void ResizeIndexes(const fedes::Model& source);
+		void SetIndexes(const fedes::Model& source);
 		void AssignIntegration();
 
 		void Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path = "../../../exports");

@@ -37,6 +37,7 @@ namespace fedes {
 
 		bool Find(const Vector3<T>& point) const;
 		size_t Nearest(const Vector3<T>& query_point) const;
+		std::array<fedes::Vector3<T>, 8> FieldOfPoints(const Vector3<T>& query_point);
 
 		post_order_iterator post_begin();
 		post_order_iterator post_end();

@@ -13,13 +13,11 @@ namespace fedes {
 
 	/*
 	 * @brief CreateXML will export an XML file with data that can be visualised with ParaView or Morpheo by providing a model and output file path.
-	 * 
 	 * @port This function is ported from FEDES v2
 	 * @param path: Path to write file to, e.g. "dir/a.xml" or "b.vtu"
 	 * @param model: Model that will be used to write data to the file from
 	 * @param by_integration: differentiates whether or not we are dealing with certain values by integration or node points,
 	 * in FEDES v2, this corresponds to the difference between createXML1 and create XML2
-	 * 
 	 * @exception Propagates std::ofstream failure
 	 */
 	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model, bool by_integration) {

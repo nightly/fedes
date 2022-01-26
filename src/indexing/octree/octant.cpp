@@ -13,14 +13,25 @@ namespace fedes::internal {
 
 	/* 
 	 * @brief Octant constructor, creating the octant with the given center and extent
-	 *
-	 * @tparam T: the type of point contained within the Octant, i.e. double/float
-	 * @param center: the center of this Octant
-	 * @param extent: how far the octant extends within each axis (width, height, depth)
+	 * @tparam T: type of point contained within the Octant, i.e. double/float
+	 * @param center: center of this Octant
+	 * @param extent: half how far the Octant extends within each axis (width, height, depth)
 	 */
 	template<typename T>
 	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent)
 		: center(center), extent(extent) {
+	}
+
+	/*
+	 * @brief Octant constructor, creating the octant with the given center and extent
+	 * @tparam T: type of point contained within the Octant, i.e. double/float
+	 * @param center: center of this Octant
+	 * @param extent: half how far the Octant extends within each axis (width, height, depth)
+	 * @param parent: the parent of thie newly created Octant
+	 */
+	template<typename T>
+	Octant<T>::Octant(const Vector3<T>& center, const Vector3<T>& extent, Octant<T>* parent)
+		: center(center), extent(extent), parent(parent) {
 	}
 
 	/*
@@ -44,11 +55,10 @@ namespace fedes::internal {
 	 *
 	 * Morton Encoding, also known as Z-Ordering is used here. The point in question is compared to the octant's center
 	 * to determine whether it is larger in the X, Y, and Z axis'. Then pattern matching is used to determine the correct
-	 * child octant to return. Example: 000 would return 0, where as 111 would return 7. Used for insertion & traversal.
+	 * child octant to return. Examples: 000 would return 0, whereas 111 would return 7. Used for insertion & traversal.
 	 * 
 	 * @param point: the point in question to determine the correct sub-Octant for based on the current Octant.
-	 * 
-	 * @returns unsigned integer from 0 to 7 representing the child octant within the child[] array
+	 * @return unsigned integer from 0 to 7 representing the child octant within the child[] array
 	 */
 	template<typename T>
 	uint8_t Octant<T>::DetermineChildOctant(const Vector3<T>& point) const {

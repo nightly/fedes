@@ -16,7 +16,6 @@ namespace fedes {
 
 	/**
 	 * @brief Reads an ANSYS input file exported with LIS, parses nodes and elements.
-	 *
 	 * @port - Port of code from FEDES v2
 	 * @param path: Path to the file
 	 * @param model: Model which will be updated by reference
@@ -82,7 +81,6 @@ namespace fedes {
 
 	/**
 	* @brief Reads an ANSYS output file (in .txt), parsing displacements, total strain and stress
-	*
 	* @port - Port of code from FEDES v2
 	* @param path: Path to the file
 	* @param model: Model which will be updated by reference
@@ -173,7 +171,6 @@ namespace fedes {
 
 	/*
 	 * @brief Maps nodes and elements to fedes::Model from an Abaqus .inp file
-	 *
 	 * @port - Port of code from FEDES v2
 	 * @param path: Path to the file
 	 * @param model: Model which will be updated by reference
@@ -255,10 +252,7 @@ namespace fedes {
 	}
 
 	/**
-	* @brief Maps Abaqus Output data for a model where the input data was set prior (uses node.size)
-	* 
-	* Reads an ABAQUS output file (in .dat), parsing displacements, stress, total strain, platsic strain & accumulated strain
-	*
+	* @brief Maps Abaqus Output data file (.dat) for a model where input data was set prior (uses node.size of the model)
 	* @port - Port of code from FEDES v2
 	* @param path: Path to the file
 	* @param model: Model which will be updated by reference
@@ -457,7 +451,6 @@ namespace fedes {
 
 	/*
 	 * @brief Maps nodes and elements to fedes::Model from an Morpheo .vtu or .xml file
-	 *
 	 * @port - Port of code from FEDES v2
 	 * @param path: Path to the file
 	 * @param model: Model which will be updated by reference
@@ -529,7 +522,6 @@ namespace fedes {
 
 	/*
 	 * @brief Maps nodes, elements, stresses, displacements, total strains and accumulated strains from Morpheo .vtu/.xml
-	 *
 	 * @port - Port of code from FEDES v2
 	 * @param path: Path to the file
 	 * @param model: Model which will be updated by reference

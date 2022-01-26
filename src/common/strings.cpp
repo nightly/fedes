@@ -11,7 +11,6 @@ namespace fedes {
 
 	/*
 	* @brief Trims whitespaces and blank characters from the start/left side of the string.
-	* 
 	* @param string The string to evaluate
 	* @return A string that's been trimmed from the left-hand/beginning side
 	*/
@@ -22,7 +21,6 @@ namespace fedes {
 
 	/*
 	* @brief Trims whitespaces and blank characters from the end/right-side of a string.
-	* 
 	* @param string The string to evaluate
 	* @return A string that's been trimmed from the right-hand/end side
 	*/
@@ -33,7 +31,6 @@ namespace fedes {
 
 	/*
 	 * @brief Trims whitespaces and blank characters from start/end (left/right) side of the string.
-	 * 
 	 * @param string The string to trim
 	 * @return A string that is now trimmed
 	 */
@@ -43,14 +40,13 @@ namespace fedes {
 
 	/*
 	 * @brief StringSplit will output to a vector of strings separated based on the provided delimiter.
-	 *
 	 * @param splits: each splitted string will be outputted as a new entry into this vector of strings
 	 * @param string: the original string
-	 * @param  delimiter: the delimiter to separate the string by.
+	 * @param  delimiter: the delimiter to separate the string by
 	 * @return Number of splits
 	 */
-	int StringSplit(std::vector<std::string>& splits, const std::string& string, const char delimiter) {
-		int result = 0;
+	size_t StringSplit(std::vector<std::string>& splits, const std::string& string, const char delimiter) {
+		size_t result{0};
 		std::stringstream stream(string);
 		std::string current;
 		while (getline(stream, current, delimiter)) {
@@ -62,7 +58,6 @@ namespace fedes {
 
 	/*
 	 * @brief Converts a string to lower-case and returns it
-	 * 
 	 * @param string: The string to convert to lowercase
 	 * @return Newly-created lower-cased string
 	 */
