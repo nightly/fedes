@@ -1,9 +1,9 @@
 cmake_minimum_required (VERSION 3.8)
 
 # FEDES Library
-set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp"
+set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp" "maths/direction.cpp"
 "model/model.cpp" "model/parsers.cpp" "model/writers.cpp"
-"indexing/octree/octree.cpp" "indexing/octree/octant.cpp" "indexing/octree/traversals.cpp" "indexing/octree/interpolations.cpp"
+"indexing/mx-octree/octree.cpp" "indexing/mx-octree/octant.cpp" "indexing/mx-octree/traversals.cpp" "indexing/mx-octree/interpolations.cpp"
 "memory/chunk_allocator.cpp" "thread/thread_pool.cpp"
 "common/files.cpp" "common/strings.cpp"
 "instrumentation/timer.cpp")

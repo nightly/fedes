@@ -1,7 +1,7 @@
 #pragma once 
 
-#include "fedes/indexing/octree/octree.hpp"
-#include "fedes/indexing/octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octant.hpp"
 #include "fedes/model/model.hpp"
 
 #include <concepts>

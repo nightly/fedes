@@ -1,13 +1,11 @@
-#include "fedes/indexing/octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octant.hpp"
 
 #include <array>
-#include <tuple>
-#include <matchit.h>
-
 #include <iostream>
 #include <string>
 
 #include "fedes/maths/vector3.hpp"
+#include "fedes/maths/direction.hpp"
 
 namespace fedes::internal {
 
@@ -51,7 +49,7 @@ namespace fedes::internal {
 	}
 
 	/*
-	 * @brief Provided a point, returns which octant/node to traverse to given this octant's center
+	 * @brief Provided a point, returns which octant/node to traverse using the current Octant's center
 	 *
 	 * Morton Encoding, also known as Z-Ordering is used here. The point in question is compared to the octant's center
 	 * to determine whether it is larger in the X, Y, and Z axis'. Then pattern matching is used to determine the correct
@@ -61,24 +59,8 @@ namespace fedes::internal {
 	 * @return unsigned integer from 0 to 7 representing the child octant within the child[] array
 	 */
 	template<typename T>
-	uint8_t Octant<T>::DetermineChildOctant(const Vector3<T>& point) const {
-		using namespace matchit;
-
-		bool x_larger = point.x >= center.x;
-		bool y_larger = point.y >= center.y;
-		bool z_larger = point.z >= center.z;
-		std::tuple<bool, bool, bool> tuple{ x_larger, y_larger, z_larger };
-	
-		return match(tuple)(
-		pattern | ds(true, true, true) = [] { return 7; },
-		pattern | ds(true, true, false) = [] { return 6; },
-		pattern | ds(true, false, true) = [] { return 5; },
-		pattern | ds(true, false, false) = [] { return 4; },
-		pattern | ds(false, true, true) = [] { return 3; },
-		pattern | ds(false, true, false) = [] { return 2; },
-		pattern | ds(false, false, true) = [] { return 1; },
-		pattern | ds(false, false, false) = [] { return 0; }
-		);
+	uint_fast8_t Octant<T>::DetermineChildOctant(const Vector3<T>& point) const {
+		return fedes::DetermineDirection(center, point);
 	}
 
 	/*

@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "fedes/indexing/octree/octree.hpp"
-#include "fedes/indexing/octree/interpolations.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
+#include "fedes/indexing/mx-octree/interpolations.hpp"
 #include "fedes/instrumentation/timer.hpp"
 
 

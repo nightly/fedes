@@ -245,17 +245,16 @@ namespace fedes {
 		}	
 		try {
 			fedes::CloseInputFileStream(stream);
-		}
-		catch (const std::ifstream::failure& e) {
+		} catch (const std::ifstream::failure& e) {
 			throw;
 		}
 	}
 
 	/**
-	* @brief Maps Abaqus Output data file (.dat) for a model where input data was set prior (uses node.size of the model)
+	* @brief Maps Abaqus Output data file (.dat) for a model which has its input data pre-set
 	* @port - Port of code from FEDES v2
 	* @param path: Path to the file
-	* @param model: Model which will be updated by reference
+	* @param model: Model which will be updated by reference, assumes nodes set prior (uses nodes.size)
 	* @exception Propagates std::ifstream::failure
 	*/
 	void AbaqusOutputRead(const std::filesystem::path& path, fedes::Model& model) {
@@ -266,8 +265,7 @@ namespace fedes {
 		std::ifstream stream;
 		try {
 			fedes::SetInputFileStream(path, stream);
-		}
-		catch (const std::ifstream::failure& e) {
+		} catch (const std::ifstream::failure& e) {
 			throw;
 		}
 		while (stream.peek() != EOF && std::getline(stream, line)) {

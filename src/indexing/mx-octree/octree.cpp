@@ -1,4 +1,4 @@
-#include "fedes/indexing/octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
 
 #include <span>
 #include <vector>
@@ -6,22 +6,24 @@
 #include <memory>
 #include <limits>
 #include <array>
+#include <unordered_map>
 
 #include <iostream>
 #include <string>
 
 #include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/octree/octant.hpp"
-#include "fedes/indexing/octree/traversals.hpp"
+#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/indexing/mx-octree/traversals.hpp"
 #include "fedes/maths/distance.hpp"
+#include "fedes/maths/direction.hpp"
 
 namespace fedes {
 
 	/**
-	 * @brief Octree will be constructed based on a set of unique points provided
+	 * @brief Index by node. Octree will be constructed based on a set of unique points provided.
 	 * @tparam T: point type of Octree, e.g. double, float
-	 * @param points: Unique set of points to be indexed from any std::span-compliant container (array, vector, etc)...
-	 * @param points_per_leaf: the maximum number of points to be contained within a leaf before splitting into a branch
+	 * @param points: Unique set of points to be indexed from any std::span-compliant container (array, vector, etc)
+	 * @param points_per_leaf: the threshold number of points to be contained within a leaf before splitting into a branch
 	 * @param max_depth: the maximum depth for the Octree
 	 * @exception length_error: If an empty set of points is sent, no Octree will be constructed
 	 */
@@ -31,6 +33,46 @@ namespace fedes {
 		if (points_.empty()) {
 			throw std::length_error("Octree Constructor: Empty set of initial points sent");
 		}
+		SetRoot();
+		for (size_t i = 0; i != points_.size(); i++) {
+			InsertAtOctant(*root_, i, 0);
+		}
+	}
+
+	/*
+	 * @brief Index by element constructor overload for the Octree, using unique points and corresponding elements.
+	 * @tparam T: point type of Octree, e.g. double, float
+	 * @param points: Unique set of points to be indexed from any std::span-compliant container (array, vector, etc)
+	 * @param elements: a 2-dimensional std::span compliant container that details elements with a list of its nodes
+	 * @param points_per_leaf: the threshold number of points to be contained within a leaf before splitting into a branch
+	 * @param max_depth: the maximum depth for the Octree
+	 * @exception length_error: If an empty set of points or elements are sent, no Octree will be constructed
+	 */
+	template <typename T>
+	Octree<T>::Octree(const std::span<Vector3<T>>& points, const std::span<std::span<int>>& elements, size_t points_per_leaf, size_t max_depth) 
+		: points_(points), elements_(elements), points_per_leaf_(points_per_leaf), max_depth_(max_depth) {
+		if (points_.empty()) {
+			throw std::length_error("Octree Element Index Constructor: Empty set of initial points sent");
+		}
+		if (elements_.empty()) {
+			throw std::length_error("Octree Element Index Constructor: Empty set of elements sent");
+		}
+		SetRoot();
+		for (size_t i = 0; i != points_.size(); i++) {
+			InsertAtOctant(*root_, i, 0);
+		}
+		node_elements_map_.reserve(points_.size());
+		for (size_t e = 0; e < elements_.size(); e++) {
+			for (size_t n = 0; e < elements_[e].size(); n++) {
+				node_elements_map_[n].emplace_back(e);
+			}
+		}
+	}
+
+	/* @brief Calculates and sets the root Octant/node (center & extent) from the given set of points.
+	 */
+	template <typename T>
+	void Octree<T>::SetRoot() {
 		fedes::Vector3<T> min(std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
 		fedes::Vector3<T> max(std::numeric_limits<T>::min(), std::numeric_limits<T>::min(), std::numeric_limits<T>::min());
 		fedes::Vector3<T> center;
@@ -56,13 +98,10 @@ namespace fedes {
 			if (v.z < min.z) {
 				min.z = v.z;
 			}
-		}		
+		}
 		fedes::Vector3<T> extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
 		center /= points_.size();
 		root_ = new Octant(center, extent / 2, nullptr);
-		for (size_t i = 0; i != points_.size(); i++) {
-			InsertAtOctant(*root_, i, 0);
-		}
 	}
 
 	/*
@@ -71,7 +110,7 @@ namespace fedes {
 	* @param point_id: the point index to insert into the correct Octant from points_
 	* @param size_t depth: the current depth of the given Octant
 	*/
-	template<typename T>
+	template <typename T>
 	void Octree<T>::InsertAtOctant(Octant& octant, size_t point_id, size_t depth) {
 		// Handle leaf node case
 		if (octant.IsLeaf()) {
@@ -84,7 +123,7 @@ namespace fedes {
 			}
 		}
 		// Handle branch node/interior node case
-		uint8_t oct = octant.DetermineChildOctant(points_[point_id]);
+		uint_fast8_t oct = octant.DetermineChildOctant(points_[point_id]);
 		return InsertAtOctant(*(octant.child[oct]), point_id, ++depth);
 	}
 
@@ -99,7 +138,7 @@ namespace fedes {
 		std::vector<size_t> current_points = octant.points;
 		octant.points.clear();
 
-		for (uint8_t i = 0; i < 8; i++) {
+		for (uint_fast8_t i = 0; i < 8; i++) {
 			fedes::Vector3<T> split_center = octant.center;
 			split_center.x += octant.extent.x * (i & 4 ? 0.5 : -0.5);
 			split_center.y += octant.extent.y * (i & 2 ? 0.5 : -0.5);
@@ -181,7 +220,6 @@ namespace fedes {
 	* @param octant: the current Octant we are searching recursively from
 	* @return Nearest point as the index identifier from the original container
 	*/
-	// .......
 	template <typename T>
 	size_t Octree<T>::NearestSearch(const Vector3<T>& query_point, const Octant& octant) const {
 		if (!octant.IsLeaf()) { // Interior node case
@@ -195,7 +233,7 @@ namespace fedes {
 				// The child node we wanted to traverse to is a leaf with no points, therefore, we must select a different node
 				Octant* best_octant = nullptr;
 				T best_distance = std::numeric_limits<T>::max();
-				for (uint8_t i = 0; i < 8; i++) {
+				for (uint_fast8_t i = 0; i < 8; i++) {
 					if ((i == oct) || ((octant.child[i]->IsLeaf()) && octant.child[i]->IsEmpty())) {
 						continue; // Exclude the node previously selected as well as any node that can't be traversed to
 					}
@@ -219,6 +257,8 @@ namespace fedes {
 					best_point_index = p;
 				}
 			}
+			// Check neighbouring Octants for minimum possible distance to query point 
+			// versus current best distance to see if we must check them at all.
 			return best_point_index;
 		}
 	}
@@ -226,17 +266,45 @@ namespace fedes {
 	/*
 	 * @brief Performs Field of Point search
 	 * @param query_point: the query point to use as origin for the search
+	 * @return An array of points found in each quadrant. If a point cannot be found in a direction, it will be NaN.
 	 */
 	template <typename T>
-	std::array<fedes::Vector3<T>, 8> Octree<T>::FieldOfPoints(const Vector3<T>& query_point) {
-		// 1. Traverse to the correct octant based on the query point and use that as the origin node
-		// 2. Assign data for each direction/field from the points contained within the origin node
-		// 3. Locate the neighboring nodes for any unassigned directions
-		// 4. Where a point cannot be found for a given direction/field because it doesn't exist,
-		//    we can represent it with NaN and then perform the interpolation with points we did find.
-		return {};
+	std::array<fedes::Vector3<T>, 8> Octree<T>::FieldOfPoints(const Vector3<T>& query_point) const {
+		std::array<fedes::Vector3<T>, 8> field = {fedes::Vector3<T>(std::numeric_limits<T>::infinity)};
+		Octant* octant = root_;
+		while (!octant->IsLeaf()) {
+			octant = octant->DetermineChildOctant(query_point);
+		}
+		for (auto& p : octant->points) {
+			uint_fast8_t dir = fedes::DetermineDirection(query_point, points_[p]);
+			if (field[dir] == fedes::Vector3<T>(std::numeric_limits<T>::infinity)) {
+				field[dir] = points_[p];
+			} else if (fedes::DistanceSquared(query_point, points_[p]) < fedes::DistanceSquared(query_point, field[dir]) {
+				field[dir] = points_[p];
+			}
+		}
+		
+		// Any points in a given direction which were not found should be searched for in the direction's neighbouring Octant.
+		for (uint_fast8_t dir = 0; dir < 8; dir++ ) {
+			if (field[dir] != fedes::Vector3<T>(std::numeric_limits<T>::infinity)) {
+				continue;
+			}
+			Octant* neighbour = FindNeighbourNode(octant, dir);
+			if (neighbour == nullptr) {
+				field[dir] = fedes::Vector3<T>(std::numeric_limits<T>::quiet_NaN);
+				continue;
+			}
+			for (auto& p : neighbour->points) {
+				if (field[dir] == fedes::Vector3<T>(std::numeric_limits<T>::infinity)) {
+					field[dir] = points_[p];
+				}
+				else if (fedes::DistanceSquared(query_point, points_[p]) < fedes::DistanceSquared(query_point, field[dir]) {
+					field[dir] = points_[p];
+				}
+			}
+		}
+		return field;
 	}
-
 
 	/*
 	 * @brief Clears the octree and deallocates all memory

@@ -27,6 +27,6 @@ namespace fedes::internal {
 
 		bool IsLeaf() const;
 		bool IsEmpty() const;
-		uint8_t DetermineChildOctant(const Vector3<T>& point) const;
+		uint_fast8_t DetermineChildOctant(const Vector3<T>& point) const;
 	};
 }

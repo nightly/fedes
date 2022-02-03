@@ -1,7 +1,7 @@
 #pragma once 
 
 #include "fedes/model/model.hpp"
-#include "fedes/indexing/octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
 
 fedes::Octree<double> OctreeBuild(fedes::Model& source, size_t points_per_leaf, size_t max_depth);
 

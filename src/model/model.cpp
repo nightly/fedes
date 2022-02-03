@@ -25,15 +25,15 @@ namespace fedes {
 	}
 
 	/* 
-	 * @brief Resizes and pre-allocates all target indexes for FE data allowing arbitrary use of operator[] + assigns integration data
+	 * @brief  For the target mesh: resizes and pre-allocates all target indexes for FE data,
+	 * allowing arbitrary use of operator[] + assigns integration data (see: AssignIntegration).
 	 *
-	 * Displacement and forces are mapped by node, stresses and strains are mapped by integration points/elements, hence why some indexes are 
-	 * relative to the element count as opposed to node count. Integration points are only calculated when the source model has data that
-	 * needs to be mapped via integration point (e.g. stress).
+	 * Displacement and forces are mapped by node, stresses and strains are mapped by integration points/elements.
+	 * Integration points are only calculated if the source model has data that needs mapping via integration points.
 	 * 
 	 * @param source: the source model so that target FE indexes can be set correctly corresponding to the source model
 	 */
-	void Model::SetIndexes(const fedes::Model& source) {
+	void Model::SetTargetIndexes(const fedes::Model& source) {
 		if (!source.displacement.empty()) {
 			displacement.resize(this->nodes.size());
 		}
@@ -55,14 +55,17 @@ namespace fedes {
 	}
 
 	/*
-	 * @brief Provides the integration data for the model, called by default from SetIndexes()
+	 * @brief Provides the integration data for the model, called by default from SetTargetIndexes(). Idempotent.
 	 * 
-	 * An integration point represents the average node value for each element.
+	 * An integration point represents the average/center node value for any given element.
 	 * Some mapping methods are done via integration point instead of by node (e.g stresses and strains).
 	 * 
 	 * @port Port of "convert_coordinates" from FEDES v2 interpolations.pas
 	 */
 	void Model::AssignIntegration() {
+		if (!integration.empty()) {
+			return; 
+		}
 		integration.reserve(elements.size());
 		for (size_t i = 0; i < elements.size(); i++) {
 			double x = 0;

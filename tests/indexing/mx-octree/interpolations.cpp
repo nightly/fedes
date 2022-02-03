@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
-#include "fedes/indexing/octree/interpolations.hpp"
+#include "fedes/indexing/mx-octree/interpolations.hpp"
 
 #include <string>
 
 #include "fedes/model/model.hpp"
 #include "fedes/model/writers.hpp"
 #include "fedes/model/parsers.hpp"
-#include "fedes/indexing/octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
 #include "fedes/common/files.hpp"
 
 
@@ -20,6 +20,7 @@ TEST(OctreeInterpolations, NPM1) {
 		FAIL() << e.what();
 	}
 	fedes::Octree<double> octree(source.nodes, 8, 10);
+	target.SetTargetIndexes(source);
 	fedes::OctreeNearestPointMethod<double>(octree, source, target);
 	ASSERT_EQ(target.displacement[2], source.displacement[92]);
 	ASSERT_EQ(target.displacement[14], source.displacement[2015]);

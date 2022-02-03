@@ -8,6 +8,7 @@ namespace fedes {
 	struct Vector3 {
 		T x, y, z;
 		Vector3(T x, T y, T z);
+		Vector3(T scalar);
 		Vector3();
 
 		Vector3 operator/(const T& scalar) const;

@@ -1,4 +1,4 @@
-#include "fedes/indexing/octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
 #include <gtest/gtest.h>
 
 #include <memory>

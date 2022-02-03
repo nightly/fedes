@@ -1,8 +1,8 @@
-#include "fedes/indexing/octree/interpolations.hpp"
+#include "fedes/indexing/mx-octree/interpolations.hpp"
 
 #include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/octree/octree.hpp"
-#include "fedes/indexing/octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octant.hpp"
 #include "fedes/model/model.hpp"
 
 #include <iostream>
@@ -33,7 +33,7 @@ namespace fedes {
 	}
 
 	/*
-	 * @brief Performs Distance Method using Field of Points using an Octree
+	 * @brief Performs Distance Method using Field of Points using an Octree, with proportional distance coefficent
 	 * @tparam T: point data type of the Octree, i.e. double, float
 	 * @param octree: built Octree Index to use when performing the mapping
 	 * @param source: source model with nodal and FE data

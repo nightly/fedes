@@ -4,20 +4,31 @@
 
 namespace fedes {
 	/*
+	 * @brief Empty constructor for Vector3 which will return a Vector3 of (0.00, 0.00, 0.00)
+	 * @tparam T: the numeric type of the Vector3, i.e. double or float
+	 */
+	template<typename T>
+	Vector3<T>::Vector3()
+		: x(0.0), y(0.0), z(0.0) {}
+
+	/*
 	 * @brief Constructor for Vector3 which will take the given coordinates in the order of x, y, and z
 	 * @tparam T: the numeric type of the Vector3, i.e. double or float
+	 * @params x, y, z: the respective coordinates for each dimension, assigned in the listed order
 	 */
 	template<typename T>
 	Vector3<T>::Vector3(T x, T y, T z)
 		: x(x), y(y), z(z) {}
 
 	/*
-	 * @brief Empty constructor for Vector3 which will return a Vector3 of (0.00, 0.00, 0.00) 
+	 * @brief Scalar constructor overload for Vector3, setting an uniform value for x, y, and z.
 	 * @tparam T: the numeric type of the Vector3, i.e. double or float
+	 * @param scalar: the uniform value to set for each dimension, x, y, and z.
 	 */
-	template<typename T>
-	Vector3<T>::Vector3()
-		: x(0.0), y(0.0), z(0.0) {}
+	template <typename T>
+	Vector3<T>::Vector3(T scalar) 
+		: x(scalar), y(scalar), z(scalar) {
+	}
 
 	/*
 	 * @brief Overloaded division operator with a scalar value 

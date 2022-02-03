@@ -1,4 +1,4 @@
-#include "fedes/indexing/octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octant.hpp"
 
 #include <memory>
 

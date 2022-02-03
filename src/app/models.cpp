@@ -38,7 +38,7 @@ void SetModels(fedes::Model& source, fedes::Model& target, unsigned int id) {
 		fedes::MorpheoInputRead("../../models/Example1-ManufacturingProcessChain-2ndLoop/Process2-Machining-XML-input.vtu", target);
 		break;
 	}		
-	target.SetIndexes(source);
+	target.SetTargetIndexes(source);
 }
 
 /*

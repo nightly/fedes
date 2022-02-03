@@ -6,9 +6,9 @@
 namespace fedes {
 
 	template <typename T>
-	T DistanceSquared(const fedes::Vector3<T>& point, const fedes::Vector3<T>& second_point);
+	T DistanceSquared(const fedes::Vector3<T>& p, const fedes::Vector3<T>& q);
 
 	template <typename T>
-	T Distance(const fedes::Vector3<T>& point, const fedes::Vector3<T>& second_point);
+	T Distance(const fedes::Vector3<T>& p, const fedes::Vector3<T>& q);
 
 }

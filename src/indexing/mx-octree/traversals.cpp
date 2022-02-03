@@ -1,11 +1,11 @@
-#include "fedes/indexing/octree/traversals.hpp"
+#include "fedes/indexing/mx-octree/traversals.hpp"
 
 #include <stack>
 #include <iterator>
 #include <memory>
 
-#include "fedes/indexing/octree/octant.hpp"
-#include "fedes/indexing/octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octree.hpp"
 
 namespace fedes {
 
