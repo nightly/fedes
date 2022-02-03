@@ -27,8 +27,7 @@ namespace fedes {
 	 */
 	template <typename T>
 	Vector3<T>::Vector3(T scalar) 
-		: x(scalar), y(scalar), z(scalar) {
-	}
+		: x(scalar), y(scalar), z(scalar) {}
 
 	/*
 	 * @brief Overloaded division operator with a scalar value 

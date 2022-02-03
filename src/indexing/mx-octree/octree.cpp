@@ -270,41 +270,55 @@ namespace fedes {
 	 */
 	template <typename T>
 	std::array<fedes::Vector3<T>, 8> Octree<T>::FieldOfPoints(const Vector3<T>& query_point) const {
-		std::array<fedes::Vector3<T>, 8> field = {fedes::Vector3<T>(std::numeric_limits<T>::infinity)};
+		std::array<fedes::Vector3<T>, 8> field = {fedes::Vector3<T>(std::numeric_limits<T>::infinity())};
 		Octant* octant = root_;
 		while (!octant->IsLeaf()) {
-			octant = octant->DetermineChildOctant(query_point);
+			octant = octant->child[octant->DetermineChildOctant(query_point)];
 		}
 		for (auto& p : octant->points) {
 			uint_fast8_t dir = fedes::DetermineDirection(query_point, points_[p]);
-			if (field[dir] == fedes::Vector3<T>(std::numeric_limits<T>::infinity)) {
+			if (field[dir] == fedes::Vector3<T>(std::numeric_limits<T>::infinity())) {
 				field[dir] = points_[p];
-			} else if (fedes::DistanceSquared(query_point, points_[p]) < fedes::DistanceSquared(query_point, field[dir]) {
+			} else if (fedes::DistanceSquared(query_point, points_[p]) < fedes::DistanceSquared(query_point, field[dir])) {
 				field[dir] = points_[p];
 			}
 		}
 		
 		// Any points in a given direction which were not found should be searched for in the direction's neighbouring Octant.
 		for (uint_fast8_t dir = 0; dir < 8; dir++ ) {
-			if (field[dir] != fedes::Vector3<T>(std::numeric_limits<T>::infinity)) {
+			if (field[dir] != fedes::Vector3<T>(std::numeric_limits<T>::infinity())) {
 				continue;
 			}
 			Octant* neighbour = FindNeighbourNode(octant, dir);
 			if (neighbour == nullptr) {
-				field[dir] = fedes::Vector3<T>(std::numeric_limits<T>::quiet_NaN);
+				field[dir] = fedes::Vector3<T>(std::numeric_limits<T>::quiet_NaN());
 				continue;
 			}
 			for (auto& p : neighbour->points) {
-				if (field[dir] == fedes::Vector3<T>(std::numeric_limits<T>::infinity)) {
+				if (field[dir] == fedes::Vector3<T>(std::numeric_limits<T>::infinity())) {
 					field[dir] = points_[p];
-				}
-				else if (fedes::DistanceSquared(query_point, points_[p]) < fedes::DistanceSquared(query_point, field[dir]) {
+				} else if (fedes::DistanceSquared(query_point, points_[p]) < fedes::DistanceSquared(query_point, field[dir])) {
 					field[dir] = points_[p];
 				}
 			}
 		}
 		return field;
 	}
+
+
+	/* 
+	 * @brief Finds the neighbouring node in the given direction, if there is one
+	 * @param octant: current Octant to find the neighbour for
+	 * @param diretion: given direction, defined by Z-Ordering
+	 * @return A pointer to the neighboring Octant or nullptr if one cannot be found
+	 */
+	template <typename T>
+	Octree<T>::Octant* Octree<T>::FindNeighbourNode(const Octant* octant, uint_fast8_t direction) const {
+		// With the pointer to the parent Octant, we are able to ascend and descend the tree as we'd like,
+		// Neighbor Finding in Images Represented by Octrees, Hanan Samet
+		return nullptr;
+	}
+
 
 	/*
 	 * @brief Clears the octree and deallocates all memory
