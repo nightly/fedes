@@ -5,7 +5,7 @@
 
 namespace fedes {
 
-	/* @brief Determines the direction of a point against a given origin point (0-7).
+	/* @brief Determines the direction (0—7, Z-Ordering) of a point against a given origin point.
 	 * 
 	 * Z-Ordering/Morton Encoding is used here. Useful for insertions, traversals, and Field of Points.
 	 * Lower X, Y, and Z (relative to origin) corresponds to 0, whereas greater X, Y, and Z corresponds to 7.
@@ -13,7 +13,7 @@ namespace fedes {
 	 * @tparam T: point type, e.g. double, float
 	 * @param origin: 3-dimensional point to use as the center
 	 * @param p: 3-dimensional point to find direction code for respective to the given origin
-	 * @returns directional code (0-7), based on Z-Ordering
+	 * @returns directional code (0—7), based on Z-Ordering
 	 */
 	template <typename T>
 	uint_fast8_t DetermineDirection(const fedes::Vector3<T>& origin, const fedes::Vector3<T>& p) {

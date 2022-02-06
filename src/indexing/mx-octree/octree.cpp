@@ -228,8 +228,7 @@ namespace fedes {
 			if (!child->IsLeaf() || !child->IsEmpty()) {
 				// The node we wish to traverse to is an interior node or leaf node with points
 				return NearestSearch(query_point, *child);
-			}
-			else {
+			} else {
 				// The child node we wanted to traverse to is a leaf with no points, therefore, we must select a different node
 				Octant* best_octant = nullptr;
 				T best_distance = std::numeric_limits<T>::max();
