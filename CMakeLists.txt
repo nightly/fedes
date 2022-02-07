@@ -19,4 +19,4 @@ endif()
 add_subdirectory(src/app)
 
 # Benchmarks
-add_subdirectory(benchmarks)
+# add_subdirectory(benchmarks)

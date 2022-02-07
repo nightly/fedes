@@ -6,7 +6,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/external/googletest" "external/googletes
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
 
-    target_compile_features(${TESTNAME}  PRIVATE cxx_std_20)
+    target_compile_features(${TESTNAME}  PRIVATE cxx_std_23)
     if(MSVC)
         target_compile_options(${TESTNAME} PUBLIC "/Zc:__cplusplus") 
     endif()
@@ -39,5 +39,4 @@ package_add_test("parsers" "model/parsers.cpp")
 package_add_test("writers" "model/writers.cpp")
 
 package_add_test("strings" "common/strings.cpp")
-
 

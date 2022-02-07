@@ -49,7 +49,7 @@ namespace fedes {
 	 * @exception length_error: If an empty set of points or elements are sent, no Octree will be constructed
 	 */
 	template <typename T>
-	Octree<T>::Octree(const std::span<Vector3<T>>& points, const std::span<std::span<int>>& elements, size_t points_per_leaf, size_t max_depth) 
+	Octree<T>::Octree(const std::span<Vector3<T>>& points, const std::span<std::span<size_t>>& elements, size_t points_per_leaf, size_t max_depth) 
 		: points_(points), elements_(elements), points_per_leaf_(points_per_leaf), max_depth_(max_depth) {
 		if (points_.empty()) {
 			throw std::length_error("Octree Element Index Constructor: Empty set of initial points sent");
@@ -64,7 +64,7 @@ namespace fedes {
 		node_elements_map_.reserve(points_.size());
 		for (size_t e = 0; e < elements_.size(); e++) {
 			for (size_t n = 0; e < elements_[e].size(); n++) {
-				node_elements_map_[n].emplace_back(e);
+				node_elements_map_[elements_[e][n]].emplace_back(e);
 			}
 		}
 	}
@@ -135,8 +135,7 @@ namespace fedes {
 	 */
 	template<typename T>
 	void Octree<T>::Split(Octant& octant, size_t point_id, size_t depth) {
-		std::vector<size_t> current_points = octant.points;
-		octant.points.clear();
+		std::vector<size_t> current_points = std::move(octant.points);
 
 		for (uint_fast8_t i = 0; i < 8; i++) {
 			fedes::Vector3<T> split_center = octant.center;
@@ -223,7 +222,7 @@ namespace fedes {
 	template <typename T>
 	size_t Octree<T>::NearestSearch(const Vector3<T>& query_point, const Octant& octant) const {
 		if (!octant.IsLeaf()) { // Interior node case
-			uint8_t oct = octant.DetermineChildOctant(query_point);
+			uint_fast8_t oct = octant.DetermineChildOctant(query_point);
 			Octant* child = (octant.child[oct]);
 			if (!child->IsLeaf() || !child->IsEmpty()) {
 				// The node we wish to traverse to is an interior node or leaf node with points
@@ -244,8 +243,7 @@ namespace fedes {
 				}
 				return NearestSearch(query_point, *best_octant);
 			}
-		}
-		else {
+		} else {
 			// We have arrived at the best final leaf, although since leaves may contain more than 1 point, some searching is left
 			std::size_t best_point_index{};
 			T best_distance = std::numeric_limits<T>::max();

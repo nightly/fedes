@@ -10,7 +10,7 @@ set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp" "maths/direction.cpp"
 
 add_library(fedes STATIC ${FEDES_SOURCES})
 
-target_compile_features(fedes PRIVATE cxx_std_20)
+target_compile_features(fedes PRIVATE cxx_std_23)
 if(MSVC)
     target_compile_options(fedes PUBLIC "/Zc:__cplusplus") # Reports __cplusplus version correctly for external libraries checking it
 endif()

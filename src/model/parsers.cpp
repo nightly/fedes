@@ -62,11 +62,11 @@ namespace fedes {
 				}
 				size = A1.size() - 1;
 				if ((A1[size]) != (A1[size-1])) { // Hex
-					model.elements.push_back({ stoi(A1[5]) - 1, stoi(A1[6]) - 1, stoi(A1[7]) - 1, stoi(A1[8]) - 1, stoi(A1[9]) - 1, stoi(A1[10]) - 1, stoi(A1[11]) - 1, stoi(A1[12]) - 1 });
+					model.elements.push_back({ stoul(A1[5]) - 1, stoul(A1[6]) - 1, stoul(A1[7]) - 1, stoul(A1[8]) - 1, stoul(A1[9]) - 1, stoul(A1[10]) - 1, stoul(A1[11]) - 1, stoul(A1[12]) - 1 });
 				} else if ((A1[size] == A1[size-1]) && (A1[size] == A1[size-2])) { // Tetrahedron
-					model.elements.push_back({ stoi(A1[6]) - 1, stoi(A1[7]) - 1, stoi(A1[8]) - 1, stoi(A1[10]) - 1 });
+					model.elements.push_back({ stoul(A1[6]) - 1, stoul(A1[7]) - 1, stoul(A1[8]) - 1, stoul(A1[10]) - 1 });
 				} else { // Wedge
-					model.elements.push_back({ stoi(A1[5]) - 1, stoi(A1[6]) - 1, stoi(A1[7]) - 1, stoi(A1[9]) - 1, stoi(A1[10]) - 1, stoi(A1[11]) - 1});
+					model.elements.push_back({ stoul(A1[5]) - 1, stoul(A1[6]) - 1, stoul(A1[7]) - 1, stoul(A1[9]) - 1, stoul(A1[10]) - 1, stoul(A1[11]) - 1});
 				}
 			}
 			A.clear();
@@ -221,7 +221,7 @@ namespace fedes {
 						st = st + line;
 						AnzTokens = fedes::StringSplit(A1, st, ',');
 						for (int j = 1; j < (A1.size()); j++) {
-							model.elements[br_1].emplace_back(stoi(fedes::Trim(A1[j])));
+							model.elements[br_1].emplace_back(stoul(fedes::Trim(A1[j])));
 						}
 						A1.clear();
 						st = "";
@@ -231,7 +231,7 @@ namespace fedes {
 						br_1++;
 						model.elements.resize(model.elements.size() + 1);
 						for (int j = 1; j < (A.size()); j++) {
-							model.elements[br_1].emplace_back(stoi(fedes::Trim(A[j])) - 1);
+							model.elements[br_1].emplace_back(stoul(fedes::Trim(A[j])) - 1);
 						}
 						A.clear();
 					}
@@ -505,7 +505,7 @@ namespace fedes {
 				}
 				model.elements.resize(model.elements.size() + 1);
 				for (auto &s: A1) {
-					model.elements[counter_2].emplace_back(stoi(s));
+					model.elements[counter_2].emplace_back(stoul(s));
 				}
 				A.clear();
 				A1.clear();
@@ -588,7 +588,7 @@ namespace fedes {
 					}
 				}
 				for (auto& s : A1) {
-					model.elements[counter_2].emplace_back(stoi(s));
+					model.elements[counter_2].emplace_back(stoul(s));
 				}
 				A.clear();
 				A1.clear();

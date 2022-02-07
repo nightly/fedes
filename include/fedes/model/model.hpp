@@ -13,7 +13,7 @@ namespace fedes {
 	struct Model {
 	public:
 		std::vector<fedes::Vector3<double>> nodes;
-		std::vector<std::vector<int>> elements;
+		std::vector<std::vector<size_t>> elements;
 		std::vector<std::vector<double>> displacement;
 		std::vector<std::vector<double>> stress;
 		std::vector<std::vector<double>> total_strain;

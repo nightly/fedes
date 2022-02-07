@@ -18,6 +18,7 @@ namespace fedes::internal {
 	public:
 		Octant(const Vector3<T>& center, const Vector3<T>& extent);
 		Octant(const Vector3<T>& center, const Vector3<T>& extent, Octant<T>* parent);
+		Octant(Octant<T>* parent);
 		~Octant();
 
 		Octant(const Octant& other) = delete;
@@ -28,5 +29,6 @@ namespace fedes::internal {
 		bool IsLeaf() const;
 		bool IsEmpty() const;
 		uint_fast8_t DetermineChildOctant(const Vector3<T>& point) const;
+		T MinimumDistanceSq(const Vector3<T>& point) const;
 	};
 }

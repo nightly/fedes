@@ -5,7 +5,7 @@
 namespace fedes {
 
 	/*
-	 * @brief A chunk-based custom memory allocator compliant specialization of std::allocator_traits  
+	 * @brief A non thread-safe chunk-based custom memory allocator compliant specialization of std::allocator_traits  
 	 * @tparam T: object in question to allocate chunk-wise
 	 * @tparam chunk_size: size of each chunk 
 	 */

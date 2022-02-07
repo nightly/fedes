@@ -8,7 +8,6 @@
 
 #include "fedes/model/model.hpp"
 #include "fedes/common/files.hpp"
-#include "fedes/instrumentation/timer.hpp"
 
 class ParserTest : public ::testing::Test {
 protected:
@@ -30,8 +29,8 @@ TEST_F(ParserTest, AnsysReadLis) {
 	ASSERT_EQ(model_.nodes[12300].y, -69.125);
 	ASSERT_EQ(model_.nodes[54127].x, 103.64);
 
-	ASSERT_EQ(model_.elements[20000], std::vector<int>({52497, 3345, 3344, 40830}));
-	ASSERT_EQ(model_.elements[171187], std::vector<int>({ 27638, 27635, 22109, 27642 }));
+	ASSERT_EQ(model_.elements[20000], std::vector<size_t>({52497, 3345, 3344, 40830}));
+	ASSERT_EQ(model_.elements[171187], std::vector<size_t>({ 27638, 27635, 22109, 27642 }));
 }
 
 TEST_F(ParserTest, AnsysOutputRead) {
@@ -63,9 +62,9 @@ TEST_F(ParserTest, AbaqusInputRead) {
 	ASSERT_EQ(model_.nodes[0], fedes::Vector3<double>(-2, -0.0370841436, 0));
 	ASSERT_EQ(model_.nodes[74182], fedes::Vector3<double>(1.41097403, -0.599422753, 1.5));
 
-	ASSERT_EQ(model_.elements[0], std::vector<int>({71, 536, 41, 0, 2464, 2929, 2434, 2393}));
-	ASSERT_EQ(model_.elements[30000], std::vector<int>({32586, 31411, 31410, 32583, 34979, 33804, 33803, 34976}));
-	ASSERT_EQ(model_.elements[66719], std::vector<int>({69912, 69436, 69911, 71789, 72305, 71829, 72304, 74182}));
+	ASSERT_EQ(model_.elements[0], std::vector<size_t>({71, 536, 41, 0, 2464, 2929, 2434, 2393}));
+	ASSERT_EQ(model_.elements[30000], std::vector<size_t>({32586, 31411, 31410, 32583, 34979, 33804, 33803, 34976}));
+	ASSERT_EQ(model_.elements[66719], std::vector<size_t>({69912, 69436, 69911, 71789, 72305, 71829, 72304, 74182}));
 }
 
 TEST_F(ParserTest, AbaqusOutputRead) {
@@ -101,9 +100,9 @@ TEST_F(ParserTest, MorpheoInputRead) {
 	ASSERT_EQ(model_.nodes[19000], fedes::Vector3<double>(216, 894.6055903, -25.64458887));
 	ASSERT_EQ(model_.nodes[41636], fedes::Vector3<double>(227, 920, 0));
 
-	ASSERT_EQ(model_.elements[0], std::vector<int>({5921, 16282, 16103, 16153}));
-	ASSERT_EQ(model_.elements[100000], std::vector<int>({3782, 27775, 24940, 27693 }));
-	ASSERT_EQ(model_.elements[154406], std::vector<int>({19004, 41564, 40473, 19074 }));
+	ASSERT_EQ(model_.elements[0], std::vector<size_t>({5921, 16282, 16103, 16153}));
+	ASSERT_EQ(model_.elements[100000], std::vector<size_t>({3782, 27775, 24940, 27693 }));
+	ASSERT_EQ(model_.elements[154406], std::vector<size_t>({19004, 41564, 40473, 19074 }));
 }
 
 TEST_F(ParserTest, MorpheoInputOutputRead) {
@@ -120,7 +119,7 @@ TEST_F(ParserTest, MorpheoInputOutputRead) {
 	ASSERT_EQ(model_.displacement.size(), 24543); 
 
 	ASSERT_EQ(model_.nodes[24542], fedes::Vector3<double>({ 305.200439, 783.551758, -0.989621878 }));
-	ASSERT_EQ(model_.elements[60000], std::vector<int>({8586, 17257, 8541, 17256}));
+	ASSERT_EQ(model_.elements[60000], std::vector<size_t>({8586, 17257, 8541, 17256}));
 
 	ASSERT_EQ(model_.displacement[3], std::vector<double>({ 0.192687857932194, -0.411094398936378, 0.745349839557346 }));
 	ASSERT_EQ(model_.displacement[24542], std::vector<double>({ 0.0761108402353308, -0.0440849347627563, 0.220086344388388 }));

@@ -57,3 +57,5 @@ namespace fedes {
 	template void OctreeNearestPointMethod<double>(const fedes::Octree<double>&, const fedes::Model&, fedes::Model&);
 	template void OctreeFieldOfPoints<double>(const fedes::Octree<double>& octree, const fedes::Model& source, fedes::Model& target);
 }
+
+// @Todo: cover other mappings, e.g. accumulated strain

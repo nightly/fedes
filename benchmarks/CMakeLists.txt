@@ -5,7 +5,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/external/googlebenchmark" "external/goog
 macro(package_add_benchmark BENCHNAME)
     add_executable(${BENCHNAME} ${ARGN})
 
-    target_compile_features(${BENCHNAME}  PRIVATE cxx_std_20)
+    target_compile_features(${BENCHNAME}  PRIVATE cxx_std_23)
     if(MSVC)
         target_compile_options(${BENCHNAME} PUBLIC "/Zc:__cplusplus") 
     endif()
@@ -13,7 +13,7 @@ macro(package_add_benchmark BENCHNAME)
     target_link_libraries(${BENCHNAME} 
     PRIVATE 
         fedes
-        benchmark::benchmark)
+        benchmark::benchmark_main)
 
-    set_target_properties(${TESTNAME} PROPERTIES FOLDER benchmarks)
+    set_target_properties(${TESTNAME} PROPERTIES FOLDER benches)
 endmacro()

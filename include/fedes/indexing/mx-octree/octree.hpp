@@ -24,7 +24,7 @@ namespace fedes {
 		Octant* root_ = nullptr;
 		
 		std::span<Vector3<T>> points_;
-		std::span<std::span<int>> elements_;
+		std::span<std::span<size_t>> elements_;
 		std::unordered_map<size_t, std::vector<size_t>> node_elements_map_; //
 
 		size_t points_per_leaf_;
@@ -32,7 +32,7 @@ namespace fedes {
 	public:
 		Octree() = delete;
 		Octree(const std::span<Vector3<T>>& points, size_t points_per_leaf, size_t max_depth);
-		Octree(const std::span<Vector3<T>>& points, const std::span<std::span<int>>& elements, size_t points_per_leaf, size_t max_depth);
+		Octree(const std::span<Vector3<T>>& points, const std::span<std::span<size_t>>& elements, size_t points_per_leaf, size_t max_depth);
 		~Octree();
 
 		Octree(const Octree& other) = delete;
