@@ -37,3 +37,11 @@ TEST_F(OctreeTest, Nearest) {
 	fedes::Vector3<double> p2(-0.9, -0.82, -0.5);
 	ASSERT_EQ(octree_->Nearest(p2), 0);
 }
+
+TEST_F(OctreeTest, FieldOfPoints) {
+
+}
+
+TEST_F(OctreeTest, NearestElement) {
+
+}

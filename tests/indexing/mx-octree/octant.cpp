@@ -17,7 +17,6 @@ protected:
 	}
 };
 
-
 TEST_F(OctantTest, IsLeafFromFixture) {
 	bool leaf = octant_->IsLeaf();
 	ASSERT_EQ(leaf, true) << "Expected original fixture to be a leaf node";
@@ -38,4 +37,13 @@ TEST_F(OctantTest, IsEmpty) {
 	ASSERT_EQ(octant_->IsEmpty(), false);
 }
 
+TEST_F(OctantTest, MinimumDistanceZero) {
+	// Point is contained inside the Octant, thus minimum distance should be zero
+	fedes::Vector3<double> p(0.5, 0.5, 0.5); 
+	double minimum_distance = sqrt(octant_->MinimumDistanceSq(p));
+	ASSERT_EQ(minimum_distance, 0);
+}
 
+TEST_F(OctantTest, MinimumDistance) {
+
+}

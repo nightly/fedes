@@ -50,8 +50,8 @@ namespace fedes {
 	*/
 	template <typename Octree>
 	OctreePostOrderIterator<Octree>::OctreePostOrderIterator(OctreePostOrderIterator&& other) noexcept {
-		*process_stack_ = *(other.process_stack_);
-		*ordered_stack_ = *(other.ordered_stack_);
+		process_stack_.swap(other.process_stack_);
+		ordered_stack_.swap(other.ordered_stack_);
 		other.process_stack_ = nullptr;
 		other.ordered_stack_ = nullptr;
 	}
@@ -71,8 +71,8 @@ namespace fedes {
 	*/
 	template <typename Octree>
 	OctreePostOrderIterator<Octree>& OctreePostOrderIterator<Octree>::operator=(OctreePostOrderIterator&& other) noexcept {
-		*process_stack_ = *(other.ordered_stack_);
-		*ordered_stack_ = *(other.ordered_stack_);
+		process_stack_.swap(other.process_stack_);
+		ordered_stack_.swap(other.ordered_stack_);
 		other.process_stack_ = nullptr;
 		other.ordered_stack_ = nullptr;
 		return *this;

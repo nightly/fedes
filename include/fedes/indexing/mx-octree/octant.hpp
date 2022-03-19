@@ -19,7 +19,7 @@ namespace fedes::internal {
 		Octant(const Vector3<T>& center, const Vector3<T>& extent);
 		Octant(const Vector3<T>& center, const Vector3<T>& extent, Octant<T>* parent);
 		Octant(Octant<T>* parent);
-		~Octant();
+		~Octant() noexcept;
 
 		Octant(const Octant& other) = delete;
 		Octant& operator=(const Octant& other) = delete;

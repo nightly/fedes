@@ -20,3 +20,10 @@ add_subdirectory(src/app)
 
 # Benchmarks
 # add_subdirectory(benchmarks)
+
+set_target_properties(fedes fedes_app
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}"
+)

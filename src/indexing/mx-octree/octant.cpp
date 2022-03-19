@@ -5,7 +5,7 @@
 #include <string>
 
 #include "fedes/maths/vector3.hpp"
-#include "fedes/maths/direction.hpp"
+#include "fedes/maths/z_ordering.hpp"
 
 namespace fedes::internal {
 
@@ -87,7 +87,7 @@ namespace fedes::internal {
 	* @brief Octant destructor
 	*/
 	template <typename T>
-	Octant<T>::~Octant() {
+	Octant<T>::~Octant() noexcept {
 		
 	}
 	

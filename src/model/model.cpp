@@ -18,7 +18,7 @@ namespace fedes {
 	void Model::Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path) {
 		try {
 			std::string file_name_with_ext = file_name + ".vtu";
-			fedes::CreateXML(path / file_name_with_ext, *this, by_integration ? true : false);
+			fedes::CreateXML(path / file_name_with_ext, *this, by_integration);
 		} catch (const std::ofstream::failure& e) {
 			throw;
 		}
@@ -80,6 +80,27 @@ namespace fedes {
 			integration.emplace_back(x / element_count, y / element_count, z / element_count);
 		}
 	}
+
+
+	/*
+	 * @brief Determines whether there is any Finite Element Data contained that is to be mapped by node.
+	 * @return True if there's any FE data to be mapped by node (i.e. displacement), false otherwise.
+	 */
+	bool Model::ByNode() const {
+		return !displacement.empty() ? true : false;
+	}
+	
+	/*
+	 * @brief Determines whether there is any Finite Element Data contained that is to be mapped via integration point.
+	 * @return True if there is (e.g. stress), false otherwise (meaning no FEA data or only data to be mapped by node).
+	 */
+	bool Model::ByIntegration() const {
+		if (!stress.empty() || !accumulated_strain.empty() || !plastic_strain.empty() || !total_strain.empty()) {
+			return true;
+		}
+		return false;
+	}
+
 
 	/*
 	 * @brief Model equality operator, which is useful for unit tests (when dealing with small models)

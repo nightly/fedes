@@ -10,8 +10,3 @@ endif()
 
 # Dependencies
 target_link_libraries(fedes_app PRIVATE fedes)
-
-# Preprocessor definitions
-if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)
-    target_compile_definitions(fedes_app PRIVATE FEDES_BENCHMARKING=1)
-endif()

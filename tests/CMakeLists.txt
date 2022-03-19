@@ -22,18 +22,21 @@ macro(package_add_test TESTNAME)
         WORKING_DIRECTORY ${PROJECT_DIR}
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_DIR}"
     )
-    set_target_properties(${TESTNAME} PROPERTIES FOLDER tests)
+    set_target_properties(${TESTNAME} PROPERTIES 
+    FOLDER tests
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/tests")
 endmacro()
 
 # Test Suite
 package_add_test("vector3" "maths/vector3.cpp")
 package_add_test("distance" "maths/distance.cpp")
-package_add_test("direction" "maths/direction.cpp")
+package_add_test("z_ordering" "maths/z_ordering.cpp")
 
 package_add_test("octant" "indexing/mx-octree/octant.cpp")
 package_add_test("octree" "indexing/mx-octree/octree.cpp")
 package_add_test("octree_traversals" "indexing/mx-octree/traversals.cpp")
 package_add_test("octree_interpolations" "indexing/mx-octree/interpolations.cpp")
+package_add_test("octree_comparator" "indexing/mx-octree/octant_comparator.cpp")
 
 package_add_test("parsers" "model/parsers.cpp")
 package_add_test("writers" "model/writers.cpp")

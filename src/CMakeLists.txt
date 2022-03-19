@@ -1,9 +1,10 @@
 cmake_minimum_required (VERSION 3.8)
 
 # FEDES Library
-set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp" "maths/direction.cpp"
+set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp" "maths/z_ordering.cpp"
 "model/model.cpp" "model/parsers.cpp" "model/writers.cpp"
 "indexing/mx-octree/octree.cpp" "indexing/mx-octree/octant.cpp" "indexing/mx-octree/traversals.cpp" "indexing/mx-octree/interpolations.cpp"
+"indexing/mx-octree/octant_comparator.cpp"
 "memory/chunk_allocator.cpp" "thread/thread_pool.cpp"
 "common/files.cpp" "common/strings.cpp"
 "instrumentation/timer.cpp")
@@ -26,8 +27,3 @@ target_include_directories(fedes
 # Dependencies 
 add_subdirectory("${PROJECT_SOURCE_DIR}/external/matchit" "external/matchit")
 target_link_libraries(fedes PRIVATE matchit)
-
-# Preprocessor definitions
-if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)
-    target_compile_definitions(fedes PRIVATE FEDES_BENCHMARKING=1)
-endif()
