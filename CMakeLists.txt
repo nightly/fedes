@@ -16,12 +16,12 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)
 endif()
 
 # Application
-add_subdirectory(src/app)
+add_subdirectory(apps/cli)
 
 # Benchmarks
 # add_subdirectory(benchmarks)
 
-set_target_properties(fedes fedes_app
+set_target_properties(fedes fedes_cli
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
     LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
