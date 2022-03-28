@@ -4,7 +4,7 @@ project ("fedes" VERSION 0 LANGUAGES CXX)
 option(FEDES_RUN_TESTS "Run tests" ON)
 
 # Library
-add_subdirectory(src)
+add_subdirectory(src/fedes)
 
 # Tests
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)

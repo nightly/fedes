@@ -18,8 +18,8 @@ endif()
 
 target_include_directories(fedes
     PUBLIC 
-        $<INSTALL_INTERFACE:include>    
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:src>    
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src
 )
