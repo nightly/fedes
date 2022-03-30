@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "fedes/maths/z_ordering.hpp"
+#include "fedes/maths/z_ordering.h"
 
-#include "fedes/maths/vector3.hpp"
+#include "fedes/maths/vector3.h"
 
 class DetermineDirectionTest : public ::testing::Test {
 protected:

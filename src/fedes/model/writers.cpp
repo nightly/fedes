@@ -1,13 +1,13 @@
 // writers.cpp -> Port of FEDES v2 code
 
-#include "fedes/model/writers.hpp"
+#include "fedes/model/writers.h"
 
 #include <filesystem>
 #include <fstream>
 
-#include "fedes/common/files.hpp"
-#include "fedes/maths/vector3.hpp"
-#include "fedes/model/model.hpp"
+#include "fedes/common/files.h"
+#include "fedes/maths/vector3.h"
+#include "fedes/model/model.h"
 
 namespace fedes {
 

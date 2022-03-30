@@ -1,10 +1,10 @@
-#include "octree.hpp"
+#include "octree.h"
 
 #include <iostream>
 
-#include "fedes/indexing/mx-octree/octree.hpp"
-#include "fedes/indexing/mx-octree/interpolations.hpp"
-#include "fedes/instrumentation/timer.hpp"
+#include "fedes/indexing/mx-octree/octree.h"
+#include "fedes/indexing/mx-octree/interpolations.h"
+#include "fedes/instrumentation/timer.h"
 
 
 /*

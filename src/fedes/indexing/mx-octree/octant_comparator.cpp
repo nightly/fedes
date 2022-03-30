@@ -1,7 +1,7 @@
-#include "fedes/indexing/mx-octree/octant_comparator.hpp"
+#include "fedes/indexing/mx-octree/octant_comparator.h"
 
-#include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/maths/vector3.h"
+#include "fedes/indexing/mx-octree/octant.h"
 
 namespace fedes {
 

@@ -1,12 +1,12 @@
-#include "fedes/model/writers.hpp"
+#include "fedes/model/writers.h"
 #include <gtest/gtest.h>
 
 #include <filesystem>
 #include <fstream>
 
-#include "fedes/model/model.hpp"
-#include "fedes/model/parsers.hpp"
-#include "fedes/common/files.hpp"
+#include "fedes/model/model.h"
+#include "fedes/model/parsers.h"
+#include "fedes/common/files.h"
 
 
 TEST(Writer, CreateXML) {

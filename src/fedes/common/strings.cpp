@@ -1,4 +1,4 @@
-#include "fedes/common/strings.hpp"
+#include "fedes/common/strings.h"
 
 #include <string>
 #include <regex>

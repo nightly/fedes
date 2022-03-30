@@ -1,7 +1,7 @@
 #pragma once
 
-#include "fedes/maths/Vector3.hpp"
-#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/maths/Vector3.h"
+#include "fedes/indexing/mx-octree/octant.h"
 
 namespace fedes {
 	

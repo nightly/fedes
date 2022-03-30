@@ -1,13 +1,13 @@
-#include "fedes/model/parsers.hpp"
 #include <gtest/gtest.h>
+#include "fedes/model/parsers.h"
 
 #include <fstream>
 #include <array>
 #include <vector>
 #include <cstring>
 
-#include "fedes/model/model.hpp"
-#include "fedes/common/files.hpp"
+#include "fedes/model/model.h"
+#include "fedes/common/files.h"
 
 class ParserTest : public ::testing::Test {
 protected:

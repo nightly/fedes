@@ -1,6 +1,6 @@
-#include "fedes/maths/distance.hpp"
+#include "fedes/maths/distance.h"
 
-#include "fedes/maths/vector3.hpp"
+#include "fedes/maths/vector3.h"
 
 #include <cmath>
 #include <concepts>

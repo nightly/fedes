@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include "fedes/indexing/mx-octree/traversals.hpp"
+#include "fedes/indexing/mx-octree/traversals.h"
 
 #include <vector>
 
-#include "fedes/indexing/mx-octree/octree.hpp"
-#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octree.h"
+#include "fedes/indexing/mx-octree/octant.h"
 
 
 class OctreeTraversalTest : public ::testing::Test {

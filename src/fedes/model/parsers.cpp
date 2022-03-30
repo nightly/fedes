@@ -1,6 +1,6 @@
 // parsers.cpp -> port of FEDES v2 parsing functions.
 
-#include "fedes/model/parsers.hpp"
+#include "fedes/model/parsers.h"
 
 #include <filesystem>
 #include <fstream>
@@ -8,9 +8,9 @@
 #include <array>
 #include <string>
 
-#include "fedes/model/model.hpp"
-#include "fedes/common/files.hpp"
-#include "fedes/common/strings.hpp"
+#include "fedes/model/model.h"
+#include "fedes/common/files.h"
+#include "fedes/common/strings.h"
 
 namespace fedes {
 

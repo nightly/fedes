@@ -1,4 +1,4 @@
-#include "fedes/indexing/mx-octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octree.h"
 
 #include <span>
 #include <vector>
@@ -13,12 +13,12 @@
 #include <iostream>
 #include <string>
 
-#include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/mx-octree/octant.hpp"
-#include "fedes/indexing/mx-octree/octant_comparator.hpp"
-#include "fedes/indexing/mx-octree/traversals.hpp"
-#include "fedes/maths/distance.hpp"
-#include "fedes/maths/z_ordering.hpp"
+#include "fedes/maths/vector3.h"
+#include "fedes/indexing/mx-octree/octant.h"
+#include "fedes/indexing/mx-octree/octant_comparator.h"
+#include "fedes/indexing/mx-octree/traversals.h"
+#include "fedes/maths/distance.h"
+#include "fedes/maths/z_ordering.h"
 
 namespace fedes {
 

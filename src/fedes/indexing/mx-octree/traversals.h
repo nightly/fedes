@@ -4,7 +4,7 @@
 #include <memory>
 #include <iterator>
 
-#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octant.h"
 
 namespace fedes {
 
@@ -36,4 +36,4 @@ namespace fedes {
 	};
 }
 
-#include "fedes/indexing/mx-octree/octree.hpp"
+#include "fedes/indexing/mx-octree/octree.h"

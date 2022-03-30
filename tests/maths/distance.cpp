@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "fedes/maths/distance.hpp"
+#include "fedes/maths/distance.h"
 
-#include "fedes/maths/vector3.hpp"
+#include "fedes/maths/vector3.h"
 
 TEST(Distance, EuclideanDistance) {
 	fedes::Vector3<double> p1(3.2, 5.5, 9.9);

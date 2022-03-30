@@ -1,11 +1,11 @@
-#include "fedes/indexing/mx-octree/octant.hpp"
+#include "fedes/indexing/mx-octree/octant.h"
 
 #include <array>
 #include <iostream>
 #include <string>
 
-#include "fedes/maths/vector3.hpp"
-#include "fedes/maths/z_ordering.hpp"
+#include "fedes/maths/vector3.h"
+#include "fedes/maths/z_ordering.h"
 
 namespace fedes::internal {
 

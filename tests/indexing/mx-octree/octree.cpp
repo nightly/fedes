@@ -1,11 +1,11 @@
-#include "fedes/indexing/mx-octree/octree.hpp"
 #include <gtest/gtest.h>
+#include "fedes/indexing/mx-octree/octree.h"
 
 #include <memory>
 #include <array>
 #include <iostream>
 
-#include "fedes/maths/vector3.hpp"
+#include "fedes/maths/vector3.h"
 
 
 class OctreeTest : public ::testing::Test {

@@ -1,10 +1,10 @@
-#include "fedes/model/model.hpp"
+#include "fedes/model/model.h"
 
 #include <string>
 #include <filesystem>
 #include <fstream>
 
-#include "fedes/model/writers.hpp"
+#include "fedes/model/writers.h"
 
 namespace fedes {
 	

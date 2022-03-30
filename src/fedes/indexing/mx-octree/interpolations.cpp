@@ -1,9 +1,9 @@
-#include "fedes/indexing/mx-octree/interpolations.hpp"
+#include "fedes/indexing/mx-octree/interpolations.h"
 
-#include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/mx-octree/octree.hpp"
-#include "fedes/indexing/mx-octree/octant.hpp"
-#include "fedes/model/model.hpp"
+#include "fedes/maths/vector3.h"
+#include "fedes/indexing/mx-octree/octree.h"
+#include "fedes/indexing/mx-octree/octant.h"
+#include "fedes/model/model.h"
 
 #include <iostream>
 

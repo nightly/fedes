@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 
-#include "models.hpp"
-#include "octree.hpp"
+#include "models.h"
+#include "octree.h"
 
 
 /*

@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
-#include "fedes/indexing/mx-octree/interpolations.hpp"
+#include "fedes/indexing/mx-octree/interpolations.h"
 
 #include <memory>
 
-#include "fedes/model/model.hpp"
-#include "fedes/model/writers.hpp"
-#include "fedes/model/parsers.hpp"
-#include "fedes/indexing/mx-octree/octree.hpp"
-#include "fedes/common/files.hpp"
+#include "fedes/model/model.h"
+#include "fedes/model/writers.h"
+#include "fedes/model/parsers.h"
+#include "fedes/indexing/mx-octree/octree.h"
+#include "fedes/common/files.h"
 
 class OctreeInterpolationsTest : public ::testing::Test {
 protected:

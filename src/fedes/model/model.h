@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <string>
 
-#include "fedes/maths/vector3.hpp"
+#include "fedes/maths/vector3.h"
 
 namespace fedes {
 

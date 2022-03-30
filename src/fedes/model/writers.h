@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "fedes/model/model.hpp"
+#include "fedes/model/model.h"
 
 namespace fedes {
 

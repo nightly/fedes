@@ -1,10 +1,11 @@
-#include "fedes/indexing/mx-octree/octant.hpp"
+#include <gtest/gtest.h>
+#include "fedes/indexing/mx-octree/octant.h"
 
 #include <memory>
 
-#include "fedes/maths/vector3.hpp"
+#include "fedes/maths/vector3.h"
 
-#include <gtest/gtest.h>
+
 
 class OctantTest : public ::testing::Test {
 protected:

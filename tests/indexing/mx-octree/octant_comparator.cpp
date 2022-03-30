@@ -1,8 +1,8 @@
-#include "fedes/indexing/mx-octree/octant_comparator.hpp"
 #include <gtest/gtest.h>
+#include "fedes/indexing/mx-octree/octant_comparator.h"
 
-#include "fedes/indexing/mx-octree/octant.hpp"
-#include "fedes/maths/vector3.hpp"
+#include "fedes/indexing/mx-octree/octant.h"
+#include "fedes/maths/vector3.h"
 
 class OctantComparatorTest : public ::testing::Test {
 protected:

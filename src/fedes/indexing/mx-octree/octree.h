@@ -8,10 +8,10 @@
 #include <functional>
 #include <unordered_map>
 
-#include "fedes/indexing/mx-octree/traversals.hpp"
-#include "fedes/maths/vector3.hpp"
-#include "fedes/indexing/mx-octree/octant.hpp"
-#include "fedes/indexing/mx-octree/octant_comparator.hpp"
+#include "fedes/indexing/mx-octree/traversals.h"
+#include "fedes/maths/vector3.h"
+#include "fedes/indexing/mx-octree/octant.h"
+#include "fedes/indexing/mx-octree/octant_comparator.h"
 
 namespace fedes {	
 

@@ -1,5 +1,5 @@
-#include "fedes/common/strings.hpp"
 #include <gtest/gtest.h>
+#include "fedes/common/strings.h"
 
 #include <string>
 #include <vector>

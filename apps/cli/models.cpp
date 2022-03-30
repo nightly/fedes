@@ -1,13 +1,13 @@
-#include "models.hpp"
+#include "models.h"
 
 #include <filesystem>
 #include <string>
 #include <fstream>
 #include <iostream>
 
-#include "fedes/model/parsers.hpp"
-#include "fedes/model/writers.hpp"
-#include "fedes/instrumentation/timer.hpp"
+#include "fedes/model/parsers.h"
+#include "fedes/model/writers.h"
+#include "fedes/instrumentation/timer.h"
 
 /*
  * @brief Sets source and target models based on a pre-defined set of examples
