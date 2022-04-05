@@ -19,7 +19,7 @@ endif()
 add_subdirectory(apps/cli)
 
 # Benchmarks
-# add_subdirectory(benchmarks)
+add_subdirectory(benchmarks)
 
 set_target_properties(fedes fedes_cli
     PROPERTIES

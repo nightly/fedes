@@ -32,14 +32,17 @@ package_add_test("vector3" "maths/vector3.cpp")
 package_add_test("distance" "maths/distance.cpp")
 package_add_test("z_ordering" "maths/z_ordering.cpp")
 
-package_add_test("octant" "indexing/mx-octree/octant.cpp")
-package_add_test("octree" "indexing/mx-octree/octree.cpp")
-package_add_test("octree_traversals" "indexing/mx-octree/traversals.cpp")
-package_add_test("octree_interpolations" "indexing/mx-octree/interpolations.cpp")
-package_add_test("octree_comparator" "indexing/mx-octree/octant_comparator.cpp")
-
 package_add_test("parsers" "model/parsers.cpp")
 package_add_test("writers" "model/writers.cpp")
 
 package_add_test("strings" "common/strings.cpp")
+
+
+package_add_test("octant" "indexing/mx-octree/octant.cpp")
+package_add_test("octree" "indexing/mx-octree/octree.cpp")
+package_add_test("octree_traversals" "indexing/mx-octree/traversals.cpp")
+package_add_test("octree_comparator" "indexing/mx-octree/octant_comparator.cpp")
+
+package_add_test("mx_interpolations" "interpolations/mx_octree.cpp")
+
 

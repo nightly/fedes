@@ -1,4 +1,4 @@
-#include "fedes/indexing/mx-octree/interpolations.h"
+#include "fedes/interpolations/octree.h"
 
 #include "fedes/maths/vector3.h"
 #include "fedes/indexing/mx-octree/octree.h"
@@ -24,7 +24,7 @@ namespace fedes {
 				target.displacement[i] = source.displacement[source_node_idx];
 			}
 		}
-		if (source.ByIntegration()) { 
+		if (source.ByIntegration()) {
 			for (size_t i = 0; i != target.integration.size(); i++) {
 				size_t source_node_idx = octree.Nearest(target.integration[i]);
 				target.stress[i] = source.stress[source_node_idx];
@@ -99,8 +99,8 @@ namespace fedes {
 	/* Explicit template instantiations */
 	template void OctreeNearestPointMethod<double>(const fedes::Octree<double>&, const fedes::Model&, fedes::Model&);
 	template void OctreeFieldOfPoints<double>(const fedes::Octree<double>& octree, const fedes::Model& source, fedes::Model& target);
-	template void OctreeDistanceUsingElements<double>(const fedes::Octree<double>&octree, const fedes::Model & source, fedes::Model & target);
-	template void OctreeElementShapeFunction<double>(const fedes::Octree<double>&octree, const fedes::Model & source, fedes::Model & target);
+	template void OctreeDistanceUsingElements<double>(const fedes::Octree<double>& octree, const fedes::Model& source, fedes::Model& target);
+	template void OctreeElementShapeFunction<double>(const fedes::Octree<double>& octree, const fedes::Model& source, fedes::Model& target);
 
 }
 

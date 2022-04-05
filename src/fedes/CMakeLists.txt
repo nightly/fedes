@@ -3,11 +3,14 @@ cmake_minimum_required (VERSION 3.8)
 # FEDES Library
 set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp" "maths/z_ordering.cpp"
 "model/model.cpp" "model/parsers.cpp" "model/writers.cpp"
-"indexing/mx-octree/octree.cpp" "indexing/mx-octree/octant.cpp" "indexing/mx-octree/traversals.cpp" "indexing/mx-octree/interpolations.cpp"
+"indexing/mx-octree/octree.cpp" "indexing/mx-octree/octant.cpp" "indexing/mx-octree/traversals.cpp" 
 "indexing/mx-octree/octant_comparator.cpp"
 "memory/chunk_allocator.cpp" "thread/thread_pool.cpp"
 "common/files.cpp" "common/strings.cpp"
-"instrumentation/timer.cpp")
+"instrumentation/timer.cpp" 
+"interpolations/octree.cpp"
+"indexing/parallel-octree/linear_octant.cpp" "indexing/parallel-octree/octree.cpp" 
+"indexing/parallel-octree/pre_order_iterator.cpp" "indexing/parallel-octree/post_order_iterator.cpp")
 
 add_library(fedes STATIC ${FEDES_SOURCES})
 

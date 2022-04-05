@@ -28,9 +28,9 @@ ctest -j 8 --output-on-failure --verbose
 ```
 
 ## Layout 
-- `apps` contains executable applications 
-- `benchmarks` contains indexing and interpolations benchmarks 
-- `external` external libraries & dependencies as Git submodules 
-- `models` stores sample FEA input & output meshes for testing purposes 
-- `src/fedes` contains library code 
-- `tests` contains tests alongside test data
+- `apps`: contains executable applications 
+- `benchmarks`: contains indexing and interpolations benchmarks 
+- `external`: external libraries & dependencies as Git submodules 
+- `models`: stores sample FEA input & output meshes for testing purposes 
+- `src/fedes`: contains library code 
+- `tests`: contains tests alongside test data

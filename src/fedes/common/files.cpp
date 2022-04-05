@@ -89,7 +89,7 @@ namespace fedes {
 		output_stream.exceptions(std::ifstream::badbit);
 		try {
 			if (!std::filesystem::is_directory(path.parent_path()) && path.has_parent_path()) {
-				std::filesystem::create_directory(path.parent_path());
+				std::filesystem::create_directories(path.parent_path());
 			}
 			output_stream.open(path, std::ios::out | std::ios::trunc);
 		} catch (const std::ofstream::failure& e) {

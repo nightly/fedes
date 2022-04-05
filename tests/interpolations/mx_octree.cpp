@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "fedes/indexing/mx-octree/interpolations.h"
+#include "fedes/interpolations/octree.h"
 
 #include <memory>
 

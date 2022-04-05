@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "fedes/indexing/mx-octree/octree.h"
-#include "fedes/indexing/mx-octree/interpolations.h"
+#include "fedes/interpolations/octree.h"
 #include "fedes/instrumentation/timer.h"
 
 
