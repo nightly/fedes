@@ -1,13 +1,14 @@
 #include "fedes/maths/vector3.h"
 
 #include <ostream>
+#include <concepts>
 
 namespace fedes {
 	/*
 	 * @brief Empty constructor for Vector3 which will return a Vector3 of (0.00, 0.00, 0.00)
 	 * @tparam T: the numeric type of the Vector3, i.e. double or float
 	 */
-	template<typename T>
+	template <std::floating_point T>
 	Vector3<T>::Vector3()
 		: x(0.0), y(0.0), z(0.0) {}
 
@@ -16,7 +17,7 @@ namespace fedes {
 	 * @tparam T: the numeric type of the Vector3, i.e. double or float
 	 * @params x, y, z: the respective coordinates for each dimension, assigned in the listed order
 	 */
-	template<typename T>
+	template <std::floating_point T>
 	Vector3<T>::Vector3(T x, T y, T z)
 		: x(x), y(y), z(z) {}
 
@@ -25,41 +26,30 @@ namespace fedes {
 	 * @tparam T: the numeric type of the Vector3, i.e. double or float
 	 * @param scalar: the uniform value to set for each dimension, x, y, and z.
 	 */
-	template <typename T>
+	template <std::floating_point T>
 	Vector3<T>::Vector3(T scalar) 
 		: x(scalar), y(scalar), z(scalar) {}
 
 	/*
-	 * @brief Overloaded division operator with a scalar value 
+	 * @brier operator/ for scalar value
 	 */
-	template<typename T>
+	template <std::floating_point T>
 	Vector3<T> Vector3<T>::operator/(const T& scalar) const {
 		return Vector3<T>(x / scalar, y / scalar, z / scalar);
 	}
 
 	/*
-	 * @brief Overloaded multiplication operator with a scalar value 
+	 * @brief operator * for scalar value
 	 */
-	template<typename T>
+	template <std::floating_point T>
 	Vector3<T> Vector3<T>::operator*(const T& scalar) const {
 		return Vector3<T>(x * scalar, y * scalar, z * scalar);
 	}
 
 	/*
-	 * @brief Overloaded += operator, adding the other Vector3 to the current one
+	 * @brief operator /=, for scalar value
 	 */
-	template<typename T>
-	Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& other) {
-		x += other.x;
-		y += other.y;
-		z += other.z;
-		return *this;
-	}
-
-	/*
-     * @brief Overloaded /= operator, for scalar value
-     */
-	template<typename T>
+	template <std::floating_point T>
 	Vector3<T>& Vector3<T>::operator/=(const T& scalar) {
 		x /= scalar;
 		y /= scalar;
@@ -68,19 +58,70 @@ namespace fedes {
 	}
 
 	/*
-	 * @brief Overloaded == operator, checking two Vector3's for equality
+	 * @brief operator + for another Vector3 
 	 */
-	template<typename T>
-	bool Vector3<T>::operator==(const Vector3<T>& other) const {
-		return ((x == other.x) && (y == other.y) && (z == other.z)) ? true : false;
+	template <std::floating_point T>
+	Vector3<T> Vector3<T>::operator+(const Vector3<T>& other) const {
+		return Vector3(x + other.x, y + other.y, z + other.z);
 	}
+
+	/*
+     * @brief operator +=, adding the other Vector3 to the current one
+	 */
+	template <std::floating_point T>
+	Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& other) {
+		x += other.x;
+		y += other.y;
+		z += other.z;
+		return *this;
+	}
+
+	/*
+     * @brief operator - for another Vector3
+	 */
+	template <std::floating_point T>
+	Vector3<T> Vector3<T>::operator-(const Vector3<T>& other) const {
+		return Vector3(x - other.x, y - other.y, z - other.z);
+	}
+
+	/*
+	 * @brief operator * for another Vector3 - also known as dot product
+	 */
+	template <std::floating_point T>
+	Vector3<T> Vector3<T>::operator*(const Vector3<T>& other) const {
+		return Vector3(x * other.x, y * other.y, z * other.z);
+	}
+
+	/*
+	 * @brief operator ==, checking two Vector3's for equality
+	 */
+	template <std::floating_point T>
+	bool Vector3<T>::operator==(const Vector3<T>& other) const {
+		return ((x == other.x) && (y == other.y) && (z == other.z));
+	}
+
+	/*
+	 * @brief Cross product 
+	 */
+	template <std::floating_point T>
+	Vector3<T> Vector3<T>::cross(const Vector3<T>& other) const {
+		return Vector3<T>(
+			y * other.z - other.y * z, 
+			z * other.x - other.z * x,
+			x * other.y - other.x * y);
+	}
+
+
+	// =============================
+	// Output and instantiations
+	// =============================
 
 	/*
 	 * @brief Overloaded output operator 
 	 */
-	template <typename T>
+	template <std::floating_point T>
 	std::ostream& operator<<(std::ostream& os, const Vector3<T>& v) {
-		return os << v.x << ", " << v.y << ", " << v.z << std::endl;
+		return os << v.x << ", " << v.y << ", " << v.z;
 	}
 
 	/* Explicit template instantiations*/

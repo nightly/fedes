@@ -1,16 +1,23 @@
 cmake_minimum_required (VERSION 3.8)
 
 # FEDES Library
-set(FEDES_SOURCES "maths/vector3.cpp" "maths/distance.cpp" "maths/z_ordering.cpp"
-"model/model.cpp" "model/parsers.cpp" "model/writers.cpp"
-"indexing/mx-octree/octree.cpp" "indexing/mx-octree/octant.cpp" "indexing/mx-octree/traversals.cpp" 
-"indexing/mx-octree/octant_comparator.cpp"
-"memory/chunk_allocator.cpp" "thread/thread_pool.cpp"
-"common/files.cpp" "common/strings.cpp"
+set(FEDES_SOURCES 
+
+"maths/vector3.cpp"  "maths/z_ordering.cpp" "maths/distance.h" "maths/random.h"
+"maths/element_type.cpp" "maths/geometry.h"
+
+"model/model.cpp" "model/parsers.cpp" "model/writers.cpp" "model/export.cpp" "model/examples.cpp"
+
+"indexing/octree/octree.h" "indexing/octree/octant.h" "indexing/octree/traversals.h" 
+"indexing/octree/octant_comparator.h"
+
+"interpolations/octree/octree.h" "interpolations/octree/npm.h" "interpolations/octree/fop.h"
+"interpolations/octree/dmue.h" "interpolations/octree/esf.h"
+
 "instrumentation/timer.cpp" 
-"interpolations/octree.cpp"
-"indexing/parallel-octree/linear_octant.cpp" "indexing/parallel-octree/octree.cpp" 
-"indexing/parallel-octree/pre_order_iterator.cpp" "indexing/parallel-octree/post_order_iterator.cpp")
+
+"common/files.cpp" "common/strings.cpp" "common/log.h"
+)
 
 add_library(fedes STATIC ${FEDES_SOURCES})
 
@@ -29,4 +36,21 @@ target_include_directories(fedes
 
 # Dependencies 
 add_subdirectory("${PROJECT_SOURCE_DIR}/external/matchit" "external/matchit")
-target_link_libraries(fedes PRIVATE matchit)
+add_subdirectory("${PROJECT_SOURCE_DIR}/external/spdlog" "external/spdlog")
+add_subdirectory("${PROJECT_SOURCE_DIR}/external/thread-pool" "external/thread-pool")
+
+target_link_libraries(fedes
+    PRIVATE 
+        matchit
+    PUBLIC
+        thread_pool
+        spdlog::spdlog
+)
+
+# Directories
+set_target_properties(fedes
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}"
+)

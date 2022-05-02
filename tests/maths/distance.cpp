@@ -7,7 +7,7 @@ TEST(Distance, EuclideanDistance) {
 	fedes::Vector3<double> p1(3.2, 5.5, 9.9);
 	fedes::Vector3<double> p2(6.5, 2.05, 1);
 	double distance = fedes::Distance<double>(p1, p2);
-	ASSERT_DOUBLE_EQ(distance, 10.099628706046575);
+	ASSERT_DOUBLE_EQ(distance, 10.099628448486328);
 }
 
 TEST(Distance, EuclideanDistanceZero) {

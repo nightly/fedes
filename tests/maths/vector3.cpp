@@ -34,3 +34,13 @@ TEST_F(Vector3Test, ScalarDivision) {
 	fedes::Vector3<double> expected(2.5, 1.0, 5.25);
 	ASSERT_EQ(result, expected);
 }
+
+TEST(Vector3, Cross_1) {
+	fedes::Vector3<double> a(3, -3, 1);
+	fedes::Vector3<double> b(4, 9, 2);
+	
+	fedes::Vector3<double> got, expected;
+	got = a.cross(b);
+	expected = fedes::Vector3<double>(-15, -2, 39);
+	ASSERT_EQ(got, expected);
+}

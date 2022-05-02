@@ -1,88 +1,123 @@
 ﻿#include <iostream>
+#include <float.h>
 
-#include "models.h"
+// #pragma float_control(except, on)
+
+#include <thread_pool.hpp>
+
+#include "fedes/indexing/octree/octree.h"
+#include "fedes/common/log.h"
+#include "fedes/model/examples.h"
+#include "fedes/model/export.h"
+
 #include "octree.h"
 
-
 /*
-* @brief Prompts the user for model, parameters etc
+* @brief Prompts the user for model, Octree index parameters etc
 */
-void prompt() {
+void prompt(thread_pool& pool) {
 	fedes::Model source, target;
-	unsigned int model{};
-	std::cout << "Enter model ID to use (1 - 4): \n";
+	size_t model{}, max_depth{}, points_per_leaf{}, interpolation_type{};
+
+	std::cout << "Enter example ID to use (1 - 4): \n";
 	std::cin >> model;
-	if (model < 1 || model > 4) {
-		std::cout << "[Error] Invalid model ID!";
+	if (model < 1 || model > 4 || std::cin.fail()) {
+		std::cin.clear();
+		std::cin.ignore();
+		std::cerr << "[Error] Invalid model ID!\n";
 		return;
 	}
-	SetModels(source, target, model);
-
-	size_t points_per_leaf{};
-	size_t max_depth{};
-	std::cout << "Enter points per leaf in Octree: \n";
-	std::cin >> points_per_leaf;
+	fedes::SetExampleModels(source, target, model);
 	std::cout << "Enter maximum depth of Octree: \n";
 	std::cin >> max_depth;
-	if (points_per_leaf < 0 || max_depth < 0) {
-		std::cout << "[Error] Invalid Octree parameters!";
+	std::cout << "Enter minimum points per leaf splitting threshold for Octree: \n";
+	std::cin >> points_per_leaf;
+	if (points_per_leaf < 0 || max_depth < 0 || std::cin.fail()) {
+		std::cin.clear();
+		std::cin.ignore();
+		std::cerr << "[Error] Invalid Octree parameters!\n";
 		return;
-	}
-	
-	size_t interpolation_type;
+	}	
+
 	std::cout << "Enter interpolation type (1 - NPM, 2 - FOP, 3 - DMUE, 4 - ESF) \n";
 	std::cin >> interpolation_type;
-	if (interpolation_type < 1 || interpolation_type > 4) {
-		std::cout << "[Error] Invalid interplation type!";
+	if (interpolation_type < 1 || interpolation_type > 4 || std::cin.fail()) {
+		std::cin.clear();
+		std::cin.ignore();
+		std::cerr << "[Error] Invalid interplation type!\n";
 		return;
 	}
+
+	double radius = 10.0;
+	if (interpolation_type == 2) {
+		std::cout << "Enter radius for Field of Points search \n";
+		std::cin >> radius;
+		if (radius < 0.00 || std::isinf(radius) || std::isnan(radius) || std::cin.fail()) {
+			std::cin.clear();
+			std::cin.ignore();
+			std::cerr << "[Error] Invalid radius value!\n";
+			return;
+		}
+	}
+
+	size_t max_leaf_scan_threshold = 1000;
+	if (interpolation_type == 4) {
+		std::cout << "Enter max leaves to scan prior to relaxing geometry boundaries (boundary shift threshold) \n";
+		std::cin >> max_leaf_scan_threshold;
+		if (max_leaf_scan_threshold <= 0 || std::cin.fail()) {
+			std::cin.clear();
+			std::cin.ignore();
+			std::cerr << "[Error] Invalid threshold value!\n";
+
+			return;
+		}
+		if (max_leaf_scan_threshold <= 20) {
+			std::cout << "[Warning] This value seems to be too low or indicates a tree with too little depth to be practical\n";
+		}
+	}
+
+	FEDES_INFO("[CLI]: Example model {}, max depth {}, leaf split threshold {}", model, max_depth,
+		points_per_leaf);
+
 	switch (interpolation_type) {
 		case 1:
-			OctreeNPM(source, target, points_per_leaf, max_depth);
-			ExportModels(source, target, "mx-oct-npm");
+			OctreeNPM(source, target, max_depth, points_per_leaf, pool);
+			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-npm"));
 			break;
 		case 2:
-			OctreeDMUFOP(source, target, points_per_leaf, max_depth);
-			ExportModels(source, target, "mx-oct-fop");
+			OctreeDMUFOP(source, target, max_depth, points_per_leaf, radius, pool);
+			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-dmufop"));
 			break;
 		case 3:
-			OctreeDMUE(source, target, points_per_leaf, max_depth);
-			ExportModels(source, target, "mx-oct-dmue");
+			OctreeDMUE(source, target, max_depth, points_per_leaf, pool);
+			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-dmue"));
 			break;
 		case 4:
-			OctreeESF(source, target, points_per_leaf, max_depth);
-			ExportModels(source, target, "mx-oct-esf");
+			OctreeESF(source, target, max_depth, points_per_leaf, max_leaf_scan_threshold, pool);
+			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-esf"));
 			break;
 	}
 
 	std::cout << "Models exported\n\n\n";
 }
 
-/*
-* @brief Doesn't prompt the user, uses defaults for testing
-*/
-void no_prompt() {
-	fedes::Model source, target;
-	SetModels(source, target, 1);
-	OctreeNPM(source, target, 8, 10);
-	ExportModels(source, target, "oct-npm");
-}
 
-/*
-* @brief Main program loop, terminates after first iteration if user_prompt = false
-*/
 int main() {
-	bool prompt_user = true;
+#if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
+	spdlog::set_level(spdlog::level::trace);
+#endif
+
+#if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
+	FEDES_INFO("Running in debug or with verbose output. Console logging will affect execution time.");
+#endif 
+
+
+	thread_pool pool(std::thread::hardware_concurrency());
+	FEDES_INFO("Number of threads: {}", pool.get_thread_count());
+
 	while (true) {
-		switch (prompt_user) {
-		case(true):
-			prompt();
-			break;
-		case(false):
-			no_prompt();
-			std::exit(0);
-			break;
-		}
+		prompt(pool);
 	}
+
 	return 0;
 }

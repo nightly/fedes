@@ -34,8 +34,7 @@ namespace fedes::internal {
 	 */
 	void Timer::StopWithWrite() {
 		auto duration = Stop();
-		output_stream_ << "Timer for " << name_ << " took " << duration << " microseconds or " << (duration * 0.001) << " ms (milliseconds) \n";
-		output_stream_.flush();
+		WriteDuration(duration);
 		stopped_ = true;
 	}
 
@@ -45,6 +44,14 @@ namespace fedes::internal {
 	void Timer::Restart() {
 		stopped_ = false;
 		start_ = std::chrono::high_resolution_clock::now();
+	}
+	
+	/*
+	 * @brief Writes the given duration to the selected output stream. 
+	 */
+	void Timer::WriteDuration(long long duration) {
+		output_stream_ << "Timer for " << name_ << " took " << duration << " microseconds or " << (duration * 0.001) << " ms (milliseconds) \n";
+		output_stream_.flush();
 	}
 
 	/*

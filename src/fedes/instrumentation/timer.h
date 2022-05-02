@@ -18,6 +18,7 @@ namespace fedes::internal {
 		~Timer();
 		void Restart();
 		long long Stop();
+		void WriteDuration(long long duration);
 		void StopWithWrite();
 	};
 }

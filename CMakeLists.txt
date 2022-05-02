@@ -2,6 +2,8 @@
 project ("fedes" VERSION 0 LANGUAGES CXX)
 
 option(FEDES_RUN_TESTS "Run tests" ON)
+option(FEDES_COMPILE_BENCHMARKS "Compile benchmarks" ON)
+option(FEDES_VERBOSE_OUTPUT "Verbose output" OFF)
 
 # Library
 add_subdirectory(src/fedes)
@@ -15,15 +17,18 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_RUN_TESTS)
     add_subdirectory(tests)
 endif()
 
-# Application
+# Applications
 add_subdirectory(apps/cli)
+add_subdirectory(apps/experimental)
 
 # Benchmarks
-add_subdirectory(benchmarks)
+if (FEDES_COMPILE_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif()
 
-set_target_properties(fedes fedes_cli
-    PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
-    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}"
-    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}"
-)
+# Preprocessor definitions
+if (FEDES_VERBOSE_OUTPUT)
+    target_compile_definitions(fedes PRIVATE FEDES_VERBOSE=1)
+    target_compile_definitions(app_fedes_cli PRIVATE FEDES_VERBOSE=1)
+    target_compile_definitions(app_fedes_experimental_cli PRIVATE FEDES_VERBOSE=1)
+endif()

@@ -24,9 +24,9 @@ namespace fedes {
 		void SetTargetIndexes(const fedes::Model& source);
 		void AssignIntegration();
 		void Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path = "../../../exports");
+
 		bool ByNode() const;
 		bool ByIntegration() const;
-
 		void WriteStats(std::ostream& output_stream = std::cout);
 		bool operator==(const Model& other) const;
 	};

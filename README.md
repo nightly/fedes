@@ -27,6 +27,17 @@ cd build
 ctest -j 8 --output-on-failure --verbose
 ```
 
+## Example usage
+```cpp
+fedes::Model source, target;
+fedes::AnsysInputReadLis("../../models/Example1-Vane-big/Model1_Input-Ansys.txt", source);
+fedes::AnsysOutputRead("../../models/Example1-Vane-big/Model1_output-Ansys.txt", source);
+fedes::AbaqusInputRead("../../models/Example1-Vane-big/Model2-Input-Abaqus.inp", target);
+target.SetTargetIndexes(source);
+
+fedes::Octree<double> octree(source.nodes, 8, 10);
+```
+
 ## Layout 
 - `apps`: contains executable applications 
 - `benchmarks`: contains indexing and interpolations benchmarks 

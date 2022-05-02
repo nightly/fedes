@@ -2,6 +2,8 @@
 
 #include <filesystem>
 #include <fstream>
+#include <ostream>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 
@@ -113,4 +115,9 @@ namespace fedes {
 			throw;
 		}
 	}
+
+	void PrintCurrentDir(std::ostream& os) {
+		os << std::filesystem::current_path() << std::endl;
+	}
+
 }

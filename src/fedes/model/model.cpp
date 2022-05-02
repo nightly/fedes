@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "fedes/model/writers.h"
+#include "fedes/maths/element_type.h"
 
 namespace fedes {
 	
@@ -35,18 +36,18 @@ namespace fedes {
 	 */
 	void Model::SetTargetIndexes(const fedes::Model& source) {
 		if (!source.displacement.empty()) {
-			displacement.resize(this->nodes.size());
+			displacement.resize(this->nodes.size(), std::vector<double>(3));
 		}
 		if (!source.stress.empty() || !source.total_strain.empty() || !source.plastic_strain.empty() || !source.accumulated_strain.empty()) {
 			AssignIntegration();
 			if (!source.stress.empty()) {
-				stress.resize(this->elements.size());
+				stress.resize(this->elements.size(), std::vector<double>(6));
 			}
 			if (!source.total_strain.empty()) {
-				total_strain.resize(this->elements.size());
+				total_strain.resize(this->elements.size(), std::vector<double>(6));
 			}
 			if (!source.plastic_strain.empty()) {
-				plastic_strain.resize(this->elements.size());
+				plastic_strain.resize(this->elements.size(),std::vector<double>(6));
 			}
 			if (!source.accumulated_strain.empty()) {
 				accumulated_strain.resize(this->elements.size());
@@ -81,7 +82,6 @@ namespace fedes {
 		}
 	}
 
-
 	/*
 	 * @brief Determines whether there is any Finite Element Data contained that is to be mapped by node.
 	 * @return True if there's any FE data to be mapped by node (i.e. displacement), false otherwise.
@@ -106,8 +106,7 @@ namespace fedes {
 	 * @brief Model equality operator, which is useful for unit tests (when dealing with small models)
 	 */
 	bool Model::operator==(const Model& other) const {
-		return (nodes == other.nodes && elements == other.elements && displacement == other.displacement && stress == other.stress &&
-		total_strain == other.total_strain && plastic_strain == other.plastic_strain && accumulated_strain == other.accumulated_strain &&
-		integration == other.integration);
+		return ((nodes == other.nodes) && (elements == other.elements) && (displacement == other.displacement) && (stress == other.stress) &&
+		(total_strain == other.total_strain) && (plastic_strain == other.plastic_strain) && (accumulated_strain == other.accumulated_strain));
 	}
 }

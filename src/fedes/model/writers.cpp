@@ -4,6 +4,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <format>
 
 #include "fedes/common/files.h"
 #include "fedes/maths/vector3.h"
@@ -38,9 +39,9 @@ namespace fedes {
 
 		if (!model.displacement.empty()) {
 			stream << "<PointData Tensors=\"Vector\" >\n";
-			stream << "<DataArray type=\"Float64\" Name=\"Displacement\" NumberOfComponents=\"3\" format=\"ascii\" >\n";
+			stream << "<DataArray type=\"Float64\" Name=\"displacement\" NumberOfComponents=\"3\" format=\"ascii\" >\n";
 			for (auto& d : model.displacement) {	
-				stream << d[0] << ' ' << d[1] << ' ' << d[2] << "\n";
+				stream << std::format("{} {} {}", d[0], d[1], d[2]) << '\n';
 			}
 			stream << "</DataArray>\n";
 		}
@@ -54,28 +55,28 @@ namespace fedes {
 			if (!model.stress.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"Stress\" NumberOfComponents=\"6\" format=\"ascii\" >\n";
 				for (auto& s : model.stress) {
-					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
+					stream << std::format("{} {} {} {} {} {}", s[0], s[1], s[2], s[3], s[4], s[5]) << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
 			if (!model.total_strain.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"TotalStrain\" NumberOfComponents=\"6\" format=\"ascii\" >\n";
 				for (auto& s : model.total_strain) {
-					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
+					stream << std::format("{} {} {} {} {} {}", s[0], s[1], s[2], s[3], s[4], s[5]) << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
 			if (!model.plastic_strain.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"PlasticStrain\" NumberOfComponents=\"6\" format=\"ascii\" >\n";
 				for (auto& s : model.plastic_strain) {
-					stream << s[0] << ' ' << s[1] << ' ' << s[2] << ' ' << s[3] << ' ' << s[4] << ' ' << s[5] << "\n";
+					stream << std::format("{} {} {} {} {} {}", s[0], s[1], s[2], s[3], s[4], s[5]) << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
 			if (!model.accumulated_strain.empty()) {
 				stream << "<DataArray type=\"Float64\" Name=\"AccumulatedStrain\" NumberOfComponents=\"1\" format=\"ascii\" >\n";
 				for (auto& s : model.accumulated_strain) {
-					stream << s << "\n";
+					stream << std::format("{}", s) << "\n";
 				}
 				stream << "</DataArray>\n";
 			}
@@ -154,7 +155,7 @@ namespace fedes {
 		stream << "<Points>\n";
 		stream << "<DataArray type=\"Float64\" Name=\"coordinates\" NumberOfComponents=\"3\" format=\"ascii\" >\n";
 		for (auto& n : model.nodes) {
-			stream << n.x << ' ' << n.y << ' ' << n.z << '\n';
+			stream << std::format("{} {} {}", n.x, n.y, n.z) << '\n';
 		}
 		stream << "</DataArray>\n";
 		stream << "</Points>\n";
