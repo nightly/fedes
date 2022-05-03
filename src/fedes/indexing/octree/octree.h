@@ -95,10 +95,11 @@ namespace fedes {
 			if (pool.has_value()) {
 				pool_ = pool.value();
 				ParallelConstructRoot();
+				ParallelNodeElementMap();
 			} else {
 				ConstructRoot();
+				NodeElementMap();
 			}
-			NodeElementMap();
 
 			for (size_t i = 0; i != points_->size(); i++) {
 				Insert(*root_, i, 0);
@@ -262,6 +263,17 @@ namespace fedes {
 		}
 
 		void NodeElementMap() {
+			node_elements_.resize(points_->size());
+
+			for (size_t e = 0; e < elements_->size(); ++e) {
+				for (size_t n = 0; n < (*elements_)[e].size(); ++n) {
+					node_elements_[(*elements_)[e][n]].emplace_back(e);
+				}
+			}
+		}
+
+		void ParallelNodeElementMap() {
+			// With a concurrent container/collection, the node to element mapping can be done in parallel,
 			node_elements_.resize(points_->size());
 
 			for (size_t e = 0; e < elements_->size(); ++e) {

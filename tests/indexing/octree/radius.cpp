@@ -32,7 +32,7 @@ TEST_F(OctreeRadiusTest, R1) {
 	octree_->RadiusSearch(center, radius, got);
 
 	std::vector<size_t> expected({2});
-	// ASSERT_EQ(got, expected);
+	ASSERT_EQ(got, expected);
 }
 
 TEST_F(OctreeRadiusTest, All) {
@@ -42,5 +42,5 @@ TEST_F(OctreeRadiusTest, All) {
 	octree_->RadiusSearch(center, radius, got);
 
 	std::vector<size_t> expected({0, 1, 2, 3, 4, 5, 6});
-	// ASSERT_EQ(got, expected);
+	ASSERT_EQ(got, expected);
 }

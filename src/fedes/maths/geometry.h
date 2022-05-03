@@ -23,9 +23,9 @@ namespace fedes {
 	 */
 	inline std::optional<MuesfData> TetrahedronContainment(const std::span<fedes::Vector3<double>>& source_nodes, const std::vector<size_t>& element,
 		                                                   const fedes::Vector3<double> query_point, double g3, double h3, double r3, double g_h_r3) {
-		double xn = query_point.x;
-		double yn = query_point.y;
-		double zn = query_point.z;
+		const double& xn = query_point.x;
+		const double& yn = query_point.y;
+		const double& zn = query_point.z;
 		double cx1cx0 = source_nodes[element[1]].x - source_nodes[element[0]].x;
 		double cy2cy0 = source_nodes[element[2]].y - source_nodes[element[0]].y;
 		double cz3cz0 = source_nodes[element[3]].z - source_nodes[element[0]].z;
@@ -37,7 +37,7 @@ namespace fedes {
 		double cz1cz0 = source_nodes[element[1]].z - source_nodes[element[0]].z;
 		double xncx0 = xn - source_nodes[element[0]].x;
 		double yncy0 = yn - source_nodes[element[0]].y;
-		double zncz0 = zn - source_nodes[element[1]].z;
+		double zncz0 = zn - source_nodes[element[0]].z;
 
 	    double det = cx1cx0 * cy2cy0 * cz3cz0 - cx1cx0 * cy3cy0 * cz2cz0 - cy1cy0 * cx2cx0 * cz3cz0 +
 		cy1cy0 *

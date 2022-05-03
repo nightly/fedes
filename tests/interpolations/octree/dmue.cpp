@@ -10,7 +10,7 @@
 #include "fedes/indexing/octree/octree.h"
 
 
-TEST(OctreeInterpolationsDMUE, Model1) {
+TEST(OctreeInterpolationsDMUE, DISABLED_Model1) {
 	thread_pool pool;
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, 1);

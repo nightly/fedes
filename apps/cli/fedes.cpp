@@ -71,9 +71,6 @@ void prompt(thread_pool& pool) {
 
 			return;
 		}
-		if (max_leaf_scan_threshold <= 20) {
-			std::cout << "[Warning] This value seems to be too low or indicates a tree with too little depth to be practical\n";
-		}
 	}
 
 	FEDES_INFO("[CLI]: Example model {}, max depth {}, leaf split threshold {}", model, max_depth,
