@@ -198,31 +198,38 @@ namespace fedes {
 		// Construction, insertion, splitting, and destruction
 		// ====================================================================
 
+		/*
+		 * @brief Will update the Min and Max vectors with new minima and maxima for x, y, z from a provided Vector3
+		 */
+		inline void MinMax(Vector3& min, Vector3& max, const Vector3& v) const {
+			if (v.x > max.x) {
+				max.x = v.x;
+			}
+			if (v.x < min.x) {
+				min.x = v.x;
+			}
+
+			if (v.y > max.y) {
+				max.y = v.y;
+			}
+			if (v.y < min.y) {
+				min.y = v.y;
+			}
+
+			if (v.z > max.z) {
+				max.z = v.z;
+			}
+			if (v.z < min.z) {
+				min.z = v.z;
+			}
+		}
+
 		void ConstructRoot() {
 			Vector3 min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
 			Vector3 max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
 			Vector3 center;
 			for (auto& v : *points_) {
-				if (v.x > max.x) {
-					max.x = v.x;
-				}
-				if (v.x < min.x) {
-					min.x = v.x;
-				}
-
-				if (v.y > max.y) {
-					max.y = v.y;
-				}
-				if (v.y < min.y) {
-					min.y = v.y;
-				}
-
-				if (v.z > max.z) {
-					max.z = v.z;
-				}
-				if (v.z < min.z) {
-					min.z = v.z;
-				}
+				MinMax(min, max, v);
 			}
 
 			Vector3 extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
@@ -231,29 +238,63 @@ namespace fedes {
 		}
 
 		void ParallelConstructRoot() {
+			Vector3 center;
+			size_t start_idx = 0;
+			size_t end_idx = points_->size();
+			size_t blocks = pool_->get_thread_count();
+			std::vector<std::pair<Vector3, Vector3>> locals;
+			locals.resize(blocks);
+
+			auto local_min_max = [&](const size_t& a, const size_t& b) -> std::pair<Vector3, Vector3> {
+				Vector3 local_min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
+				Vector3 local_max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
+
+				for (size_t i = a; i < b; i++) {
+					const Vector3& v =  (*points_)[i];
+					MinMax(local_min, local_max, v);
+				}
+				return {local_min, local_max };
+			};
+
 			Vector3 min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
 			Vector3 max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
-			Vector3 center;
-			for (auto& v : *points_) {
-				if (v.x > max.x) {
-					max.x = v.x;
+
+			// Adaptation of pool.parallelize_loop —- since we do care about return values
+			end_idx--;
+			size_t total_size = (end_idx - start_idx + 1);
+			size_t block_size = (total_size / blocks);
+
+			// Start the tasks and set the futures
+			std::vector<std::future<std::pair<Vector3, Vector3>>> futures;
+			futures.resize(blocks);
+			for (size_t t = 0; t < blocks; t++) {
+				size_t start = ((t * block_size) + start_idx);
+				size_t end = (t == blocks - 1) ? end_idx + 1 : (((t + 1) * block_size) + start_idx);
+				futures[t] = pool_->submit(local_min_max, start, end);
+			}
+
+			// Get the futures or wait, update global minima and maxima values
+			for (size_t t = 0; t < blocks; t++) {
+				const auto& [l_min, l_max] = futures[t].get();
+				if (l_max.x > max.x) {
+					max.x = l_max.x;
 				}
-				if (v.x < min.x) {
-					min.x = v.x;
+				if (l_min.x < min.x) {
+					min.x = l_min.x;
 				}
 
-				if (v.y > max.y) {
-					max.y = v.y;
+				if (l_max.y > max.y) {
+					max.y = l_max.y;
 				}
-				if (v.y < min.y) {
-					min.y = v.y;
+				if (l_min.y < min.y) {
+					min.y = l_min.y;
 				}
 
-				if (v.z > max.z) {
-					max.z = v.z;
+				if (l_max.z > max.z) {
+					max.z = l_max.z;
 				}
-				if (v.z < min.z) {
-					min.z = v.z;
+				if (l_min.z < min.z) {
+					min.z = l_min.z;
 				}
 			}
 
@@ -360,7 +401,7 @@ namespace fedes {
 
 		/*
 		 * @brief Recursively attempts to find a given exact point
-		 * @param octant: starting Octant to find the point from - usually the root.
+		 * @param octant: starting Octant to find the point from — usually the root.
 		 * @returns -1 if the point cannot be found, or the index within points_ if the point was found.
 		 */
 		int_fast64_t Find(const Vector3& point, const Octant& octant) const {
@@ -372,10 +413,10 @@ namespace fedes {
 					}
 				}
 			} else {
-				// FEDES_TRACE("[Octree Find]: Traversed to Octant not containing target point, Octant min: {} and max {}", o.aabb_min, o.aabb_max);
+				FEDES_TRACE("[Octree Find]: Traversed to Octant not containing target point, Octant min: {} and max {}", o.aabb_min, o.aabb_max);
 				return -1;
 			}
-			// FEDES_TRACE("[Octree Find]: Traversed to empty Octant, Octant min: {} and max {}", o.aabb_min, o.aabb_max);
+			FEDES_TRACE("[Octree Find]: Traversed to empty Octant, Octant min: {} and max {}", o.aabb_min, o.aabb_max);
 			return -1;
 		}
 

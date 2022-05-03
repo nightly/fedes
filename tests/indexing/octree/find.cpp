@@ -26,9 +26,11 @@ protected:
 };
 
 TEST_F(OctreeFindTest, Find) {
-	ASSERT_EQ(octree_->Find(fedes::Vector3<double>(0.5, 0.25, 0.75)), 3);
+	int_fast64_t idx = octree_->Find(fedes::Vector3<double>(0.5, 0.25, 0.75));
+	ASSERT_EQ(idx, 3);
 }
 
 TEST_F(OctreeFindTest, Missing) {
-	ASSERT_EQ(octree_->Find(fedes::Vector3<double>(0.3, 0.3, 0.3)), -1);
+	int_fast64_t idx = octree_->Find(fedes::Vector3<double>(0.3, 0.3, 0.3));
+	ASSERT_EQ(idx, -1);
 }

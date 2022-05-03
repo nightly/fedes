@@ -101,7 +101,7 @@ void prompt(thread_pool& pool) {
 
 int main() {
 #if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
-	spdlog::set_level(spdlog::level::trace);
+	spdlog::set_level(spdlog::level::debug);
 #endif
 
 #if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
