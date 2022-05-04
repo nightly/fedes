@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/external/googletest" "external/googletest")
 
+# Macro adapted from https://cliutils.gitlab.io/modern-cmake/
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME} ${ARGN})
 
@@ -26,17 +27,33 @@ macro(package_add_test TESTNAME)
     RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/tests")
 endmacro()
 
+
 # Test Suite
+
+# =============================
+#          Maths
+#==============================
 package_add_test("vector3" "maths/vector3.cpp")
 package_add_test("distance" "maths/distance.cpp")
 package_add_test("z_ordering" "maths/z_ordering.cpp")
 package_add_test("geometry" "maths/geometry.cpp")
 
+# =============================
+#          Model
+#==============================
 package_add_test("parsers" "model/parsers.cpp")
 package_add_test("writers" "model/writers.cpp")
 
+
+# =============================
+#          Common
+#==============================
 package_add_test("strings" "common/strings.cpp")
 
+
+# ========================================
+#       Octree Indexing & Searches
+#=========================================
 package_add_test("octant" "indexing/octree/octant.cpp")
 package_add_test("octree_construct" "indexing/octree/construct.cpp")
 package_add_test("octree_construct_element" "indexing/octree/construct_element.cpp")
@@ -49,6 +66,10 @@ package_add_test("octree_field" "indexing/octree/field.cpp")
 package_add_test("octree_radius" "indexing/octree/radius.cpp")
 package_add_test("octree_comparator" "indexing/octree/octant_comparator.cpp")
 
+
+# ==========================================
+#        Interpolations using Octree
+#===========================================
 package_add_test("octree_interpolations_npm" "interpolations/octree/npm.cpp")
 package_add_test("octree_interpolations_fop" "interpolations/octree/fop.cpp")
 package_add_test("octree_interpolations_dmue" "interpolations/octree/dmue.cpp")

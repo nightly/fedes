@@ -9,7 +9,7 @@ set_property(DIRECTORY "${PROJECT_SOURCE_DIR}/external/googlebenchmark" APPEND
   PROPERTY COMPILE_DEFINITIONS "-DCMAKE_BUILD_TYPE=Release")
 
 macro(package_add_benchmark BENCHNAME)
-    add_executable(${BENCHNAME} ${ARGN})
+    add_executable(${BENCHNAME} ${ARGN} "indexing/octree/construction/m4.cpp")
     target_compile_features(${BENCHNAME}  PRIVATE cxx_std_23)
 
     target_link_libraries(${BENCHNAME} PRIVATE 
@@ -26,15 +26,43 @@ endmacro()
 
 # Benchmark Suite
 
-package_add_benchmark("bench_octree_construct" "indexing/octree/construction/construct.cpp")
-package_add_benchmark("bench_octree_large" "indexing/octree/construction/large.cpp")
-package_add_benchmark("bench_octree_parallel_construct" "indexing/octree/construction/parallel.cpp")
+# ==================
+#   Index Creation
+# ==================
 
-package_add_benchmark("bench_octree_npm" "interpolations/octree/npm.cpp")
-package_add_benchmark("bench_octree_fop" "interpolations/octree/fop.cpp")
-package_add_benchmark("bench_octree_dmue" "interpolations/octree/dmue.cpp")
-package_add_benchmark("bench_octree_esf" "interpolations/octree/esf.cpp")
+package_add_benchmark("bench_octree_m1" "indexing/octree/construction/m1.cpp")
+package_add_benchmark("bench_octree_m2" "indexing/octree/construction/m2.cpp")
+package_add_benchmark("bench_octree_m3" "indexing/octree/construction/m3.cpp")
+package_add_benchmark("bench_octree_m4" "indexing/octree/construction/m4.cpp")
 
+# ==================
+#   Interpolations
+# ==================
+
+package_add_benchmark("bench_octree_npm_m1" "interpolations/octree/npm/m1.cpp")
+package_add_benchmark("bench_octree_npm_m2" "interpolations/octree/npm/m2.cpp")
+package_add_benchmark("bench_octree_npm_m3" "interpolations/octree/npm/m3.cpp")
+package_add_benchmark("bench_octree_npm_m4" "interpolations/octree/npm/m4.cpp")
+
+package_add_benchmark("bench_octree_fop_m1" "interpolations/octree/fop/m1.cpp")
+package_add_benchmark("bench_octree_fop_m2" "interpolations/octree/fop/m2.cpp")
+package_add_benchmark("bench_octree_fop_m3" "interpolations/octree/fop/m3.cpp")
+package_add_benchmark("bench_octree_fop_m4" "interpolations/octree/fop/m4.cpp")
+
+package_add_benchmark("bench_octree_dmue_m1" "interpolations/octree/dmue/m1.cpp")
+package_add_benchmark("bench_octree_dmue_m2" "interpolations/octree/dmue/m2.cpp")
+package_add_benchmark("bench_octree_dmue_m3" "interpolations/octree/dmue/m3.cpp")
+package_add_benchmark("bench_octree_dmue_m4" "interpolations/octree/dmue/m4.cpp")
+
+
+package_add_benchmark("bench_octree_esf_m1" "interpolations/octree/esf/m1.cpp")
+package_add_benchmark("bench_octree_esf_m2" "interpolations/octree/esf/m2.cpp")
+package_add_benchmark("bench_octree_esf_m3" "interpolations/octree/esf/m3.cpp")
+package_add_benchmark("bench_octree_esf_m4" "interpolations/octree/esf/m4.cpp")
+
+# ============
+#   Other
+# ===========
 
 package_add_benchmark("bench_experimental_1" "experimental/experimental_1.cpp")
 package_add_benchmark("bench_experimental_2" "experimental/experimental_2.cpp")

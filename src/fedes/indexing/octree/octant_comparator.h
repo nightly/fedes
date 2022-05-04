@@ -11,7 +11,7 @@
 
 namespace fedes {
 	
-	template <std::floating_point T>
+	template <std::floating_point T = double>
 	struct OctantComparator {
 	public:
 		using Octant = fedes::internal::Octant<T>;

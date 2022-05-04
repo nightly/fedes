@@ -60,6 +60,18 @@ void prompt(thread_pool& pool) {
 		}
 	}
 
+	size_t min_leaf_scan_dmue = 50;
+	if (interpolation_type == 3) {
+		std::cout << "Enter minimum number of leaf scans for DMUE \n";
+		std::cin >> min_leaf_scan_dmue;
+		if (min_leaf_scan_dmue < 0 || std::cin.fail()) {
+			std::cin.clear();
+			std::cin.ignore();
+			std::cerr << "[Error] Invalid minimal leaf scan value!\n";
+			return;
+		}
+	}
+
 	size_t max_leaf_scan_threshold = 1000;
 	if (interpolation_type == 4) {
 		std::cout << "Enter max leaves to scan prior to relaxing geometry boundaries (boundary shift threshold) \n";
@@ -86,7 +98,7 @@ void prompt(thread_pool& pool) {
 			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-dmufop"));
 			break;
 		case 3:
-			OctreeDMUE(source, target, max_depth, points_per_leaf, pool);
+			OctreeDMUE(source, target, max_depth, points_per_leaf, min_leaf_scan_dmue, pool);
 			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-dmue"));
 			break;
 		case 4:

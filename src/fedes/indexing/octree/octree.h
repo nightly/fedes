@@ -201,7 +201,7 @@ namespace fedes {
 		/*
 		 * @brief Will update the Min and Max vectors with new minima and maxima for x, y, z from a provided Vector3
 		 */
-		inline void MinMax(Vector3& min, Vector3& max, const Vector3& v) const {
+		inline static void MinMax(Vector3& min, Vector3& max, const Vector3& v) {
 			if (v.x > max.x) {
 				max.x = v.x;
 			}
@@ -238,12 +238,9 @@ namespace fedes {
 		}
 
 		void ParallelConstructRoot() {
-			Vector3 center;
 			size_t start_idx = 0;
 			size_t end_idx = points_->size();
 			size_t blocks = pool_->get_thread_count();
-			std::vector<std::pair<Vector3, Vector3>> locals;
-			locals.resize(blocks);
 
 			auto local_min_max = [&](const size_t& a, const size_t& b) -> std::pair<Vector3, Vector3> {
 				Vector3 local_min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
@@ -256,22 +253,24 @@ namespace fedes {
 				return {local_min, local_max };
 			};
 
-			Vector3 min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
-			Vector3 max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
-
-			// Adaptation of pool.parallelize_loop —- since we do care about return values
+			// Adaptation of pool.parallelize_loop to also capture the futures
 			end_idx--;
 			size_t total_size = (end_idx - start_idx + 1);
 			size_t block_size = (total_size / blocks);
 
 			// Start the tasks and set the futures
 			std::vector<std::future<std::pair<Vector3, Vector3>>> futures;
-			futures.resize(blocks);
+			futures.reserve(blocks);
 			for (size_t t = 0; t < blocks; t++) {
 				size_t start = ((t * block_size) + start_idx);
 				size_t end = (t == blocks - 1) ? end_idx + 1 : (((t + 1) * block_size) + start_idx);
-				futures[t] = pool_->submit(local_min_max, start, end);
+				FEDES_TRACE("Local MinMax Split {}: start {} - end {}", t, start, end);
+				futures.emplace_back(pool_->submit(local_min_max, start, end));
 			}
+
+			// Global min/max
+			Vector3 min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
+			Vector3 max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
 
 			// Get the futures or wait, update global minima and maxima values
 			for (size_t t = 0; t < blocks; t++) {
@@ -299,7 +298,7 @@ namespace fedes {
 			}
 
 			Vector3 extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
-			center = (max + min) / 2;
+			Vector3 center = (max + min) / 2;
 			root_ = new Octant(center, extent / 2, nullptr);
 		}
 
