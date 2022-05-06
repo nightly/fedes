@@ -120,9 +120,9 @@ namespace fedes {
 		Octree(Octree&& other) noexcept = delete;
 		Octree& operator=(Octree&& other) noexcept = delete;
 
-		// ====================================================================
-		// Searches (pick, NPM, DMUFOP, DMUE, ESF)
-		// ====================================================================
+		// ======================================================================
+		// Searches (Pick, Nearest Point, Range/Radius, DMUFOP, DMUE, ESF)
+		// ======================================================================
 		
 		/*
 		 * @brief Returns -1 or the given index if the point is located. 
@@ -612,13 +612,19 @@ namespace fedes {
 			for (const auto& p : radius_points) {
 				uint_fast8_t dir = fedes::DetermineDirection(query, (*points_)[p]);
 				if (field[dir] == std::pair<size_t, PointT>()) {
-					field[dir] = std::make_pair(p, fedes::Distance(query, (*points_)[p]));
+					field[dir] = std::make_pair(p, fedes::DistanceSquared(query, (*points_)[p]));
 				}
 				else {
-					PointT dist = fedes::Distance(query, (*points_)[p]);
-					if (dist < field[dir].second) {
-						field[dir] = std::make_pair(p, dist);
+					PointT dist_sq = fedes::DistanceSquared(query, (*points_)[p]);
+					if (dist_sq < field[dir].second) {
+						field[dir] = std::make_pair(p, dist_sq);
 					}
+				}
+			}
+
+			for (uint_fast8_t i = 0; i < 8; ++i) {
+				if (field[i] != std::pair<size_t, PointT>()) {
+					field[i].second = std::sqrtf(field[i].second);
 				}
 			}
 
@@ -638,7 +644,7 @@ namespace fedes {
 				}
 			} else {
 				for (uint_fast8_t i = 0; i < 8; ++i) {
-					if (octant.child[i]->WithinSphere(query_point, radius, radius_sq)) {
+					if (!(octant.child[i]->IsLeaf() && octant.child[i]->IsEmpty()) && octant.child[i]->WithinSphere(query_point, radius, radius_sq)) {
 						RadiusSearch(*octant.child[i], query_point, radius, radius_sq, results);
 					}
 				}

@@ -46,13 +46,13 @@ void OctreeDMUFOP(fedes::Model& source, fedes::Model& target, size_t max_depth, 
  * @brief Distance Method using Elements with Octree Index with timing
  */
 void OctreeDMUE(fedes::Model& source, fedes::Model& target, size_t max_depth, size_t points_per_leaf,
-	           size_t min_leaf_scan_dmue, thread_pool& pool) {
+	           size_t min_scan_dmue, thread_pool& pool) {
 	fedes::internal::Timer build_timer("Octree Element Index Construction");
 	fedes::Octree<double> octree(source.nodes, source.elements, max_depth, points_per_leaf, &pool);
 	auto build_duration = build_timer.Stop();
 
 	fedes::internal::Timer interpolation_timer("Octree Distance Method using Elements Interpolation");
-	fedes::ParallelDMUE(octree, source, target, pool, min_leaf_scan_dmue);
+	fedes::ParallelDMUE(octree, source, target, pool, min_scan_dmue);
 	auto interpolation_duration = interpolation_timer.Stop();
 	build_timer.WriteDuration(build_duration);
 	interpolation_timer.WriteDuration(interpolation_duration);

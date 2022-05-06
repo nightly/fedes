@@ -60,11 +60,11 @@ void prompt(thread_pool& pool) {
 		}
 	}
 
-	size_t min_leaf_scan_dmue = 50;
+	size_t min_scan_dmue = 50;
 	if (interpolation_type == 3) {
-		std::cout << "Enter minimum number of leaf scans for DMUE \n";
-		std::cin >> min_leaf_scan_dmue;
-		if (min_leaf_scan_dmue < 0 || std::cin.fail()) {
+		std::cout << "Enter minimum number of element scans for DMUE \n";
+		std::cin >> min_scan_dmue;
+		if (min_scan_dmue < 0 || std::cin.fail()) {
 			std::cin.clear();
 			std::cin.ignore();
 			std::cerr << "[Error] Invalid minimal leaf scan value!\n";
@@ -98,7 +98,7 @@ void prompt(thread_pool& pool) {
 			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-dmufop"));
 			break;
 		case 3:
-			OctreeDMUE(source, target, max_depth, points_per_leaf, min_leaf_scan_dmue, pool);
+			OctreeDMUE(source, target, max_depth, points_per_leaf, min_scan_dmue, pool);
 			fedes::ExportModels(source, target, ("oct-M" + std::to_string(model)), ("oct-M" + std::to_string(model) + "-dmue"));
 			break;
 		case 4:
@@ -117,7 +117,7 @@ int main() {
 #endif
 
 #if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
-	FEDES_INFO("Running in debug or with verbose output. Console logging will affect execution time.");
+	FEDES_WARN("Running in debug or with verbose output. Console logging will affect execution time.");
 #endif 
 
 
