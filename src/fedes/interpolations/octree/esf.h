@@ -44,9 +44,9 @@ namespace fedes {
 							double a5 = g * (1 + r);
 							double a6 = h * (1 + r);
 							for (uint_fast8_t k = 0; k < 3; ++k) {
-								target.displacement[i][k] = a1 * source.displacement[source.elements[elem][0]][k] + a2 * source.displacement[source.elements[elem][1]][k] +
+								target.displacement[i][k] = (a1 * source.displacement[source.elements[elem][0]][k] + a2 * source.displacement[source.elements[elem][1]][k] +
 									a3 * source.displacement[source.elements[elem][2]][k] + a4 * source.displacement[source.elements[elem][3]][k] +
-									a5 * source.displacement[source.elements[elem][4]][k] + a6 * source.displacement[source.elements[elem][5]][k];
+									a5 * source.displacement[source.elements[elem][4]][k] + a6 * source.displacement[source.elements[elem][5]][k]) / 2;
 							}
 						} else if (element_type == ElementType::Hexahedron) {
 							double a1 = (1 - g) * (1 - h) * (1 - r);
@@ -58,10 +58,10 @@ namespace fedes {
 							double a7 = (1 + g) * (1 + h) * (1 + r);
 							double a8 = (1 - g) * (1 + h) * (1 + r);
 							for (uint_fast8_t k = 0; k < 3; ++k) {
-								target.displacement[i][k] = a1 * source.displacement[source.elements[elem][0]][k] + a2 * source.displacement[source.elements[elem][1]][k] +
+								target.displacement[i][k] = (a1 * source.displacement[source.elements[elem][0]][k] + a2 * source.displacement[source.elements[elem][1]][k] +
 									a3 * source.displacement[source.elements[elem][2]][k] + a4 * source.displacement[source.elements[elem][3]][k] +
 									a5 * source.displacement[source.elements[elem][4]][k] + a6 * source.displacement[source.elements[elem][5]][k] +
-									a7 * source.displacement[source.elements[elem][6]][k] + a8 * source.displacement[source.elements[elem][7]][k];
+									a7 * source.displacement[source.elements[elem][6]][k] + a8 * source.displacement[source.elements[elem][7]][k]) / 8;
 							}
 						}
 
@@ -94,28 +94,28 @@ namespace fedes {
 							double ghr = (1 - g - h - r);
 							if (stress_map) {
 								for (uint_fast8_t k = 0; k < 6; ++k) {
-									target.stress[i][k] = ghr * source.stress[source.elements[elem][0]][k] + g * source.stress[source.elements[elem][1]][k] +
-										h * source.stress[source.elements[elem][2]][k] + r * source.stress[source.elements[elem][3]][k];
+									(target.stress[i][k] = ghr * source.stress[source.elements[elem][0]][k] + g * source.stress[source.elements[elem][1]][k] +
+										h * source.stress[source.elements[elem][2]][k] + r * source.stress[source.elements[elem][3]][k]) / 2;
 								}
 							}
 
 							if (plastic_strain_map) {
 								for (uint_fast8_t k = 0; k < 6; ++k) {
-									target.plastic_strain[i][k] = ghr * source.plastic_strain[source.elements[elem][0]][k] + g * source.plastic_strain[source.elements[elem][1]][k] +
-										h * source.plastic_strain[source.elements[elem][2]][k] + r * source.plastic_strain[source.elements[elem][3]][k];
+									(target.plastic_strain[i][k] = ghr * source.plastic_strain[source.elements[elem][0]][k] + g * source.plastic_strain[source.elements[elem][1]][k] +
+										h * source.plastic_strain[source.elements[elem][2]][k] + r * source.plastic_strain[source.elements[elem][3]][k]) / 2;
 								}
 							}
 
 							if (total_strain_map) {
 								for (uint_fast8_t k = 0; k < 6; ++k) {
-									target.total_strain[i][k] = ghr * source.total_strain[source.elements[elem][0]][k] + g * source.total_strain[source.elements[elem][1]][k] +
-										h * source.total_strain[source.elements[elem][2]][k] + r * source.total_strain[source.elements[elem][3]][k];
+									(target.total_strain[i][k] = ghr * source.total_strain[source.elements[elem][0]][k] + g * source.total_strain[source.elements[elem][1]][k] +
+										h * source.total_strain[source.elements[elem][2]][k] + r * source.total_strain[source.elements[elem][3]][k]) / 2;
 								}
 							}
 
 							if (accumulated_strain_map) {
-									target.accumulated_strain[i] = ghr * source.accumulated_strain[source.elements[elem][0]] + g * source.accumulated_strain[source.elements[elem][1]] +
-										h * source.accumulated_strain[source.elements[elem][2]] + r * source.accumulated_strain[source.elements[elem][3]];
+									(target.accumulated_strain[i] = ghr * source.accumulated_strain[source.elements[elem][0]] + g * source.accumulated_strain[source.elements[elem][1]] +
+										h * source.accumulated_strain[source.elements[elem][2]] + r * source.accumulated_strain[source.elements[elem][3]]) / 2;
 							}
 						} else if (element_type == ElementType::Wedge) {
 							double a1 = (1 - g - h) * (1 - r);
@@ -167,36 +167,36 @@ namespace fedes {
 
 							if (stress_map) {
 								for (uint_fast8_t k = 0; k < 6; ++k) {
-									target.stress[i][k] = a1 * source.stress[source.elements[elem][0]][k] + a2 * source.stress[source.elements[elem][1]][k] +
+									target.stress[i][k] = (a1 * source.stress[source.elements[elem][0]][k] + a2 * source.stress[source.elements[elem][1]][k] +
 										a3 * source.stress[source.elements[elem][2]][k] + a4 * source.stress[source.elements[elem][3]][k] +
 										a5 * source.stress[source.elements[elem][4]][k] + a6 * source.stress[source.elements[elem][5]][k] +
-										a7 * source.stress[source.elements[elem][6]][k] + a8 * source.stress[source.elements[elem][7]][k];
+										a7 * source.stress[source.elements[elem][6]][k] + a8 * source.stress[source.elements[elem][7]][k])/8;
 								}
 							}
 
 							if (plastic_strain_map) {
 								for (uint_fast8_t k = 0; k < 6; ++k) {
-									target.plastic_strain[i][k] = a1 * source.plastic_strain[source.elements[elem][0]][k] + a2 * source.plastic_strain[source.elements[elem][1]][k] +
+									target.plastic_strain[i][k] = (a1 * source.plastic_strain[source.elements[elem][0]][k] + a2 * source.plastic_strain[source.elements[elem][1]][k] +
 										a3 * source.plastic_strain[source.elements[elem][2]][k] + a4 * source.plastic_strain[source.elements[elem][3]][k] +
 										a5 * source.plastic_strain[source.elements[elem][4]][k] + a6 * source.plastic_strain[source.elements[elem][5]][k] +
-										a7 * source.plastic_strain[source.elements[elem][6]][k] + a8 * source.plastic_strain[source.elements[elem][7]][k];
+										a7 * source.plastic_strain[source.elements[elem][6]][k] + a8 * source.plastic_strain[source.elements[elem][7]][k]) / 8;
 								}
 							}
 
 							if (total_strain_map) {
 								for (uint_fast8_t k = 0; k < 6; ++k) {
-									target.total_strain[i][k] = a1 * source.total_strain[source.elements[elem][0]][k] + a2 * source.total_strain[source.elements[elem][1]][k] +
+									target.total_strain[i][k] = (a1 * source.total_strain[source.elements[elem][0]][k] + a2 * source.total_strain[source.elements[elem][1]][k] +
 										a3 * source.total_strain[source.elements[elem][2]][k] + a4 * source.total_strain[source.elements[elem][3]][k] +
 										a5 * source.total_strain[source.elements[elem][4]][k] + a6 * source.total_strain[source.elements[elem][5]][k] +
-										a7 * source.total_strain[source.elements[elem][6]][k] + a8 * source.total_strain[source.elements[elem][7]][k];
+										a7 * source.total_strain[source.elements[elem][6]][k] + a8 * source.total_strain[source.elements[elem][7]][k]) / 8;
 								}
 							}
 
 							if (accumulated_strain_map) {
-								target.accumulated_strain[i] = a1 * source.accumulated_strain[source.elements[elem][0]] + a2 * source.accumulated_strain[source.elements[elem][1]] +
+								target.accumulated_strain[i] = (a1 * source.accumulated_strain[source.elements[elem][0]] + a2 * source.accumulated_strain[source.elements[elem][1]] +
 									a3 * source.accumulated_strain[source.elements[elem][2]] + a4 * source.accumulated_strain[source.elements[elem][3]] +
 									a5 * source.accumulated_strain[source.elements[elem][4]] + a6 * source.accumulated_strain[source.elements[elem][5]] +
-									a7 * source.accumulated_strain[source.elements[elem][6]] + a8 * source.accumulated_strain[source.elements[elem][7]];
+									a7 * source.accumulated_strain[source.elements[elem][6]] + a8 * source.accumulated_strain[source.elements[elem][7]]) / 8;
 							}
 
 						}
