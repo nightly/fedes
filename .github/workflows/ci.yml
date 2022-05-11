@@ -20,7 +20,7 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -S. -B build -DCMAKE_BUILD_TYPE=Release
+        cmake -S. -B build -DCMAKE_BUILD_TYPE=Release -DFEDES_VERBOSE_OUTPUT=OFF
 
     - name: Build
       run: |
@@ -29,4 +29,4 @@ jobs:
     - name: Run Tests 
       run: |
         cd build
-        ctest -j 16 --output-on-failure --verbose
+        ctest -C Release -j 16 --output-on-failure --verbose

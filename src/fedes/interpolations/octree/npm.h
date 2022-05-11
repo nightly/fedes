@@ -19,7 +19,7 @@ namespace fedes {
 	 * @param target: target model to use to fill FE data with from the source with indexes preset using SetIndexes()
 	 * @param pool: the thread pool to parallelize with
 	 */
-	template <std::floating_point T>
+	template <std::floating_point T = double>
 	void ParallelNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, thread_pool& pool) {
 		if (source.ByNode()) {
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
@@ -77,7 +77,7 @@ namespace fedes {
 	 * @param source: source model with nodal and FE data
 	 * @param target: target model to use to fill FE data with from the source with indexes preset using SetIndexes()
 	 */
-	template <std::floating_point T>
+	template <std::floating_point T = double>
 	void NearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target) {
 		if (source.ByNode()) {
 			for (size_t i = 0; i != target.nodes.size(); i++) {

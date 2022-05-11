@@ -12,11 +12,11 @@ protected:
 	void SetUp() override {
 		fedes::Vector3<double> center_a(0.0, 0.0, 0.0);
 		fedes::Vector3<double> extent_a(0.25, 0.25, 0.25);
-		octant_a = std::make_unique<fedes::internal::Octant<double>>(center_a, extent_a, nullptr);
+		octant_a = std::make_unique<fedes::internal::Octant<double>>(center_a, extent_a);
 
 		fedes::Vector3<double> center_b(0.75, 0.75, 0.75);
 		fedes::Vector3<double> extent_b(0.25, 0.25, 0.25);
-		octant_b = std::make_unique<fedes::internal::Octant<double>>(center_b, extent_b, nullptr);
+		octant_b = std::make_unique<fedes::internal::Octant<double>>(center_b, extent_b);
 	}
 };
 

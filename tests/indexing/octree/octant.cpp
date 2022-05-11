@@ -14,7 +14,7 @@ protected:
 	void SetUp() override {
 		fedes::Vector3<double> center(0.0, 0.0, 0.0);
 		fedes::Vector3<double> extent(1.0, 1.0, 1.0);
-		octant_ = std::make_unique<fedes::internal::Octant<double>>(center, extent, nullptr);
+		octant_ = std::make_unique<fedes::internal::Octant<double>>(center, extent);
 	}
 };
 
@@ -24,7 +24,7 @@ TEST_F(OctantTest, IsLeafFromFixture) {
 }
 
 TEST_F(OctantTest, IsLeafWithChildren) {
-	fedes::internal::Octant<double> child(fedes::Vector3<double>(0.5, 0.5, 0.5), fedes::Vector3<double>(0.5,0.5,0.5), octant_.get());
+	fedes::internal::Octant<double> child(fedes::Vector3<double>(0.5, 0.5, 0.5), fedes::Vector3<double>(0.5,0.5,0.5));
 	for (int i = 0; i < 7; i++) {
 		octant_->child[i] = &child;
 	}

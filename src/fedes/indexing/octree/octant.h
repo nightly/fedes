@@ -20,13 +20,12 @@ namespace fedes::internal {
 		Vector3 extent; // @brief: half how far the Octant extends from the center (+=, -=) (width, height, depth) [half_size]
 		Vector3 aabb_min;
 		Vector3 aabb_max;
-		Octant* parent = nullptr;
 		std::vector<size_t> points;
 		std::array<Octant<PointT>*, 8> child = { nullptr };
 	public:
 		Octant() noexcept = default;
-		Octant(const Vector3& center, const Vector3& extent, Octant* parent)
-		: center(center), extent(extent), parent(parent) {
+		Octant(const Vector3& center, const Vector3& extent)
+		: center(center), extent(extent) {
 			aabb_min = center - extent;
 			aabb_max = center + extent;
 		}

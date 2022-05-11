@@ -117,7 +117,7 @@ int main() {
 #endif
 
 #if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
-	FEDES_WARN("Running in debug or with verbose output. Console logging will affect execution time.");
+	FEDES_WARN("[FEDES CLI] Running in debug or with verbose output. Console logging will affect execution time of interpolations.");
 #endif 
 
 

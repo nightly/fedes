@@ -26,7 +26,7 @@
 
 namespace fedes {	
 
-	template<std::floating_point PointT = double>
+	template <std::floating_point PointT = double>
 	class Octree {
 	public:
 		using value_type = PointT;
@@ -234,7 +234,7 @@ namespace fedes {
 
 			Vector3 extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
 			center = (max + min) / 2;
-			root_ = new Octant(center, extent / 2, nullptr);
+			root_ = new Octant(center, extent / 2);
 		}
 
 		void ParallelConstructRoot() {
@@ -299,7 +299,7 @@ namespace fedes {
 
 			Vector3 extent((max.x - min.x), (max.y - min.y), (max.z - min.z));
 			Vector3 center = (max + min) / 2;
-			root_ = new Octant(center, extent / 2, nullptr);
+			root_ = new Octant(center, extent / 2);
 		}
 
 		void NodeElementMap() {
@@ -359,7 +359,7 @@ namespace fedes {
 				split_center.x += octant.extent.x * (i & 4 ? 0.5 : -0.5);
 				split_center.y += octant.extent.y * (i & 2 ? 0.5 : -0.5);
 				split_center.z += octant.extent.z * (i & 1 ? 0.5 : -0.5);
-				octant.child[i] = new Octant(split_center, octant.extent / 2, &octant);
+				octant.child[i] = new Octant(split_center, octant.extent / 2);
 			}
 
 			for (auto& p : current_points) {
@@ -377,7 +377,7 @@ namespace fedes {
 		void Clear() {
 			post_order_iterator it = post_begin();
 			while (it != post_end()) {
-				auto octant = it.operator->();
+				Octant* octant = it.operator->();
 				delete octant;
 				++it;
 			}
@@ -401,9 +401,9 @@ namespace fedes {
 		/*
 		 * @brief Recursively attempts to find a given exact point
 		 * @param octant: starting Octant to find the point from — usually the root.
-		 * @returns -1 if the point cannot be found, or the index within points_ if the point was found.
+		 * @return Sentinel value of -1 if the point cannot be found, or the index from points_ if the point was found.
 		 */
-		int_fast64_t Find(const Vector3& point, const Octant& octant) const {
+		[[nodiscard]] int_fast64_t Find(const Vector3& point, const Octant& octant) const {
 			const Octant& o = OctantContainingPoint(point, octant);
 			if (!o.points.empty()) {
 				for (auto& p : o.points) {
@@ -411,11 +411,8 @@ namespace fedes {
 						return p;
 					}
 				}
-			} else {
-				FEDES_TRACE("[Octree Find]: Traversed to Octant not containing target point, Octant min: {} and max {}", o.aabb_min, o.aabb_max);
-				return -1;
 			}
-			FEDES_TRACE("[Octree Find]: Traversed to empty Octant, Octant min: {} and max {}", o.aabb_min, o.aabb_max);
+			FEDES_TRACE("[Octree Find]: Point not found from designated Octant with Min: {} and Max {}, Empty = {}", o.aabb_min, o.aabb_max, o.IsEmpty());
 			return -1;
 		}
 
@@ -526,7 +523,7 @@ namespace fedes {
 			while (!found) {
 
 				if (pq.empty() || scanned_leaves > max_leaf_scans) { // || scanned_leaves > x || some real formula (?)
-					FEDES_DEBUG("[MUSEF] Geometries are different. Node is not contained inside any examined element. Search must be relaxed.");
+					FEDES_DEBUG("[MUESF] Geometries are different. Node is not contained inside any examined element. Search must be relaxed.");
 					pq.push(root_);
 					considered_elements.clear();
 					scanned_leaves = 0;
