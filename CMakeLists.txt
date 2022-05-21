@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.22)
 project ("fedes" VERSION 0 LANGUAGES CXX)
 
 option(FEDES_RUN_TESTS "Run tests" ON)
@@ -22,7 +22,7 @@ add_subdirectory(apps/cli)
 add_subdirectory(apps/experimental)
 
 # Benchmarks
-if (FEDES_COMPILE_BENCHMARKS)
+if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND FEDES_COMPILE_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
 

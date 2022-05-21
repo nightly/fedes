@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.22)
 
 # FEDES Application/Executable
 add_executable(app_fedes_cli "fedes.cpp"  "octree.cpp" )

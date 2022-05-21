@@ -6,7 +6,7 @@
 ## Build instructions
 
 ### Requirements
-- [CMake](https://cmake.org/) (>=3.8)
+- [CMake](https://cmake.org/) (>=3.22)
 - [Git](https://git-scm.com/) (for submodule cloning)
 - C++23 compiler
 
@@ -24,7 +24,7 @@ cmake --build build
 To run the provided tests:
 ```
 cd build
-ctest -j 8 --output-on-failure --verbose
+ctest --output-on-failure --verbose
 ```
 
 ## Example usage
