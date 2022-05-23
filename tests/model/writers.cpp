@@ -19,7 +19,7 @@ TEST(Writer, CreateXML) {
 	}
 
 	try {
-		fedes::CreateXML("Test_CreateXML.vtu", model, false);
+		fedes::CreateXML("Test_CreateXML.vtu", model, false, true);
 	} catch (const std::ofstream::failure& e) {
 		throw;
 	}

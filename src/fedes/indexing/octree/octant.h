@@ -75,9 +75,9 @@ namespace fedes::internal {
 			const PointT& z1 = aabb_min.z, &z2 = aabb_max.z;
 			constexpr PointT zero = 0.00;
 
-			PointT dx = std::max({ (x1 - point.x), zero, (point.x - x2) });
-			PointT dy = std::max({ (y1 - point.y), zero, (point.y - y2) });
-			PointT dz = std::max({ (z1 - point.z), zero, (point.z - z2) });
+			PointT dx{std::max({ (x1 - point.x), zero, (point.x - x2) })};
+			PointT dy{std::max({ (y1 - point.y), zero, (point.y - y2) })};
+			PointT dz{std::max({ (z1 - point.z), zero, (point.z - z2) })};
 			return (dx*dx + dy*dy + dz*dz);
 		}
 

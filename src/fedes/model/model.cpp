@@ -16,10 +16,10 @@ namespace fedes {
 	 * @param path: the directory to write to. @Default: ""../../../exports"
 	 * @exception Propagates std::ofstream::failure
 	 */
-	void Model::Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path) {
+	void Model::Export(const std::string& file_name, bool by_integration, bool has_fea_data, const std::filesystem::path& path) {
 		try {
 			std::string file_name_with_ext = file_name + ".vtu";
-			fedes::CreateXML(path / file_name_with_ext, *this, by_integration);
+			fedes::CreateXML(path / file_name_with_ext, *this, by_integration, has_fea_data);
 		} catch (const std::ofstream::failure& e) {
 			throw;
 		}

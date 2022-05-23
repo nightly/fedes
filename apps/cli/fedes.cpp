@@ -28,6 +28,9 @@ void prompt(thread_pool& pool) {
 		return;
 	}
 	fedes::SetExampleModels(source, target, model);
+	fedes::ExportRawModel(target, ("oct-M" + std::to_string(model)));
+
+
 	std::cout << "Enter maximum depth of Octree: \n";
 	std::cin >> max_depth;
 	std::cout << "Enter minimum points per leaf splitting threshold for Octree: \n";

@@ -18,12 +18,24 @@ namespace fedes {
 	 * @param file_suffix: filename suffixes (before file extension) to "source" and "target". E.g. "oct-npm" = "target-oct-npm.xml"
 	 * @exception Propagtes std::ofstream::failure
 	 */
-	void ExportModels(fedes::Model& source, fedes::Model& target, const std::string& file_suffix_source, const std::string& file_suffix_target) {
+	void ExportModels(fedes::Model& source, fedes::Model& target,
+		              const std::string& file_suffix_source, const std::string& file_suffix_target) {
 		try {
-			source.Export("source-" + file_suffix_source, false, "../../exports");
-			target.Export("target-" + file_suffix_target, true, "../../exports");
+			source.Export("source-" + file_suffix_source, false, true, "../../exports");
+			target.Export("target-" + file_suffix_target, true, true, "../../exports");
+		} catch (const std::ofstream::failure& e) {
+			throw;
 		}
-		catch (const std::ofstream::failure& e) {
+	}
+
+	/*
+	 * @brief Like ExportModels, but only takes one model & exports the raw model (with no FEA data)
+	 * @exception Propagtes std::ofstream::failure
+	 */
+	void ExportRawModel(fedes::Model& model, const std::string& file_suffix) {
+		try {
+			model.Export("target-raw-" + file_suffix, false, false, "../../exports");
+		} catch (const std::ofstream::failure& e) {
 			throw;
 		}
 	}

@@ -7,6 +7,10 @@
 #include "fedes/model/writers.h"
 
 namespace fedes {
-	void ExportModels(fedes::Model& source, fedes::Model& target, const std::string& file_source_suffix, 
-		              const std::string& file_target_suffix);
+
+	void ExportModels(fedes::Model& source, fedes::Model& target,
+		const std::string& file_source_suffix,  const std::string& file_target_suffix);
+
+	void ExportRawModel(fedes::Model& model, const std::string& file_suffix);
+
 }

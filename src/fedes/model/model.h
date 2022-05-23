@@ -23,7 +23,8 @@ namespace fedes {
 	public:
 		void SetTargetIndexes(const fedes::Model& source);
 		void AssignIntegration();
-		void Export(const std::string& file_name, bool by_integration, const std::filesystem::path& path = "../../../exports");
+		void Export(const std::string& file_name, bool by_integration,
+			bool has_fea_data, const std::filesystem::path& path = "../../../exports");
 
 		bool ByNode() const;
 		bool ByIntegration() const;
