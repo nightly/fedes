@@ -110,6 +110,12 @@ void prompt(thread_pool& pool) {
 			break;
 	}
 
+	std::cout << "Source mesh: number of nodes = " << source.nodes.size() << ", number of elements = " << source.elements.size() << ", element type = " << 
+		fedes::DetermineElementType(source.elements) << std::endl;
+
+	std::cout << "Target mesh: number of nodes = " << target.nodes.size() << ", number of elements = " << target.elements.size() << ", element type = " <<
+		fedes::DetermineElementType(target.elements) << std::endl;
+
 	std::cout << "Models exported\n\n\n";
 }
 

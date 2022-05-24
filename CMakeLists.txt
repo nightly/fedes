@@ -2,8 +2,8 @@
 project ("fedes" VERSION 0 LANGUAGES CXX)
 
 option(FEDES_RUN_TESTS "Run tests" ON)
-option(FEDES_COMPILE_BENCHMARKS "Compile benchmarks" ON)
-option(FEDES_VERBOSE_OUTPUT "Verbose output" ON)
+option(FEDES_COMPILE_BENCHMARKS "Compile benchmarks" OFF)
+option(FEDES_VERBOSE_OUTPUT "Verbose output" OFF)
 
 # Library
 add_subdirectory(src/fedes)

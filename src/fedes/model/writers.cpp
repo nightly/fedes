@@ -21,7 +21,7 @@ namespace fedes {
 	 * in FEDES v2, this corresponds to the difference between createXML1 and create XML2
 	 * @exception Propagates std::ofstream failure
 	 */
-	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model, bool by_integration, bool has_fea_data) {
+	void CreateXML(const std::filesystem::path& output_file_path, fedes::Model& model, bool by_integration, bool has_fe_data) {
 		int num = 0;
 		double z_coord = 0.00;
 		std::string str;
@@ -37,7 +37,7 @@ namespace fedes {
 		stream << "<UnstructuredGrid>\n";
 		stream << "<Piece NumberOfPoints=\"" << model.nodes.size() << "\" NumberOfCells=\"" << model.elements.size() << "\" >\n";
 
-		if (!model.displacement.empty() && has_fea_data) {
+		if (!model.displacement.empty() && has_fe_data) {
 			stream << "<PointData Tensors=\"Vector\" >\n";
 			stream << "<DataArray type=\"Float64\" Name=\"displacement\" NumberOfComponents=\"3\" format=\"ascii\" >\n";
 			for (auto& d : model.displacement) {	
@@ -45,10 +45,10 @@ namespace fedes {
 			}
 			stream << "</DataArray>\n";
 		}
-		if (by_integration) {
+		if (by_integration && has_fe_data) {
 			stream << "</PointData>\n";
 		}
-		if (has_fea_data && (!model.stress.empty()) || (!model.plastic_strain.empty()) || (!model.total_strain.empty()) || (!model.accumulated_strain.empty())) {
+		if (has_fe_data && (!model.stress.empty()) || (!model.plastic_strain.empty()) || (!model.total_strain.empty()) || (!model.accumulated_strain.empty())) {
 			if (by_integration) {
 				stream << "<CellData Tensors=\"stress\" >\n";
 			}
@@ -84,7 +84,7 @@ namespace fedes {
 				stream << "</CellData>\n";
 			}
 		}
-		if (!by_integration && has_fea_data) {
+		if (!by_integration && has_fe_data) {
 			stream << "</PointData>\n";
 		}
 		stream << "<Cells>\n";
