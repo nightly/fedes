@@ -56,7 +56,7 @@ namespace fedes {
 	}
 
 	/*
-	 * @brief Provides the integration data for the model, called by default from SetTargetIndexes(). Idempotent.
+	 * @brief Provides the integration data for the model, called by default from SetTargetIndexes().
 	 * 
 	 * An integration point represents the average/center node value for any given element.
 	 * Some mapping methods are done via integration point instead of by node (e.g stresses and strains).

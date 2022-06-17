@@ -128,7 +128,7 @@ int main() {
 #if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
 	FEDES_WARN("[FEDES CLI] Running in debug or with verbose output. Console logging will affect execution time of interpolations.");
 #endif 
-
+	std::ios::sync_with_stdio(false);
 
 	thread_pool pool(std::thread::hardware_concurrency());
 	FEDES_INFO("Number of threads: {}", pool.get_thread_count());

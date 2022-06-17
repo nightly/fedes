@@ -45,7 +45,6 @@ namespace fedes {
 		if (source.ByNode()) {
 			std::cout << "Radius: " << radius << "\n";
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
-			std::cout << "Target displacement count: " << target.displacement.size() << '\n';
 
 			pool.parallelize_loop(0, target.nodes.size(),
 				[&](const uint32_t& a, const uint32_t& b)
