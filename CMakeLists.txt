@@ -3,7 +3,9 @@ project ("fedes" VERSION 0 LANGUAGES CXX)
 
 option(FEDES_RUN_TESTS "Run tests" ON)
 option(FEDES_COMPILE_BENCHMARKS "Compile benchmarks" ON)
-option(FEDES_VERBOSE_OUTPUT "Verbose output" ON)
+
+option(FEDES_VERBOSE_OUTPUT "Verbose output" OFF)
+option(FEDES_STATS "Collect and run stats during exection" OFF)
 
 # Library
 add_subdirectory(src/fedes)
@@ -29,4 +31,9 @@ endif()
 if (FEDES_VERBOSE_OUTPUT)
     target_compile_definitions(fedes PRIVATE FEDES_VERBOSE=1)
     target_compile_definitions(app_fedes_cli PRIVATE FEDES_VERBOSE=1)
+endif()
+
+if (FEDES_STATS)
+    target_compile_definitions(fedes PRIVATE FEDES_STATS=1)
+    target_compile_definitions(app_fedes_cli PRIVATE FEDES_STATS=1)
 endif()

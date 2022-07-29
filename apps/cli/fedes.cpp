@@ -121,12 +121,14 @@ void prompt(thread_pool& pool) {
 
 
 int main() {
-#if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
+#if (defined _DEBUG == 1)
 	spdlog::set_level(spdlog::level::debug);
+#elif (defined FEDES_VERBOSE == 1 || defined FEDES_STATS == 1) 
+	spdlog::set_level(spdlog::level::info);
 #endif
 
-#if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1)
-	FEDES_WARN("[FEDES CLI] Running in debug or with verbose output. Console logging will affect execution time of interpolations.");
+#if (defined _DEBUG == 1 || defined FEDES_VERBOSE == 1 || defined FEDES_STATS == 1)
+	FEDES_WARN("[FEDES CLI] Running in debug or with verbose/stats output. Console logging will affect execution time of interpolations.");
 #endif 
 	std::ios::sync_with_stdio(false);
 

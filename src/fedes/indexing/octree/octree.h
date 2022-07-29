@@ -11,6 +11,8 @@
 #include <concepts>
 #include <unordered_set>
 #include <utility>
+#include <variant>
+#include <assert.h>
 
 #include <thread_pool.hpp>
 
@@ -375,12 +377,21 @@ namespace fedes {
 		 * a chain of destructors calling each child octant with `delete` recursively
 		 */
 		void Clear() {
+#if (defined FEDES_STATS == 1 || defined FEDES_VERBOSE == 1 || defined _DEBUG == 1)
+			size_t deleted_count{ 0 };
+#endif
 			post_order_iterator it = post_begin();
 			while (it != post_end()) {
 				Octant* octant = it.operator->();
 				delete octant;
 				++it;
+#if (defined FEDES_STATS == 1 || defined FEDES_VERBOSE == 1 || defined _DEBUG == 1)
+				deleted_count++;
+#endif
 			}
+#if (defined FEDES_STATS == 1 || defined FEDES_VERBOSE == 1 || defined _DEBUG == 1)
+			FEDES_STATS_LOG("Deleted {} nodes", deleted_count);
+#endif
 		}
 
 		// ====================================================================
@@ -447,6 +458,7 @@ namespace fedes {
 
 
 		size_t DMUESearch(const Vector3& query_point, size_t scan_number) const {
+			assert(!node_elements_.empty());
 			size_t best_element = 0;
 			PointT best_dist_sq = std::numeric_limits<PointT>::max();
 			size_t scanned = 0;
@@ -490,6 +502,7 @@ namespace fedes {
 		 * @param max_leaf_scans: in case geometry differs, without this parameter, the whole tree would be unnecessarily searched before boundaries are relaxed. 
 		 */
 		std::pair<size_t, MuesfData> MUESFSearch(const Vector3& query_point, size_t max_leaf_scans = 1000) const {
+			assert(!node_elements_.empty());
 			bool found = false;
 			std::unordered_set<size_t> considered_elements;
 			std::priority_queue<Octant*, std::vector<Octant*>, OctantComparator<PointT>> pq(query_point);
