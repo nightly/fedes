@@ -15,28 +15,28 @@
 static void BM_Octree_NPM(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
-	fedes::Octree<double> octree(source.nodes, 15, 10);
+	fedes::Octree<double> octree(source.nodes, state.range(1), state.range(2));
 	BS::thread_pool pool;
 
 	for (auto _ : state) {
-		fedes::NearestPointMethod(octree, source, target);
+		fedes::ParallelNearestPointMethod(octree, source, target, pool);
 		benchmark::DoNotOptimize(target);
 		benchmark::ClobberMemory();
 	}
 }
 
-BENCHMARK(BM_Octree_NPM)->Arg(1)->Iterations(1000)->Unit(benchmark::kMillisecond);
+// BENCHMARK(BM_Octree_NPM)->Args({1, 15, 10})->Iterations(10)->Unit(benchmark::kMillisecond);
 
 /*
  * @param state.range(0): model ID
  * @param state.range(1): max depth
  * @param state.range(2): leaf split threshold
- * @param state.range(3): radius
+*  radius set manually, otherwise use BENCHMARK_CAPTURE.
  */
 static void BM_Octree_FOP(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
-	fedes::Octree<double> octree(source.nodes, 15, 10);
+	fedes::Octree<double> octree(source.nodes, state.range(1), state.range(2));
 	BS::thread_pool pool;
 
 	for (auto _ : state) {
@@ -46,7 +46,7 @@ static void BM_Octree_FOP(benchmark::State& state) {
 	}
 }
 
-// BENCHMARK(BM_Octree_FOP)->Arg(1)->Iterations(1000)->Unit(benchmark::kMillisecond);
+// BENCHMARK(BM_Octree_FOP)->Args({1, 15, 10})->Iterations(1000)->Unit(benchmark::kMillisecond);
 
 /*
  * @param state.range(0): model ID
@@ -61,13 +61,13 @@ static void BM_Octree_DMUE(benchmark::State& state) {
 	BS::thread_pool pool;
 
 	for (auto _ : state) {
-		fedes::NearestPointMethod(octree, source, target);
+		fedes::ParallelDMUE(octree, source, target, pool, state.range(3));
 		benchmark::DoNotOptimize(target);
 		benchmark::ClobberMemory();
 	}
 }
 
-// BENCHMARK(BM_Octree_DMUE)->Arg(1)->Iterations(1000)->Unit(benchmark::kMillisecond);
+// BENCHMARK(BM_Octree_DMUE)->Args({1, 15, 10, 25})->Iterations(1000)->Unit(benchmark::kMillisecond);
 
 /*
  * @param state.range(0): model ID
@@ -78,14 +78,14 @@ static void BM_Octree_DMUE(benchmark::State& state) {
 static void BM_Octree_ESF(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
-	fedes::Octree<double> octree(source.nodes, source.elements, 15, 10);
+	fedes::Octree<double> octree(source.nodes, source.elements, state.range(1), state.range(2));
 	BS::thread_pool pool;
 
 	for (auto _ : state) {
-		fedes::ParallelElementShapeFunction(octree, source, target, pool, 2000);
+		fedes::ParallelElementShapeFunction(octree, source, target, pool, state.range(3));
 		benchmark::DoNotOptimize(target);
 		benchmark::ClobberMemory();
 	}
 }
 
-// BENCHMARK(BM_Octree_ESF)->Arg(1)->Iterations(1000)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_Octree_ESF)->Args({1, 15, 10, 1000})->Iterations(1000)->Unit(benchmark::kMillisecond);

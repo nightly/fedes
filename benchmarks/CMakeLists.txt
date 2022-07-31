@@ -9,7 +9,7 @@ set_property(DIRECTORY "${PROJECT_SOURCE_DIR}/external/googlebenchmark" APPEND
   PROPERTY COMPILE_DEFINITIONS "-DCMAKE_BUILD_TYPE=Release")
 
 macro(package_add_benchmark BENCHNAME)
-    add_executable(${BENCHNAME} ${ARGN} "indexing/octree/construction/m4.cpp")
+    add_executable(${BENCHNAME} ${ARGN})
     target_compile_features(${BENCHNAME}  PRIVATE cxx_std_23)
 
     target_link_libraries(${BENCHNAME} PRIVATE 
@@ -30,10 +30,7 @@ endmacro()
 #   Index Creation
 # ==================
 
-package_add_benchmark("bench_octree_m1" "indexing/octree/construction/m1.cpp")
-package_add_benchmark("bench_octree_m2" "indexing/octree/construction/m2.cpp")
-package_add_benchmark("bench_octree_m3" "indexing/octree/construction/m3.cpp")
-package_add_benchmark("bench_octree_m4" "indexing/octree/construction/m4.cpp")
+package_add_benchmark("bench_octree_construction" "indexing/octree/construction.cpp")
 
 # ==================
 #   Interpolations
