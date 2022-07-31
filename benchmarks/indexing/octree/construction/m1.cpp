@@ -34,7 +34,7 @@ static void BM_OctreeElementIndex_Model1(benchmark::State& state) {
 static void BM_OctreeParallelNodeIndex_Model1(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, 1);
-	thread_pool pool;
+	BS::thread_pool pool;
 
 	for (auto _ : state) {
 		fedes::Octree<double> octree(source.nodes, 15, 10, &pool);

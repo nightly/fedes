@@ -4,7 +4,7 @@
 #include <cmath>
 #include <vector>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/indexing/octree/octant.h"
@@ -41,7 +41,7 @@ namespace fedes {
 
 
 	template <std::floating_point T = double>
-	void ParallelFieldOfPoints(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, thread_pool& pool, T radius = 10.0) {
+	void ParallelFieldOfPoints(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, BS::thread_pool& pool, T radius = 10.0) {
 		if (source.ByNode()) {
 			std::cout << "Radius: " << radius << "\n";
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
@@ -73,7 +73,7 @@ namespace fedes {
 						}
 
 					}
-				});
+				}).wait();
 		}
 
 		if (source.ByIntegration()) {
@@ -154,12 +154,12 @@ namespace fedes {
 
 
 					}
-				});
+				}).wait();
 		}
 	}
 
 	template <std::floating_point T = double>
-	void FieldOfPoints(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, thread_pool& pool, T radius = 10.0) {
+	void FieldOfPoints(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, T radius = 10.0) {
 
 		if (source.ByNode()) {
 			std::cout << "Radius: " << radius << "\n";

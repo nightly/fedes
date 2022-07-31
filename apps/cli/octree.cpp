@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/interpolations/octree/octree.h"
@@ -12,13 +12,12 @@
  * @brief Nearest Point Method with Octree Index with timing
  */
 void OctreeNPM(fedes::Model& source, fedes::Model& target, size_t max_depth, size_t points_per_leaf,
-	          thread_pool& pool) {
+	          BS::thread_pool& pool) {
 	fedes::internal::Timer build_timer("Octree Node Index Construction");
 	fedes::Octree<double> octree (source.nodes, max_depth, points_per_leaf, &pool);
 	auto build_duration = build_timer.Stop();
 
 	fedes::internal::Timer interpolation_timer("Octree NPM Interpolation");
-	// fedes::NearestPointMethod(octree, source, target);
 	fedes::ParallelNearestPointMethod(octree, source, target, pool);
 	auto interpolation_duration = interpolation_timer.Stop();
 	build_timer.WriteDuration(build_duration);
@@ -30,7 +29,7 @@ void OctreeNPM(fedes::Model& source, fedes::Model& target, size_t max_depth, siz
  * @brief Distance Method using Field of Points with Octree Index with timing
  */
 void OctreeDMUFOP(fedes::Model& source, fedes::Model& target, size_t max_depth, size_t points_per_leaf,
-	             double radius, thread_pool& pool) {
+	             double radius, BS::thread_pool& pool) {
 	fedes::internal::Timer build_timer("Octree Node Index Construction");
 	fedes::Octree<double> octree(source.nodes, max_depth, points_per_leaf, &pool);
 	auto build_duration = build_timer.Stop();
@@ -46,7 +45,7 @@ void OctreeDMUFOP(fedes::Model& source, fedes::Model& target, size_t max_depth, 
  * @brief Distance Method using Elements with Octree Index with timing
  */
 void OctreeDMUE(fedes::Model& source, fedes::Model& target, size_t max_depth, size_t points_per_leaf,
-	           size_t min_scan_dmue, thread_pool& pool) {
+	           size_t min_scan_dmue, BS::thread_pool& pool) {
 	fedes::internal::Timer build_timer("Octree Element Index Construction");
 	fedes::Octree<double> octree(source.nodes, source.elements, max_depth, points_per_leaf, &pool);
 	auto build_duration = build_timer.Stop();
@@ -62,7 +61,7 @@ void OctreeDMUE(fedes::Model& source, fedes::Model& target, size_t max_depth, si
  * @brief Element Shape Function with Octree Index with timing
  */
 void OctreeESF(fedes::Model& source, fedes::Model& target, size_t max_depth, size_t points_per_leaf,
-	          size_t max_leaf_scans_threshold, thread_pool& pool) {
+	          size_t max_leaf_scans_threshold, BS::thread_pool& pool) {
 	fedes::internal::Timer build_timer("Octree Element Index Construction");
 	fedes::Octree<double> octree(source.nodes, source.elements, max_depth, points_per_leaf, &pool);
 	auto build_duration = build_timer.Stop();

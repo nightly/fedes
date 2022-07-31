@@ -1,5 +1,7 @@
 #include <benchmark/benchmark.h>
 
+#include <BS_thread_pool.hpp>
+
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/model/model.h"
 #include "fedes/model/examples.h"
@@ -34,7 +36,7 @@ static void BM_OctreeElementIndex_Model2(benchmark::State& state) {
 static void BM_OctreeParallelNodeIndex_Model2(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, 2);
-	thread_pool pool;
+	BS::thread_pool pool;
 
 	for (auto _ : state) {
 		fedes::Octree<double> octree(source.nodes, 15, 10, &pool);

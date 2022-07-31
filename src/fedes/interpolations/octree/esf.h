@@ -2,7 +2,7 @@
 
 #include <concepts>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/indexing/octree/octant.h"
@@ -11,9 +11,11 @@
 
 namespace fedes {
 
+	// @Cleanup: use a class for elements
+
 	template <std::floating_point T>
 	void ParallelElementShapeFunction(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, 
-		                             thread_pool& pool, size_t max_leaf_scans_threshold = 1000) {
+		                             BS::thread_pool& pool, size_t max_leaf_scans_threshold = 1000) {
 		const ElementType element_type = octree.element_type();
 
 		if (source.ByNode()) {
@@ -65,7 +67,7 @@ namespace fedes {
 						}
 
 					}
-				});
+				}).wait();
 		}
 
 		if (source.ByIntegration()) {
@@ -202,13 +204,13 @@ namespace fedes {
 
 
 					}
-				});
+				}).wait();
 		}
 	}
 
 	template <std::floating_point T = double>
 	void ElementShapeFunction(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target,
-		thread_pool& pool, size_t max_leaf_scans_threshold = 1000) {
+		                      size_t max_leaf_scans_threshold = 1000) {
 		const ElementType element_type = octree.element_type();
 
 		if (source.ByNode()) {

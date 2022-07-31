@@ -1,6 +1,8 @@
 #include <benchmark/benchmark.h>
 #include "fedes/interpolations/octree/octree.h"
 
+#include <BS_thread_pool.hpp>
+
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/model/model.h"
 #include "fedes/model/examples.h"
@@ -14,7 +16,7 @@ static void BM_Octree_NPM(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
 	fedes::Octree<double> octree(source.nodes, 15, 10);
-	thread_pool pool;
+	BS::thread_pool pool;
 
 	for (auto _ : state) {
 		fedes::NearestPointMethod(octree, source, target);
@@ -35,7 +37,7 @@ static void BM_Octree_FOP(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
 	fedes::Octree<double> octree(source.nodes, 15, 10);
-	thread_pool pool;
+	BS::thread_pool pool;
 
 	for (auto _ : state) {
 		fedes::ParallelFieldOfPoints(octree, source, target, pool, 10.00);
@@ -56,7 +58,7 @@ static void BM_Octree_DMUE(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
 	fedes::Octree<double> octree(source.nodes, source.elements, 15, 10);
-	thread_pool pool;
+	BS::thread_pool pool;
 
 	for (auto _ : state) {
 		fedes::NearestPointMethod(octree, source, target);
@@ -77,7 +79,7 @@ static void BM_Octree_ESF(benchmark::State& state) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, state.range(0));
 	fedes::Octree<double> octree(source.nodes, source.elements, 15, 10);
-	thread_pool pool;
+	BS::thread_pool pool;
 
 	for (auto _ : state) {
 		fedes::ParallelElementShapeFunction(octree, source, target, pool, 2000);

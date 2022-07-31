@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/model/model.h"
 #include "fedes/model/examples.h"
@@ -22,7 +22,7 @@ TEST(OctreeConstruct, Root_Model1) {
 TEST(OctreeConstruct, Root_Model1_Parallel) {
 	fedes::Model source, target;
 	fedes::SetExampleModels(source, target, 1);
-	thread_pool pool;
+	BS::thread_pool pool;
 	fedes::Octree<double> octree(source.nodes, 10, 8, &pool);
 	const auto& [center, extent] = octree.root();
 	ASSERT_EQ(center, fedes::Vector3<double>(156.75000000000000, 0.0000000000000000, 654.94499999999994));

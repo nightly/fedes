@@ -3,7 +3,7 @@
 
 // #pragma float_control(except, on)
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/common/log.h"
@@ -15,7 +15,7 @@
 /*
 * @brief Prompts the user for model, Octree index parameters etc
 */
-void prompt(thread_pool& pool) {
+void prompt(BS::thread_pool& pool) {
 	fedes::Model source, target;
 	size_t model{}, max_depth{}, points_per_leaf{}, interpolation_type{};
 
@@ -41,6 +41,8 @@ void prompt(thread_pool& pool) {
 		std::cerr << "[Error] Invalid Octree parameters!\n";
 		return;
 	}	
+
+	std::cout << "Parallelizing root construction\n";
 
 	std::cout << "Enter interpolation type (1 - NPM, 2 - FOP, 3 - DMUE, 4 - ESF) \n";
 	std::cin >> interpolation_type;
@@ -132,7 +134,7 @@ int main() {
 #endif 
 	std::ios::sync_with_stdio(false);
 
-	thread_pool pool(std::thread::hardware_concurrency());
+	BS::thread_pool pool(std::thread::hardware_concurrency());
 	FEDES_INFO("Number of threads: {}", pool.get_thread_count());
 
 	while (true) {

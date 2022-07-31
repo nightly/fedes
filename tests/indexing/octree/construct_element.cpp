@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/model/model.h"
 #include "fedes/model/examples.h"
@@ -29,7 +29,7 @@ TEST(OctreeConstructElement, NodeElementMap) {
 
 TEST(OctreeConstructElement, ParallelElementMap) {
 	fedes::Model source, target;
-	thread_pool pool;
+	BS::thread_pool pool;
 	fedes::SetExampleModels(source, target, 1);
 
 	fedes::Octree<double> octree(source.nodes, source.elements, 10, 8);

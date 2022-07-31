@@ -14,7 +14,7 @@
 #include <variant>
 #include <assert.h>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/maths/vector3.h"
 #include "fedes/maths/distance.h"
@@ -42,7 +42,7 @@ namespace fedes {
 		const std::vector<std::vector<size_t>>* elements_ = nullptr;
 		std::vector<std::vector<size_t>> node_elements_; // @brief: Node to element lookup
 		ElementType element_type_;
-		thread_pool* pool_;
+		BS::thread_pool* pool_;
 
 		size_t leaf_split_threshold_; // @brief: Splitting threshold - until a leaf contains X points, prevent splitting
 		size_t max_depth_; // @brief: Maximal depth of the Octree, where root Octant is at depth = 0
@@ -58,7 +58,7 @@ namespace fedes {
 		 * @brief Node index constructor overload
 		 */
 		Octree(const std::span<Vector3>& points, size_t max_depth, size_t leaf_split_threshold, 
-			  std::optional<thread_pool*> pool = std::nullopt)
+			  std::optional<BS::thread_pool*> pool = std::nullopt)
 		: points_(&points), leaf_split_threshold_(leaf_split_threshold), max_depth_(max_depth) {
 			if (points_->empty()) {
 				throw std::length_error("Octree Index Constructor: Empty set of initial points sent");
@@ -84,7 +84,7 @@ namespace fedes {
 		 * @brief Element index constructor overload
 		 */
 		Octree(const std::span<Vector3>& points, const std::vector<std::vector<size_t>>& elements, size_t max_depth, 
-			  size_t leaf_split_threshold, std::optional<thread_pool*> pool = std::nullopt)
+			  size_t leaf_split_threshold, std::optional<BS::thread_pool*> pool = std::nullopt)
 		: points_(&points), elements_(&elements), leaf_split_threshold_(leaf_split_threshold), max_depth_(max_depth) {
 			if (points_->empty()) {
 				throw std::length_error("Octree Element Index Constructor: Empty set of initial points sent");
@@ -240,43 +240,28 @@ namespace fedes {
 		}
 
 		void ParallelConstructRoot() {
-			size_t start_idx = 0;
-			size_t end_idx = points_->size();
-			size_t blocks = pool_->get_thread_count();
+			BS::multi_future<std::pair<Vector3, Vector3>> multi_future = pool_->parallelize_loop(0, points_->size(),
+				[&](const int a, const int b)
+				{
+					Vector3 local_min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
+					Vector3 local_max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
 
-			auto local_min_max = [&](const size_t& a, const size_t& b) -> std::pair<Vector3, Vector3> {
-				Vector3 local_min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
-				Vector3 local_max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
-
-				for (size_t i = a; i < b; i++) {
-					const Vector3& v =  (*points_)[i];
-					MinMax(local_min, local_max, v);
-				}
-				return {local_min, local_max };
-			};
-
-			// Adaptation of pool.parallelize_loop to also capture the futures
-			end_idx--;
-			size_t total_size = (end_idx - start_idx + 1);
-			size_t block_size = (total_size / blocks);
-
-			// Start the tasks and set the futures
-			std::vector<std::future<std::pair<Vector3, Vector3>>> futures;
-			futures.reserve(blocks);
-			for (size_t t = 0; t < blocks; t++) {
-				size_t start = ((t * block_size) + start_idx);
-				size_t end = (t == blocks - 1) ? end_idx + 1 : (((t + 1) * block_size) + start_idx);
-				FEDES_TRACE("Local MinMax Split {}: start {} - end {}", t, start, end);
-				futures.emplace_back(pool_->submit(local_min_max, start, end));
-			}
+					for (size_t i = a; i < b; i++) {
+						const Vector3& v = (*points_)[i];
+						MinMax(local_min, local_max, v);
+					}
+					FEDES_TRACE("Local MinMax: min {} - max {}", local_min, local_max);
+					return std::make_pair(local_min, local_max);
+				});
 
 			// Global min/max
 			Vector3 min(std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max(), std::numeric_limits<PointT>::max());
 			Vector3 max(std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min(), std::numeric_limits<PointT>::min());
 
-			// Get the futures or wait, update global minima and maxima values
-			for (size_t t = 0; t < blocks; t++) {
-				const auto& [l_min, l_max] = futures[t].get();
+			std::vector<std::pair<Vector3, Vector3>> locals = multi_future.get();
+
+			for (const auto& local : locals) {
+				const auto& [l_min, l_max] = local;
 				if (l_max.x > max.x) {
 					max.x = l_max.x;
 				}

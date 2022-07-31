@@ -1,4 +1,4 @@
 # Thread Pool
 
 https://github.com/bshoshany/thread-pool
-b6cd773f37b1be7718f771ae7403726a28be5f40
+Modified version of 670e3ab3edfbbbf99205cc5ccdce22e6674f57cc

@@ -2,7 +2,7 @@
 
 #include <concepts>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/indexing/octree/octant.h"
@@ -20,10 +20,9 @@ namespace fedes {
 	 * @param pool: the thread pool to parallelize with
 	 */
 	template <std::floating_point T = double>
-	void ParallelNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, thread_pool& pool) {
+	void ParallelNearestPointMethod(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, BS::thread_pool& pool) {
 		if (source.ByNode()) {
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
-
 			pool.parallelize_loop(0, target.nodes.size(),
 				[&](const uint32_t& a, const uint32_t& b)
 				{
@@ -33,7 +32,7 @@ namespace fedes {
 							source_node_idx, source.nodes[source_node_idx]);
 						target.displacement[i] = source.displacement[source_node_idx];
 					}
-				});
+				}).wait();
 		}
 
 		if (source.ByIntegration()) {
@@ -63,7 +62,7 @@ namespace fedes {
 							target.total_strain[i] = source.total_strain[source_node_idx];
 						}
 					}
-				});
+				}).wait();
 		}
 	}
 

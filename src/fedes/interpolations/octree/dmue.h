@@ -2,7 +2,7 @@
 
 #include <concepts>
 
-#include <thread_pool.hpp>
+#include <BS_thread_pool.hpp>
 
 #include "fedes/indexing/octree/octree.h"
 #include "fedes/indexing/octree/octant.h"
@@ -39,7 +39,7 @@ namespace fedes {
 
 
 	template <std::floating_point T = double>
-	void ParallelDMUE(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, thread_pool& pool, size_t scan_min = 50) {
+	void ParallelDMUE(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, BS::thread_pool& pool, size_t scan_min = 50) {
 		if (source.ByNode()) {
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
 			std::cout << "Minimum element scans: " << scan_min << '\n';
@@ -66,7 +66,7 @@ namespace fedes {
 						}
 
 					}
-				});
+				}).wait();
 		}
 
 		if (source.ByIntegration()) {
@@ -136,12 +136,12 @@ namespace fedes {
 						}
 
 					}
-				});
+				}).wait();
 		}
 	}
 
 	template <std::floating_point T = double>
-	void DMUE(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, thread_pool& pool, size_t scan_min = 50) {
+	void DMUE(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, size_t scan_min = 50) {
 		if (source.ByNode()) {
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
 			std::cout << "Target displacement count: " << target.displacement.size() << '\n';
