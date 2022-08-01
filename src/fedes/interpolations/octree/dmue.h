@@ -42,7 +42,7 @@ namespace fedes {
 	void ParallelDMUE(const fedes::Octree<T>& octree, const fedes::Model& source, fedes::Model& target, BS::thread_pool& pool, size_t scan_min = 50) {
 		if (source.ByNode()) {
 			std::cout << "Target node count: " << target.nodes.size() << '\n';
-			std::cout << "Minimum element scans: " << scan_min << '\n';
+			// std::cout << "Minimum element scans: " << scan_min << '\n';
 
 			pool.parallelize_loop(0, target.nodes.size(),
 				[&](const uint32_t& a, const uint32_t& b)

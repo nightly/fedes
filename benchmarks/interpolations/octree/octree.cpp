@@ -25,7 +25,7 @@ static void BM_Octree_NPM(benchmark::State& state) {
 	}
 }
 
-// BENCHMARK(BM_Octree_NPM)->Args({1, 15, 10})->Iterations(10)->Unit(benchmark::kMillisecond);
+// BENCHMARK(BM_Octree_NPM)->Args({1, 15, 10})->Iterations(1000)->Unit(benchmark::kMillisecond);
 
 /*
  * @param state.range(0): model ID
@@ -46,7 +46,7 @@ static void BM_Octree_FOP(benchmark::State& state) {
 	}
 }
 
-// BENCHMARK(BM_Octree_FOP)->Args({1, 15, 10})->Iterations(1000)->Unit(benchmark::kMillisecond);
+// BENCHMARK(BM_Octree_FOP)->Args({4, 15, 10})->Iterations(1000)->Unit(benchmark::kMillisecond);
 
 /*
  * @param state.range(0): model ID
@@ -67,7 +67,7 @@ static void BM_Octree_DMUE(benchmark::State& state) {
 	}
 }
 
-// BENCHMARK(BM_Octree_DMUE)->Args({1, 15, 10, 25})->Iterations(1000)->Unit(benchmark::kMillisecond);
+// BENCHMARK(BM_Octree_DMUE)->Args({4, 15, 10, 50})->Iterations(50)->Unit(benchmark::kMillisecond);
 
 /*
  * @param state.range(0): model ID
@@ -88,4 +88,4 @@ static void BM_Octree_ESF(benchmark::State& state) {
 	}
 }
 
-BENCHMARK(BM_Octree_ESF)->Args({1, 15, 10, 1000})->Iterations(1000)->Unit(benchmark::kMillisecond);
+BENCHMARK(BM_Octree_ESF)->Args({4, 15, 10, 1000})->Iterations(100)->Unit(benchmark::kMillisecond);
